@@ -53,7 +53,6 @@ class UploadFileToPixelbin extends AbstractHelper
                 "domain" => $this->helperData->getApiUrl(),
                 "apiSecret" => $this->helperData->getAppApiSecret(),
             ]);
-            // Create a pixelbin instance
             return new PixelbinClient($config);
         } catch (\Exception $ex) {
             throw new LocalizedException(
@@ -70,7 +69,6 @@ class UploadFileToPixelbin extends AbstractHelper
         try {
             $pixelbin = $this->getPixelbinObj();
             $result = $pixelbin->assets->listFiles();
-            //echo "<pre>"; print_r($result); echo "</pre>";
             $obj = [
                 "cloudName" => $this->helperData->getAppCloudName(),
                 "zone" => "z-slug",
