@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!--  For console command  -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="pixelbin_upload_all" xsi:type="object">Pixelbinio\Pixelbin\Console\UploadImageToPixelBin</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!--  For images logs grid  -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="image_logs_data_list_data_source" xsi:type="string">Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">pixelbin_image_sync_logs</argument>
+            <argument name="eventPrefix" xsi:type="string">Pixelbinio_Pixelbin_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">image_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs</argument>
+        </arguments>
+    </type>
+
+    <!-- Custom logger for this extension it will generate pixelbin.log file in /var/log/ -->
+    <type name="Pixelbinio\Pixelbin\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Pixelbinio\Pixelbin\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">PixelbinLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Pixelbinio\Pixelbin\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

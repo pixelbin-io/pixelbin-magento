@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">image_logs_data_list.image_logs_data_list_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>image_logs_data_columns</spinner>
+        <deps>
+            <dep>image_logs_data_list.image_logs_data_list_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="image_logs_data_list_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+            <filterUrlParams>
+                <param name="user_id">*</param>
+            </filterUrlParams>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+            </storageConfig>
+        </settings>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="image_logs_data_list_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters">
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">ui/grid/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                        </select>
+                    </filters>
+                </templates>
+                <storageConfig>
+                    <param name="provider" xsi:type="string">image_logs_data_list.image_logs_data_list.listing_top.bookmarks</param>
+                    <param name="namespace" xsi:type="string">current.filters</param>
+                </storageConfig>
+            </settings>
+        </filters>
+        <massaction name="listing_massaction">
+            <action name="mass_delete">
+                <settings>
+                    <url path="pixelbin/images/massdelete"/>
+                    <type>delete_request</type>
+                    <label translate="true">Delete Request</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="image_logs_data_columns">
+        <selectionsColumn name="ids" sortOrder="10">
+            <settings>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>55</resizeDefaultWidth>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="entity_id" sortOrder="20">
+            <settings>
+                <filter>textRange</filter>
+                <sorting>desc</sorting>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="request" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Request</label>
+            </settings>
+        </column>
+        <column name="response" sortOrder="40">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Response</label>
+            </settings>
+        </column>
+        <column name="sync_type" sortOrder="40">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Sync Type</label>
+            </settings>
+        </column>
+    </columns>
+</listing>
