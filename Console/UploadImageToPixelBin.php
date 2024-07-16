@@ -14,12 +14,55 @@
 namespace Pixelbinio\Pixelbin\Console;
 
 use Exception;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\MediaStorage\Model\File\Storage as StorageModel;
+use Magento\MediaStorage\Helper\File\Storage as StorageHelper;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
+use Pixelbinio\Pixelbin\Model\Config\Source\SyncType;
 
 class UploadImageToPixelBin extends Command
 {
+    /**
+     * @var HelperData
+     */
+    protected $helperData;
+
+    /**
+     * @var StorageModel
+     */
+    protected $storageModel;
+
+    /**
+     * @var UploadFileToPixelbin
+     */
+    protected $uploadFileToPixelbin;
+
+    /**
+     * UploadImageToPixelBin construct
+     *
+     * @param HelperData $helperData
+     * @param StorageModel $storageModel
+     * @param UploadFileToPixelbin $uploadFileToPixelbin
+     * @param string|null $name
+     */
+    public function __construct(
+        HelperData $helperData,
+        StorageModel $storageModel,
+        UploadFileToPixelbin $uploadFileToPixelbin,
+        ?string $name = null
+    )
+    {
+        $this->helperData = $helperData;
+        $this->storageModel = $storageModel;
+        $this->uploadFileToPixelbin = $uploadFileToPixelbin;
+        parent::__construct($name);
+    }
+
     /**
      * Configure the console command name and description
      *
@@ -37,13 +80,91 @@ class UploadImageToPixelBin extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return null|void|int
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Upload image to pixelbin code needs to add
+        if (!$this->helperData->isModuleEnabled()) {
+            $output->writeln('');
+            $output->writeln("<error>This option is not enabled, check module configuration settings.</error>");
+            return \Magento\Framework\Console\Cli::RETURN_FAILURE;
+        }
+        $output->writeln('');
+        $output->writeln('<comment>Start Importing Media Files</comment>');
+        $output->writeln('');
+        $flag = true;
+        try {
+            $this->syncMedia($output);
+        } catch (\Exception $e) {
+            $flag = false;
+            $output->writeln('');
+            $output->writeln("<error>{$e->getMessage()}</error>");
+        } catch (\Error $e) {
+            $flag = false;
+            $output->writeln('');
+            $output->writeln("<error>{$e->getMessage()}</error>");
+        }
 
-        $output->writeln("Pixelbin image upload command executed :)");
+        $output->writeln('');
+        $output->writeln('');
+        if ($flag) {
+            $output->writeln('<info>Media Files Imported Successfully</info>');
+            $output->writeln('<info>Media Storage Set To Pixelbin</info>');
+        } else {
+            $output->writeln('<error>Unable To Import</error>');
+        }
+        return 1;
+    }
+
+    /**
+     * Sync Media
+     *
+     * @param OutputInterface $output
+     */
+    private function syncMedia($output)
+    {
+        $sourceModel = $this->storageModel->getStorageModel();
+        $offset = 0;
+        $steps = $this->getTotalSteps($sourceModel);
+        $progressBar = new ProgressBar($output, $steps);
+        $progressBar->setBarWidth(50);
+        $progressBar->setFormat('verbose');
+        $progressBar->setProgressCharacter('<info>➤</info>');
+        $progressBar->setBarCharacter('<info>=</info>');
+        $progressBar->start();
+        $successCount = [];
+        $errorCount = [];
+        while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
+            $progressBar->advance();
+            $uploadResponse = $this->uploadFileToPixelbin->importFiles($files, SyncType::TYPE_CLI);
+            $successCount[] = $uploadResponse['successCount'];
+            $errorCount[] = $uploadResponse['errorCount'];
+            $offset += count($files);
+        }
+        $progressBar->finish();
+        unset($files);
+        $output->writeln("");
+        $output->writeln("Successfully uploaded file count is => ".count($successCount));
+        $output->writeln("<error>Failed to uploaded file count is".count($errorCount)."</error>");
+    }
+
+
+
+    /**
+     * Get TotalSteps
+     *
+     * @param [object] $sourceModel
+     * @return int
+     */
+    private function getTotalSteps($sourceModel)
+    {
+        $offset = 0;
+        while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
+            $offset += count($files);
+        }
+
+        return $offset;
     }
 }

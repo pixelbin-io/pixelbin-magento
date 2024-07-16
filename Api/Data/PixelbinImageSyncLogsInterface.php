@@ -18,7 +18,7 @@ interface PixelbinImageSyncLogsInterface
     /**#@+
      * Constants for keys of data array. Identical to the name of the getter in snake case.
      */
-    public const TABLE_NAME = "pixelbin_synchronisation";
+    public const TABLE_NAME = "pixelbin_image_sync_logs";
 
     public const KEY_ENTITY_ID = "entity_id";
     public const KEY_REQUEST = "request";

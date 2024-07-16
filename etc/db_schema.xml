@@ -29,8 +29,8 @@
     <table name="pixelbin_image_sync_logs" resource="default" engine="innodb" comment="Pixelbin Synchronisation">
         <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="10" identity="true"
                 comment="Entity Id"/>
-        <column xsi:type="varchar" length="255" name="request" default="null" comment="Request"/>
-        <column xsi:type="varchar" length="255" name="response" default="null" comment="Response"/>
+        <column xsi:type="text" name="request" comment="Request"/>
+        <column xsi:type="text" name="response" comment="Response"/>
         <column xsi:type="varchar" length="255" name="sync_type" default="null" comment="Sync Type"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>

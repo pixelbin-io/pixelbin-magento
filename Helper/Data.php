@@ -41,6 +41,8 @@ class Data extends AbstractHelper
     const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
 
+    const API_VERSION = "v2";
+
     /**
      * @var Curl
      */
@@ -302,5 +304,31 @@ class Data extends AbstractHelper
         $response = $this->curl->getBody();
 
         $this->logger->info("Api URL response: " . json_encode($response));
+    }
+
+    /**
+     * Log data in logger (/var/log/pixelbin.log)
+     *
+     * @param string $message
+     * @param array $context
+     * @param string $type
+     * @return void
+     */
+    public function logData(string $message, array $context = [], string $type = "")
+    {
+        switch ($type) {
+            case "error":
+                $this->logger->error($message, $context);
+                break;
+            case "critical":
+                $this->logger->critical($message, $context);
+                break;
+            case "alert":
+                $this->logger->alert($message, $context);
+                break;
+            default:
+                $this->logger->info($message, $context);
+                break;
+        }
     }
 }
