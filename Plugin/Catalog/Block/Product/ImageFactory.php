@@ -71,6 +71,7 @@ class ImageFactory
 
     protected $logger;
     protected $helperData;
+    protected $assetRepo;
 
     /**
      * @param ObjectManagerInterface $objectManager
@@ -84,12 +85,14 @@ class ImageFactory
         ObjectManagerInterface $objectManager,
         ConfigInterface $presentationConfig,
         Logger $logger,
-        HelperData $helperData
+        HelperData $helperData,
+        \Magento\Framework\View\Asset\Repository $assetRepo
     ) {
         $this->objectManager = $objectManager;
         $this->presentationConfig = $presentationConfig;
         $this->logger = $logger;
         $this->helperData = $helperData;
+        $this->assetRepo = $assetRepo;
         $this->dimensions = null;
         $this->imageFile = null;
         $this->keepFrame = true;
@@ -160,7 +163,12 @@ class ImageFactory
                 $imagePath = preg_replace('/\/catalog\/product\/cache\/[a-f0-9]{32}\//', '/', $imagePath);
 
 
-                $generatedImageUrl = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg';
+                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg';
+                if (@getimagesize($pixelbinImage)) {
+                    $generatedImageUrl = $pixelbinImage;
+                } else {
+                    $generatedImageUrl = $this->assetRepo->getUrl('Pixelbinio_Pixelbin::images/no-image-placeholder.png');
+                }
 
                 $imageBlock->setOriginalImageUrl($imageBlock->setImageUrl());
                 $imageBlock->setImageUrl($generatedImageUrl);
