@@ -139,15 +139,22 @@ class UploadImageToPixelBin extends Command
         while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
             $progressBar->advance();
             $uploadResponse = $this->uploadFileToPixelbin->importFiles($files, SyncType::TYPE_CLI);
-            $successCount[] = $uploadResponse['successCount'];
-            $errorCount[] = $uploadResponse['errorCount'];
+            if ($offset == 3) {
+                break;
+            }
+            if (!empty($uploadResponse['successCount'])) {
+                $successCount[] = $uploadResponse['successCount'];
+            }
+            if (!empty($uploadResponse['errorCount'])) {
+                $errorCount[] = $uploadResponse['errorCount'];
+            }
             $offset += count($files);
         }
         $progressBar->finish();
         unset($files);
         $output->writeln("");
         $output->writeln("Successfully uploaded file count is => ".count($successCount));
-        $output->writeln("<error>Failed to uploaded file count is".count($errorCount)."</error>");
+        $output->writeln("<error>Failed to uploaded file count is => ".count($errorCount)."</error>");
     }
 
 

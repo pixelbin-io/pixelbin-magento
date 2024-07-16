@@ -138,12 +138,13 @@ class UploadFileToPixelbin extends AbstractHelper
      */
     public function uploadFile(array $file, string $syncType): array
     {
+        $this->helperData->logData("file data => ".json_encode($file));
         try {
             $pixelbin = $this->getPixelbinObj();
             $result = $pixelbin->assets->fileUpload(
                 fopen($file["absolute_path"], "r"),
                 $file["path_folder"],
-                $file["filename"],
+                $file["file_name"],
                 AccessEnum::PUBLIC_READ,
                 $file["tags"] ?? [],
                 null,
@@ -217,12 +218,15 @@ class UploadFileToPixelbin extends AbstractHelper
         $errorCounts = [];
         foreach ($files as $file) {
             try {
+                unset($file["content"]);
                 if ($file["filename"] == "LICENSE.txt") {
                     continue;
                 }
+                $pathInfo = $this->fileIo->getPathInfo($file["filename"]);
+                $file["file_name"] = $pathInfo["filename"];
                 $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
                 $syncCollection = $this->pixelbinSyncCollectionFactory->create()
-                    ->addFieldToFilter(PixelbinSynchronisationInterface::KEY_IMAGE_PATH);
+                    ->addFieldToFilter(PixelbinSynchronisationInterface::KEY_IMAGE_PATH, $fileName);
                 if ($syncCollection->getSize() > 0) {
                     continue;
                 }
@@ -246,7 +250,7 @@ class UploadFileToPixelbin extends AbstractHelper
             "success" => $success,
             "successCount" => $successCounts,
             "errors" => $error,
-            "errorCount`" => $errorCounts,
+            "errorCount" => $errorCounts,
         ];
     }
 }
