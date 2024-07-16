@@ -26,7 +26,7 @@ class AfterGetItemData
     {
         try {
             if ($result['product_id'] > 0) {
-                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg';
+                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/catalog/product/w/t/wt09-yellow_main_1.jpg.jpg';
                 if (@getimagesize($pixelbinImage)) {
                     $image = $pixelbinImage;
                 } else {

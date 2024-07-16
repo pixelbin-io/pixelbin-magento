@@ -58,13 +58,9 @@
         <plugin name="after_get_image_url_plugin" type="Pixelbinio\Pixelbin\Plugin\AfterGetImageUrl"/>
     </type>
 
-    <type name="Magento\Catalog\Block\Product\View\Gallery">
+    <!-- <type name="Magento\Catalog\Block\Product\View\Gallery">
         <plugin name="add_images_to_gallery" type="Pixelbinio\Pixelbin\Plugin\AddImagesToGalleryBlock" />
     </type>
-
-    <!-- <type name="Magento\Catalog\Block\Product\AbstractProduct">
-        <plugin name="after_get_image_plugin" type="Pixelbinio\Pixelbin\Plugin\AfterGetImage"/>
-    </type> -->
 
     <type name="Magento\Checkout\CustomerData\AbstractItem">
         <plugin name="minicart_after_get_itemdata_plugin" type="Pixelbinio\Pixelbin\Plugin\Minicart\AfterGetItemData"/>
@@ -76,5 +72,5 @@
     
     <type name="Magento\Catalog\Block\Product\ImageFactory">
         <plugin name="pixelbin_plugin_catalog_block_product_imagefactory" type="Pixelbinio\Pixelbin\Plugin\Catalog\Block\Product\ImageFactory"/>
-    </type>
+    </type> -->
 </config>
