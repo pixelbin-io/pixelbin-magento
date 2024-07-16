@@ -146,9 +146,7 @@ class ImageFactory
 
         $this->imageParamsBuilder = $this->objectManager->get('\Magento\Catalog\Model\Product\Image\ParamsBuilder');
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
-        $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        $mediaUrl = $this->helperData->getMediaUrl();
 
         try {
             if (strpos($imageBlock->getImageUrl(), $mediaUrl . 'catalog/product') === 0) {
@@ -159,16 +157,23 @@ class ImageFactory
                 );
                 $imageMiscParams = $this->imageParamsBuilder->build($viewImageConfig);
 
-                $imagePath = preg_replace('/^' . preg_quote($mediaUrl, '/') . '/', '/', $imageBlock->getImageUrl());
-                $imagePath = preg_replace('/\/catalog\/product\/cache\/[a-f0-9]{32}\//', '/', $imagePath);
+                //$imagePath = preg_replace('/^' . preg_quote($mediaUrl, '/') . '/', '/', $imageBlock->getImageUrl());
+                //$imagePath = preg_replace('/\/catalog\/product\/cache\/[a-f0-9]{32}\//', '/', $imagePath);
+
+               
+                $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $url);
+
+                $imagePathArray = explode('media', $imagePath);
+
+                $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
 
                 $this->logger->info("Image URL => ", $imagePath);
 
-                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/catalog/product/w/t/wt09-yellow_main_1.jpg.jpg';
+                
                 if (@getimagesize($pixelbinImage)) {
                     $generatedImageUrl = $pixelbinImage;
                 } else {
-                    $generatedImageUrl = $this->assetRepo->getUrl('Pixelbinio_Pixelbin::images/no-image-placeholder.png');
+                    $generatedImageUrl = $this->helperData->getDefaultImage();
                 }
 
                 $imageBlock->setOriginalImageUrl($imageBlock->setImageUrl());

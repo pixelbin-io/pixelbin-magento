@@ -32,22 +32,28 @@ class AfterGetImageUrl
      */
     public function after__call(Image $image, $result, $method)
     {
+        if (!$this->helperData->isModuleEnabled()) {
+            return $result;
+        }
+
         try {
             if ($method == 'getImageUrl' && $image->getProductId() > 0) {
 
-                $imagePath = preg_replace('/\/catalog\/product\/cache\/[a-f0-9]{32}\//', '/', $result);
+                $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $result);
 
-                $this->logger->info('Image URL- '.$imagePath);
+                $imagePathArray = explode('media', $imagePath);
 
-                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/catalog/product/w/t/wt09-yellow_main_1.jpg.jpg';
+                $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
+                
                 if (@getimagesize($pixelbinImage)) {
                     $result = $pixelbinImage;
                 } else {
-                    $result = $this->assetRepo->getUrl('Pixelbinio_Pixelbin::images/no-image-placeholder.png');
+                    $result = $this->helperData->getDefaultImage();
                 }
             }
         } catch (\Exception $e) {
         }
+        
         return $result;
     }
 

@@ -41,6 +41,8 @@ class Data extends AbstractHelper
     const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
 
+    const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
+
     const API_VERSION = "v2";
 
     /**
@@ -330,5 +332,15 @@ class Data extends AbstractHelper
                 $this->logger->info($message, $context);
                 break;
         }
+    }
+
+    public function getMediaUrl()
+    {
+        return $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+    }
+
+    public function getDefaultImage()
+    {
+        return $this->getMediaUrl() . 'pixel_bin/' . $this->getConfigValue(self::XML_PATH_SETUP_DEFAULT_IMAGE);
     }
 }

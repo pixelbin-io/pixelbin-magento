@@ -7,6 +7,8 @@ use Magento\Catalog\Helper\Image as CatalogImageHelper;
 use Magento\Catalog\Model\Product\Image\UrlBuilder as CatalogUrlBuilder;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\View\ConfigInterface;
+use Pixelbinio\Pixelbin\Logger\Logger;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class UrlBuilder
 {
@@ -65,6 +67,8 @@ class UrlBuilder
      */
     private $transformationModel;
 
+    protected $logger;
+    protected $helperData;
     protected $assetRepo;
 
     /**
@@ -78,10 +82,14 @@ class UrlBuilder
     public function __construct(
         ObjectManagerInterface $objectManager,
         ConfigInterface $presentationConfig,
+        Logger $logger,
+        HelperData $helperData,
         \Magento\Framework\View\Asset\Repository $assetRepo
     ) {
         $this->objectManager = $objectManager;
         $this->presentationConfig = $presentationConfig;
+        $this->logger = $logger;
+        $this->helperData = $helperData;
         $this->assetRepo = $assetRepo;
         $this->dimensions = null;
         $this->imageFile = null;
@@ -101,9 +109,9 @@ class UrlBuilder
     {
         $url = $proceed($baseFilePath, $imageDisplayArea);
 
-        // if (!$this->configuration->isEnabled()) {
-        //     return $url;
-        // }
+        if (!$this->helperData->isModuleEnabled()) {
+            return $url;
+        }
 
         if ($url === 'no_selection') {
             return $url;
@@ -129,16 +137,17 @@ class UrlBuilder
                 );
                 $imageMiscParams = $this->imageParamsBuilder->build($imageArguments);
 
-                $imagePath = preg_replace('/^' . preg_quote($mediaUrl, '/') . '/', '/', $url);
-                $imagePath = preg_replace('/\/catalog\/product\/cache\/[a-f0-9]{32}\//', '/', $imagePath);
+                $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $url);
+
+                $imagePathArray = explode('media', $imagePath);
+
+                $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
 
                 
-
-                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg';
                 if (@getimagesize($pixelbinImage)) {
                     $generatedImageUrl = $pixelbinImage;
                 } else {
-                    $generatedImageUrl = $this->assetRepo->getUrl('Pixelbinio_Pixelbin::images/no-image-placeholder.png');
+                    $generatedImageUrl = $this->helperData->getDefaultImage();
                 }
 
                 $url = $generatedImageUrl;

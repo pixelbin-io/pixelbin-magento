@@ -6,6 +6,8 @@ use Magento\Catalog\Block\Product\View\Gallery;
 use Magento\Framework\Data\Collection;
 use Magento\Framework\Data\CollectionFactory;
 use Magento\Framework\DataObject;
+use Pixelbinio\Pixelbin\Logger\Logger;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class AddImagesToGalleryBlock
 {
@@ -14,15 +16,22 @@ class AddImagesToGalleryBlock
      */
     protected $dataCollectionFactory;
 
+    protected $logger;
+    protected $helperData;
+
     /**
      * AddImagesToGalleryBlock constructor.
      *
      * @param CollectionFactory $dataCollectionFactory
      */
     public function __construct(
-        CollectionFactory $dataCollectionFactory
+        CollectionFactory $dataCollectionFactory,
+        Logger $logger,
+        HelperData $helperData
     ) {
         $this->dataCollectionFactory = $dataCollectionFactory;
+        $this->logger = $logger;
+        $this->helperData = $helperData;
     }
 
     /**
@@ -34,14 +43,25 @@ class AddImagesToGalleryBlock
      */
     public function afterGetGalleryImages(Gallery $subject, $images) {
         try {
-    $hasExternalImage = false;
-    // logic to get your external images url
+            $hasExternalImage = false;
+            // logic to get your external images url
             if (!$hasExternalImage) {
                 return $images;
             }
             $product = $subject->getProduct();
             $images = $this->dataCollectionFactory->create();
             $productName = $product->getName();
+
+            foreach($images as $image){
+                $this->logger->info("Image URL Gallery => ", $image->getUrl());
+            }
+
+            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $url);
+
+            $imagePathArray = explode('media', $imagePath);
+
+            $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original'.$imagePathArray[1];
+
             $externalImages = ["https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg"]; // Array of images
             foreach ($externalImages as $item) {
                 $imageId    = uniqid();
