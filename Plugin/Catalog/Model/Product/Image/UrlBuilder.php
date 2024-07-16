@@ -65,6 +65,8 @@ class UrlBuilder
      */
     private $transformationModel;
 
+    protected $assetRepo;
+
     /**
      * @param ObjectManagerInterface $objectManager
      * @param ConfigInterface        $presentationConfig
@@ -75,10 +77,12 @@ class UrlBuilder
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
-        ConfigInterface $presentationConfig
+        ConfigInterface $presentationConfig,
+        \Magento\Framework\View\Asset\Repository $assetRepo
     ) {
         $this->objectManager = $objectManager;
         $this->presentationConfig = $presentationConfig;
+        $this->assetRepo = $assetRepo;
         $this->dimensions = null;
         $this->imageFile = null;
         $this->keepFrame = true;
@@ -130,7 +134,12 @@ class UrlBuilder
 
                 
 
-                $generatedImageUrl = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg';
+                $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg';
+                if (@getimagesize($pixelbinImage)) {
+                    $generatedImageUrl = $pixelbinImage;
+                } else {
+                    $generatedImageUrl = $this->assetRepo->getUrl('Pixelbinio_Pixelbin::images/no-image-placeholder.png');
+                }
 
                 $url = $generatedImageUrl;
             }
