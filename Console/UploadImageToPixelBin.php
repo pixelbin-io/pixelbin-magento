@@ -139,9 +139,6 @@ class UploadImageToPixelBin extends Command
         while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
             $progressBar->advance();
             $uploadResponse = $this->uploadFileToPixelbin->importFiles($files, SyncType::TYPE_CLI);
-            if ($offset == 3) {
-                break;
-            }
             if (!empty($uploadResponse['successCount'])) {
                 $successCount[] = $uploadResponse['successCount'];
             }
