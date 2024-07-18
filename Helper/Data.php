@@ -33,12 +33,15 @@ use Pixelbinio\Pixelbin\Logger\Logger;
 class Data extends AbstractHelper
 {
     /* Get system config fields */
-    public const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
-    public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
-    public const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
-    public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
-    public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
-    public const API_VERSION = "v2";
+    const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
+    const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
+    const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
+    const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
+    const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
+    const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
+    const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
+    const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
+    const API_VERSION = "v2";
 
     /**
      * @var Curl
@@ -181,127 +184,27 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Get API host domain
+     * Check if Image Transformation enable
      *
-     * @param int|null $storeId
-     * @return string
+     * @param int $storeId
+     * @return mixed
      */
-    public function getApiHostDomain($storeId = null)
+    public function isImageTransformationEnabled($storeId = null)
     {
-        $host = '';
-        return ltrim($host, "https://");
+        return $this->getConfigValue(self::XML_PATH_AUTO_OPTIMISATION, $storeId);
     }
 
     /**
-     * @param $path
-     * @param $method
-     * @param $appToken
-     * @param $params
-     * @param $body
-     * @return array
+     * Get product custom transformation
+     *
+     * @param int $storeId
+     * @return mixed
      */
-    public function getSignature($path, $method, $appToken, $params, $body)
+    public function getProductCustomTransformation($storeId = null)
     {
-        $host = $this->getApiHostDomain();
-        $headers = [
-            ['Authorization' => "Bearer " . $appToken]
-        ];
-
-        $exclude_headers = [
-            'authorization' => true,
-            'connection' => true,
-            'x-amzn-trace-id' => true,
-            'user-agent' => true,
-            'expect' => true,
-            'presigned-expires' => true,
-            'range' => true
-        ];
-
-        $sign_query = false;
-
-        $fp_date = date('Ymd\This\Z');
-
-        $headers['x-ebg-date'] = $fp_date;
-
-        $kCredentials = "1234567"; //This is static key
-        $bodyHash = hash('sha256', $body);
-
-        //Generate canonical headers. Remember we want /\n after last parameter as well
-        $canheaders = [
-            'host:' . $host,
-            'x-ebg-date:' . $fp_date
-        ];
-        $canheadersnew = '';
-        foreach ($canheaders as $key => $value) {
-            $canheadersnew .= $value . "\n";
-        }
-
-        // Generate canonical request. We don't want /\n after last parameter
-        $canonicalReq = [
-            $method,
-            $path,
-            $params,
-            $canheadersnew,
-            'host;x-ebg-date',
-            $bodyHash,
-        ];
-        $canonicalReqnew = '';
-        foreach ($canonicalReq as $key => $value) {
-            $canonicalReqnew .= $value . "\n";
-        }
-        $canonicalReqnew = trim($canonicalReqnew);
-
-        //encode canonical request & add fp date parameter to one array. later on convert this array to string & remove \n after last element
-        $strTosign = [
-            date('Ymd\This\Z'),
-            hash('sha256', $canonicalReqnew),
-        ];
-
-        $strTosignnew = '';
-        foreach ($strTosign as $key => $value) {
-            $strTosignnew .= $value . "\n";
-        }
-        $strTosignnew = trim($strTosignnew);
-
-        // Final signature generation
-        $signature = 'v1:' . hash_hmac('sha256', $strTosignnew, $kCredentials);
-
-        $result['ebg-date'] = $fp_date;
-        $result['ebg-signature'] = $signature;
-
-        return $result;
+        return $this->getConfigValue(self::XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION, $storeId);
     }
-
-    /**
-     * @return void
-     */
-    public function uploadFileToPixelbin()
-    {
-        $appToken = $this->getAppApiSecret($storeId);
-        $host = $this->getApiHostDomain();
-        $path = "/service/platform/assets/v1.0/upload/direct";
-        $method = 'POST';
-
-        $body = '';
-        $params = '';
-        $apiUrl = $host . $path . '?' . $params;
-
-        $this->logger->info("Api URL: " . $apiUrl);
-
-        $signData = $this->getSignature($path, $method, $appToken, $params, $body);
-
-        $authorization = "Bearer " . $appToken;
-
-        $this->curl->addHeader("Authorization", $authorization);
-        $this->curl->addHeader("x-ebg-date", $signData['fp-date']);
-        $this->curl->addHeader("x-ebg-signature", $signData['fp-signature']);
-        $this->curl->setOption(CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0');
-        $this->curl->post($apiUrl, $body);
-        $response = $this->curl->getBody();
-
-        $this->logger->info("Api URL response: " . json_encode($response));
-    }
-
+    
     /**
      * Log data in logger (/var/log/pixelbin.log)
      *
@@ -326,5 +229,38 @@ class Data extends AbstractHelper
                 $this->logger->info($message, $context);
                 break;
         }
+    }
+
+    public function getMediaUrl()
+    {
+        return $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+    }
+
+    public function getDefaultImage()
+    {
+        return $this->getMediaUrl() . 'pixel_bin/' . $this->getConfigValue(self::XML_PATH_SETUP_DEFAULT_IMAGE);
+    }
+
+    public function replaceProductImageUrlWithPixelbin($imageUrl)
+    {
+        $pixelbinImage = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+        
+        $storeId = $this->getStoreId();
+        
+        if ($this->isImageTransformationEnabled($storeId)) {
+            $productTransformation = $this->getProductCustomTransformation($storeId);        
+            $transformation = '/'.$productTransformation.'/';
+            $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+        }
+
+        if (isset($pixelbinImage)) {
+            $result = $pixelbinImage;
+        } elseif(strpos('Magento_Catalog/images/product/placeholder/thumbnail.jpg', $imageUrl) > 0) {
+            $result = $this->getDefaultImage();
+        } else {
+            $result = $this->getDefaultImage();
+        }
+
+        return $result;
     }
 }
