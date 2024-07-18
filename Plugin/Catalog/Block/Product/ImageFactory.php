@@ -153,7 +153,9 @@ class ImageFactory
         $imageId = null,
         $attributes = null
     ) {
+        //@codingStandardsIgnoreStart
         $imageBlock = call_user_func_array($proceed, array_slice(func_get_args(), 2));
+        //@codingStandardsIgnoreEnd
 
         if (!$this->helperData->isModuleEnabled()) {
             return $imageBlock;

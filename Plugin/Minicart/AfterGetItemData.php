@@ -18,7 +18,8 @@ use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class AfterGetItemData
-{    
+{
+
     /**
      * @var Logger
      */
@@ -36,6 +37,10 @@ class AfterGetItemData
 
     /**
      * AfterGetImageData constructor.
+     *
+     * @param Logger $logger
+     * @param HelperData $helperData
+     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         Logger $logger,
@@ -48,16 +53,17 @@ class AfterGetItemData
     }
 
     /**
+     * After get item data
+     *
      * @param AbstractItem $item
-     * @param $result
-     * @return mixed
+     * @param array $result
+     * @return array
      */
     public function afterGetItemData(AbstractItem $item, $result)
     {
         if (!$this->helperData->isModuleEnabled()) {
             return $result;
         }
-
         try {
             if ($result['product_id'] > 0) {
                 //$this->logger->info("Image URL Minicart - " . json_encode($result));
@@ -68,8 +74,6 @@ class AfterGetItemData
         } catch (\Exception $e) {
             $this->logger->info("Image URL Minicart error - " . $e->getMessage());
         }
-
         return $result;
     }
-
 }

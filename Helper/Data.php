@@ -33,15 +33,16 @@ use Pixelbinio\Pixelbin\Logger\Logger;
 class Data extends AbstractHelper
 {
     /* Get system config fields */
-    const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
-    const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
-    const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
-    const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
-    const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
-    const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
-    const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
-    const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
-    const API_VERSION = "v2";
+    public const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
+    public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
+    public const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
+    public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
+    public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
+    public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
+    public const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
+    //@codingStandardsIgnoreLine
+    public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
+    public const API_VERSION = "v2";
 
     /**
      * @var Curl
@@ -204,7 +205,7 @@ class Data extends AbstractHelper
     {
         return $this->getConfigValue(self::XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION, $storeId);
     }
-    
+
     /**
      * Log data in logger (/var/log/pixelbin.log)
      *
@@ -231,31 +232,48 @@ class Data extends AbstractHelper
         }
     }
 
+    /**
+     * Get media url
+     *
+     * @return string
+     * @throws NoSuchEntityException
+     */
     public function getMediaUrl()
     {
         return $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
     }
 
+    /**
+     * Get default image
+     *
+     * @return string
+     * @throws NoSuchEntityException
+     */
     public function getDefaultImage()
     {
         return $this->getMediaUrl() . 'pixel_bin/' . $this->getConfigValue(self::XML_PATH_SETUP_DEFAULT_IMAGE);
     }
 
+    /**
+     * Replace product image url with pixelbin url
+     *
+     * @param string $imageUrl
+     * @return array|string|string[]
+     * @throws NoSuchEntityException
+     */
     public function replaceProductImageUrlWithPixelbin($imageUrl)
     {
         $pixelbinImage = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-        
         $storeId = $this->getStoreId();
-        
         if ($this->isImageTransformationEnabled($storeId)) {
-            $productTransformation = $this->getProductCustomTransformation($storeId);        
+            $productTransformation = $this->getProductCustomTransformation($storeId);
             $transformation = '/'.$productTransformation.'/';
             $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
         }
 
         if (isset($pixelbinImage)) {
             $result = $pixelbinImage;
-        } elseif(strpos('Magento_Catalog/images/product/placeholder/thumbnail.jpg', $imageUrl) > 0) {
+        } elseif (strpos('Magento_Catalog/images/product/placeholder/thumbnail.jpg', $imageUrl) !== false) {
             $result = $this->getDefaultImage();
         } else {
             $result = $this->getDefaultImage();
