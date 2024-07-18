@@ -89,7 +89,6 @@ class ImageFactory
      * @var HelperData
      */
     protected $helperData;
-    protected $assetRepo;
 
     /**
      * @var \Magento\Framework\View\Asset\Repository
