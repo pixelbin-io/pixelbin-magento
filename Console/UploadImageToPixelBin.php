@@ -55,8 +55,7 @@ class UploadImageToPixelBin extends Command
         StorageModel $storageModel,
         UploadFileToPixelbin $uploadFileToPixelbin,
         ?string $name = null
-    )
-    {
+    ) {
         $this->helperData = $helperData;
         $this->storageModel = $storageModel;
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
@@ -153,8 +152,6 @@ class UploadImageToPixelBin extends Command
         $output->writeln("Successfully uploaded file count is => ".count($successCount));
         $output->writeln("<error>Failed to uploaded file count is => ".count($errorCount)."</error>");
     }
-
-
 
     /**
      * Get TotalSteps

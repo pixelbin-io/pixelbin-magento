@@ -22,11 +22,10 @@ use Magento\Framework\Data\Collection\EntityFactoryInterface;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
-use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
-use Magento\Store\Model\StoreManagerInterface;
 use Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Collection as PixelbinImageSyncLogsCollection;
 use Psr\Log\LoggerInterface;
 
+//@codingStandardsIgnoreStart
 class Collection extends PixelbinImageSyncLogsCollection implements SearchInterface
 {
     /**
@@ -34,6 +33,16 @@ class Collection extends PixelbinImageSyncLogsCollection implements SearchInterf
      */
     private $aggregations;
 
+    /**
+     * PixelbinImageSyncLogs construct
+     *
+     * @param EntityFactoryInterface $entityFactory
+     * @param LoggerInterface $logger
+     * @param FetchStrategyInterface $fetchStrategy
+     * @param ManagerInterface $eventManager
+     * @param AdapterInterface|null $connection
+     * @param AbstractDb|null $resource
+     */
     public function __construct(
         \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
         \Psr\Log\LoggerInterface $logger,
