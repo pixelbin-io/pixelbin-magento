@@ -25,7 +25,8 @@ class Handler extends BaseHandler
     protected $loggerType = Logger::INFO;
 
     /**
-     * File name
+     * File log name
+     *
      * @var string
      */
     protected $fileName = '/var/log/pixelbin.log';

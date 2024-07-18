@@ -34,17 +34,13 @@ class Data extends AbstractHelper
 {
     /* Get system config fields */
     const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
-
     const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
     const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
     const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
-
     const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
-
     const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
     const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
-
     const API_VERSION = "v2";
 
     /**
