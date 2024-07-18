@@ -1,4 +1,15 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Model\Product\Image;
 
@@ -67,17 +78,27 @@ class UrlBuilder
      */
     private $transformationModel;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
+
+    /**
+     * @var HelperData
+     */
     protected $helperData;
+
+    /**
+     * @var \Magento\Framework\View\Asset\Repository
+     */
     protected $assetRepo;
 
     /**
      * @param ObjectManagerInterface $objectManager
-     * @param ConfigInterface        $presentationConfig
-     * @param CloudinaryImageFactory $cloudinaryImageFactory
-     * @param UrlGenerator           $urlGenerator
-     * @param ConfigurationInterface $configuration
-     * @param TransformationFactory  $transformationFactory
+     * @param ConfigInterface $presentationConfig
+     * @param Logger $logger
+     * @param HelperData $helperData
+     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -105,8 +126,12 @@ class UrlBuilder
      * @param  string            $imageDisplayArea
      * @return string
      */
-    public function aroundGetUrl(CatalogUrlBuilder $catalogUrlBuilder, callable $proceed, string $baseFilePath, string $imageDisplayArea)
-    {
+    public function aroundGetUrl(
+        CatalogUrlBuilder $catalogUrlBuilder,
+        callable $proceed,
+        string $baseFilePath,
+        string $imageDisplayArea
+    ) {
         $url = $proceed($baseFilePath, $imageDisplayArea);
 
         if (!$this->helperData->isModuleEnabled()) {
@@ -117,16 +142,7 @@ class UrlBuilder
             return $url;
         }
 
-        if (class_exists('\Magento\Catalog\Model\Product\Image\ParamsBuilder')) {
-            $this->imageParamsBuilder = $this->objectManager->get('\Magento\Catalog\Model\Product\Image\ParamsBuilder');
-        } else {
-            //Skip on Magento versions prior to 2.3
-            return $url;
-        }
-
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
-        $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        $mediaUrl = $this->helperData->getMediaUrl();
 
         try {
             if (strpos($url, $mediaUrl . 'catalog/product') === 0) {
@@ -135,22 +151,8 @@ class UrlBuilder
                     CatalogImageHelper::MEDIA_TYPE_CONFIG_NODE,
                     $imageDisplayArea
                 );
-                $imageMiscParams = $this->imageParamsBuilder->build($imageArguments);
 
-                $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $url);
-
-                $imagePathArray = explode('media', $imagePath);
-
-                $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
-
-                
-                if (@getimagesize($pixelbinImage)) {
-                    $generatedImageUrl = $pixelbinImage;
-                } else {
-                    $generatedImageUrl = $this->helperData->getDefaultImage();
-                }
-
-                $url = $generatedImageUrl;
+                $url = $this->helperData->replaceProductImageUrlWithPixelbin($url);
             }
         } catch (\Exception $e) {
             $url = $proceed($baseFilePath, $imageDisplayArea);
@@ -158,5 +160,4 @@ class UrlBuilder
 
         return $url;
     }
-
 }

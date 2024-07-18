@@ -1,4 +1,15 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin;
 
@@ -8,24 +19,39 @@ use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class AfterGetImage
 {
+    /**
+     * @var Logger
+     */
     protected $logger;
+
+    /**
+     * @var HelperData
+     */
     protected $helperData;
+
+    /**
+     * @var \Magento\Framework\View\Asset\Repository
+     */
     protected $assetRepo;
 
     /**
-     * AfterGetImage constructor.
+     * @param Logger $logger
+     * @param HelperData $helperData
+     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         Logger $logger,
         HelperData $helperData,
         \Magento\Framework\View\Asset\Repository $assetRepo
-    ){
+    ) {
         $this->logger = $logger;
         $this->helperData = $helperData;
         $this->assetRepo = $assetRepo;
     }
 
     /**
+     * After Plugin to change Image URL in PDP page
+     *
      * @param AbstractProduct $subject
      * @param $result
      * @param $product
@@ -33,28 +59,27 @@ class AfterGetImage
      * @param $attributes
      * @return mixed
      */
-    public function afterGetImage(AbstractProduct $subject, $result, $product, $imageId, $attributes) 
+    public function afterGetImage(AbstractProduct $subject, $result, $product, $imageId, $attributes)
     {
         if (!$this->helperData->isModuleEnabled()) {
             return $result;
         }
-        
+
         try {
             if ($product) {
                     $image = [];
                     $imageUrl = $product->getProductUrl();
-                    $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-
-                    $imagePathArray = explode('media', $imagePath);
-
-                    $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
+                    $pixelbinImage = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
                     
-                    if (@getimagesize($pixelbinImage)) {
+                    // $imagePathArray = explode('media', $imagePath);
+                    // $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
+
+                    if (isset($pixelbinImage)) {
                         $image['image_url'] = $pixelbinImage;
                     } else {
-                        //$image['image_url'] = $this->assetRepo->getUrl('Pixelbinio_Pixelbin::images/no-image-placeholder.png');
                         $image['image_url'] = $this->helperData->getDefaultImage();
                     }
+
                     $image['width'] = "240";
                     $image['height'] = "300";
                     $image['label'] = $product->getName();
@@ -68,6 +93,7 @@ class AfterGetImage
                 }
             }
         } catch (\Exception $e) {
+            $this->logger->info("Image URL PLP error" . $e->getMessage());
         }
         return $result;
     }

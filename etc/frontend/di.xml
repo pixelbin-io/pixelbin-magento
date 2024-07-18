@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Catalog\Block\Product\Image">
+        <plugin name="after_get_image_url_plugin" type="Pixelbinio\Pixelbin\Plugin\AfterGetImageUrl"/>
+    </type>
+
+    <type name="Magento\Catalog\Block\Product\View\Gallery">
+        <plugin name="add_images_to_gallery" type="Pixelbinio\Pixelbin\Plugin\AddImagesToGalleryBlock" />
+    </type>
+
+    <type name="Magento\Catalog\Model\Product\Image\UrlBuilder">
+        <plugin name="pixelbin_plugin_catalog_model_product_image_urlbuilder" type="Pixelbinio\Pixelbin\Plugin\Catalog\Model\Product\Image\UrlBuilder"/>
+    </type>
+
+    <type name="Magento\Catalog\Block\Product\ImageFactory">
+        <plugin name="pixelbin_plugin_catalog_block_product_imagefactory" type="Pixelbinio\Pixelbin\Plugin\Catalog\Block\Product\ImageFactory"/>
+    </type>
+
+    <type name="Magento\Checkout\CustomerData\AbstractItem">
+        <plugin name="minicart_after_get_itemdata_plugin" type="Pixelbinio\Pixelbin\Plugin\Minicart\AfterGetItemData" sortOrder="1"/>
+    </type>
+
+    <type name="Magento\Catalog\Model\View\Asset\Placeholder">
+        <plugin name="placeholder_image_change" type="Pixelbinio\Pixelbin\Plugin\AfterPlaceholderLoad" sortOrder="110"/>
+    </type>
+
+</config>

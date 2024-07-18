@@ -1,4 +1,15 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin;
 
@@ -16,13 +27,20 @@ class AddImagesToGalleryBlock
      */
     protected $dataCollectionFactory;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
+
+    /**
+     * @var HelperData
+     */
     protected $helperData;
 
     /**
-     * AddImagesToGalleryBlock constructor.
-     *
      * @param CollectionFactory $dataCollectionFactory
+     * @param Logger $logger
+     * @param HelperData $helperData
      */
     public function __construct(
         CollectionFactory $dataCollectionFactory,
@@ -41,7 +59,8 @@ class AddImagesToGalleryBlock
      * @param Collection|null $images
      * @return Collection|null
      */
-    public function afterGetGalleryImages(Gallery $subject, $images) {
+    public function afterGetGalleryImages(Gallery $subject, $images)
+    {
         try {
             $hasExternalImage = false;
             // logic to get your external images url
@@ -52,7 +71,7 @@ class AddImagesToGalleryBlock
             $images = $this->dataCollectionFactory->create();
             $productName = $product->getName();
 
-            foreach($images as $image){
+            foreach ($images as $image) {
                 $this->logger->info("Image URL Gallery => ", $image->getUrl());
             }
 
@@ -62,7 +81,7 @@ class AddImagesToGalleryBlock
 
             $pixelbinImage = 'https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original'.$imagePathArray[1];
 
-            $externalImages = ["https://cdn.pixelbinz0.de/v2/mute-sun-33a96d/original/__playground/playground-default.jpeg"]; // Array of images
+            $externalImages = []; // Array of images
             foreach ($externalImages as $item) {
                 $imageId    = uniqid();
                 $small      = $item;
@@ -91,6 +110,5 @@ class AddImagesToGalleryBlock
         } catch (\Exception $e) {
             return $images;
         }
-
     }
 }

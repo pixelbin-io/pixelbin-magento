@@ -1,4 +1,15 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Block\Product;
 
@@ -69,17 +80,27 @@ class ImageFactory
      */
     private $transformationModel;
 
+    /**
+     * @var Logger
+     */
     protected $logger;
+
+    /**
+     * @var HelperData
+     */
     protected $helperData;
+
+    /**
+     * @var \Magento\Framework\View\Asset\Repository
+     */
     protected $assetRepo;
 
     /**
      * @param ObjectManagerInterface $objectManager
-     * @param ConfigInterface        $presentationConfig
-     * @param CloudinaryImageFactory $cloudinaryImageFactory
-     * @param UrlGenerator           $urlGenerator
-     * @param ConfigurationInterface $configuration
-     * @param TransformationFactory  $transformationFactory
+     * @param ConfigInterface $presentationConfig
+     * @param Logger $logger
+     * @param HelperData $helperData
+     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
@@ -125,8 +146,13 @@ class ImageFactory
      * @param  array|null          $attributes
      * @return ImageBlock
      */
-    public function aroundCreate(CatalogImageFactory $catalogImageFactory, callable $proceed, $product = null, $imageId = null, $attributes = null)
-    {
+    public function aroundCreate(
+        CatalogImageFactory $catalogImageFactory,
+        callable $proceed,
+        $product = null,
+        $imageId = null,
+        $attributes = null
+    ) {
         $imageBlock = call_user_func_array($proceed, array_slice(func_get_args(), 2));
 
         if (!$this->helperData->isModuleEnabled()) {
@@ -137,14 +163,10 @@ class ImageFactory
             return $imageBlock;
         }
 
-        
-
         //Skip on Magento versions prior to 2.3
-        if (is_array($product) || !class_exists('\Magento\Catalog\Model\Product\Image\ParamsBuilder')) {
+        if (is_array($product)) {
             return $imageBlock;
         }
-
-        $this->imageParamsBuilder = $this->objectManager->get('\Magento\Catalog\Model\Product\Image\ParamsBuilder');
 
         $mediaUrl = $this->helperData->getMediaUrl();
 
@@ -155,26 +177,8 @@ class ImageFactory
                     CatalogImageHelper::MEDIA_TYPE_CONFIG_NODE,
                     $imageId
                 );
-                $imageMiscParams = $this->imageParamsBuilder->build($viewImageConfig);
 
-                //$imagePath = preg_replace('/^' . preg_quote($mediaUrl, '/') . '/', '/', $imageBlock->getImageUrl());
-                //$imagePath = preg_replace('/\/catalog\/product\/cache\/[a-f0-9]{32}\//', '/', $imagePath);
-
-               
-                $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $url);
-
-                $imagePathArray = explode('media', $imagePath);
-
-                $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
-
-                $this->logger->info("Image URL => ", $imagePath);
-
-                
-                if (@getimagesize($pixelbinImage)) {
-                    $generatedImageUrl = $pixelbinImage;
-                } else {
-                    $generatedImageUrl = $this->helperData->getDefaultImage();
-                }
+                $generatedImageUrl = $this->helperData->replaceProductImageUrlWithPixelbin($imageBlock->getImageUrl());
 
                 $imageBlock->setOriginalImageUrl($imageBlock->setImageUrl());
                 $imageBlock->setImageUrl($generatedImageUrl);
@@ -187,6 +191,4 @@ class ImageFactory
 
         return $imageBlock;
     }
-
-
 }
