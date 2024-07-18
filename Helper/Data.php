@@ -30,18 +30,15 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\App\ResourceConnection;
 use Pixelbinio\Pixelbin\Logger\Logger;
 
-
 class Data extends AbstractHelper
 {
     /* Get system config fields */
-    const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
-
-    const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
-    const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
-    const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
-    const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
-
-    const API_VERSION = "v2";
+    public const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
+    public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
+    public const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
+    public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
+    public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
+    public const API_VERSION = "v2";
 
     /**
      * @var Curl
@@ -92,8 +89,7 @@ class Data extends AbstractHelper
         Logger                $logger,
         StoreManagerInterface $storeManager,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->curl = $curl;
         $this->curlFactory = $curlFactory;
@@ -187,7 +183,7 @@ class Data extends AbstractHelper
     /**
      * Get API host domain
      *
-     * @param $storeId
+     * @param int|null $storeId
      * @return string
      */
     public function getApiHostDomain($storeId = null)

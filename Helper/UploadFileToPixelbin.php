@@ -23,10 +23,12 @@ use Magento\Framework\Filesystem\Io\File as FileIo;
 use Magento\Framework\Filesystem;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
+use Pixelbinio\Pixelbin\Model\Config\Source\SyncType;
 use Pixelbinio\Pixelbin\Model\PixelbinImageSyncLogsFactory;
 use Pixelbinio\Pixelbin\Model\PixelbinSynchronisationFactory;
 use Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation\CollectionFactory as PixelbinSyncCollectionFactory;
 use Pixelbinio\Pixelbin\Api\Data\PixelbinImageSyncLogsInterface;
+use Magento\Framework\Filesystem\DriverInterface;
 
 class UploadFileToPixelbin extends AbstractHelper
 {
@@ -61,6 +63,11 @@ class UploadFileToPixelbin extends AbstractHelper
     protected $pixelbinSynchronisationFactory;
 
     /**
+     * @var DriverInterface
+     */
+    protected $driver;
+
+    /**
      * Cache key for media directory absolute path
      *
      * @var string
@@ -81,6 +88,7 @@ class UploadFileToPixelbin extends AbstractHelper
      * @param Data $helperData
      * @param FileIo $fileIo
      * @param Filesystem $filesystem
+     * @param DriverInterface $driver
      * @param PixelbinImageSyncLogsFactory $pixelbinImageSyncLogsFactory
      * @param PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory
      * @param PixelbinSynchronisationFactory $pixelbinSynchronisationFactory
@@ -90,17 +98,19 @@ class UploadFileToPixelbin extends AbstractHelper
         Data                           $helperData,
         FileIo                         $fileIo,
         Filesystem                     $filesystem,
+        DriverInterface                $driver,
         PixelbinImageSyncLogsFactory   $pixelbinImageSyncLogsFactory,
         PixelbinSyncCollectionFactory  $pixelbinSyncCollectionFactory,
         PixelbinSynchronisationFactory $pixelbinSynchronisationFactory
-    )
-    {
+    ) {
         $this->helperData = $helperData;
         $this->fileIo = $fileIo;
         $this->filesystem = $filesystem;
+        $this->driver = $driver;
         $this->pixelbinImageSyncLogsFactory = $pixelbinImageSyncLogsFactory;
         $this->pixelbinSyncCollectionFactory = $pixelbinSyncCollectionFactory;
         $this->pixelbinSynchronisationFactory = $pixelbinSynchronisationFactory;
+
         parent::__construct($context);
     }
 
@@ -142,7 +152,7 @@ class UploadFileToPixelbin extends AbstractHelper
         try {
             $pixelbin = $this->getPixelbinObj();
             $result = $pixelbin->assets->fileUpload(
-                fopen($file["absolute_path"], "r"),
+                $this->driver->fileOpen($file["absolute_path"], "r"),
                 $file["path_folder"],
                 $file["file_name"],
                 AccessEnum::PUBLIC_READ,
@@ -252,5 +262,31 @@ class UploadFileToPixelbin extends AbstractHelper
             "errors" => $error,
             "errorCount" => $errorCounts,
         ];
+    }
+
+    /**
+     * Upload catalog image to pixelbin
+     *
+     * @param array $file
+     * @return bool
+     */
+    public function catalogUploadFileSync(array $file): bool
+    {
+        try {
+            $file["absolute_path"] = $file["path"];
+            $fileName = "catalog/product".$file["file"];
+            $filePathArr = explode("/", $fileName);
+            array_pop($filePathArr);
+            $file["path_folder"] = implode('/', $filePathArr);
+            $file["full_path"] = $fileName;
+            $pathInfo = $this->fileIo->getPathInfo($file["file"]);
+            $file["file_name"] = $pathInfo["filename"];
+            $file["filename"] = $pathInfo["basename"];
+            $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
+            $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
+        } catch (\Exception $ex) {
+            $this->helperData->logData("file upload exception here => " . $ex->getMessage());
+        }
+        return true;
     }
 }

@@ -18,9 +18,22 @@ use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class PushImagesToPixelbin
 {
+    /**
+     * @var Logger
+     */
     protected $_logger;
+
+    /**
+     * @var HelperData
+     */
     protected $_helperData;
 
+    /**
+     * PushImagesToPixelbin construct
+     *
+     * @param Logger $logger
+     * @param HelperData $helperData
+     */
     public function __construct(
         Logger $logger,
         HelperData $helperData,
@@ -29,6 +42,11 @@ class PushImagesToPixelbin
         $this->_helperData = $helperData;
     }
 
+    /**
+     * PushImagesToPixelbin execute
+     *
+     * @return void
+     */
     public function execute()
     {
         $log_data = $result = "";
@@ -42,6 +60,4 @@ class PushImagesToPixelbin
 
         $this->_logger->info($response);
     }
-
-
 }
