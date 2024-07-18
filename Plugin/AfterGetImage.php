@@ -14,8 +14,10 @@
 namespace Pixelbinio\Pixelbin\Plugin;
 
 use Magento\Catalog\Block\Product\AbstractProduct;
+use Magento\Framework\View\Asset\Repository;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Magento\Catalog\Model\Product;
 
 class AfterGetImage
 {
@@ -30,19 +32,19 @@ class AfterGetImage
     protected $helperData;
 
     /**
-     * @var \Magento\Framework\View\Asset\Repository
+     * @var Repository
      */
     protected $assetRepo;
 
     /**
      * @param Logger $logger
      * @param HelperData $helperData
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo
+     * @param Repository $assetRepo
      */
     public function __construct(
         Logger $logger,
         HelperData $helperData,
-        \Magento\Framework\View\Asset\Repository $assetRepo
+        Repository $assetRepo
     ) {
         $this->logger = $logger;
         $this->helperData = $helperData;
@@ -53,11 +55,11 @@ class AfterGetImage
      * After Plugin to change Image URL in PDP page
      *
      * @param AbstractProduct $subject
-     * @param $result
-     * @param $product
-     * @param $imageId
-     * @param $attributes
-     * @return mixed
+     * @param object $result
+     * @param Product $product
+     * @param int $imageId
+     * @param array $attributes
+     * @return object
      */
     public function afterGetImage(AbstractProduct $subject, $result, $product, $imageId, $attributes)
     {
@@ -70,15 +72,15 @@ class AfterGetImage
                     $image = [];
                     $imageUrl = $product->getProductUrl();
                     $pixelbinImage = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-                    
+
                     // $imagePathArray = explode('media', $imagePath);
                     // $pixelbinImage = $this->helperData->getAppZone().$imagePathArray[1];
 
-                    if (isset($pixelbinImage)) {
-                        $image['image_url'] = $pixelbinImage;
-                    } else {
-                        $image['image_url'] = $this->helperData->getDefaultImage();
-                    }
+                if (isset($pixelbinImage)) {
+                    $image['image_url'] = $pixelbinImage;
+                } else {
+                    $image['image_url'] = $this->helperData->getDefaultImage();
+                }
 
                     $image['width'] = "240";
                     $image['height'] = "300";

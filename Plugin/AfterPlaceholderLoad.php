@@ -1,11 +1,22 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin;
 
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
-class AfterPlaceholderLoad 
+class AfterPlaceholderLoad
 {
     /**
      * @var Logger
@@ -24,6 +35,10 @@ class AfterPlaceholderLoad
 
     /**
      * AfterGetImageData constructor.
+     *
+     * @param Logger $logger
+     * @param HelperData $helperData
+     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         Logger $logger,
@@ -36,12 +51,15 @@ class AfterPlaceholderLoad
     }
 
     /**
+     * After get url
+     *
      * @param \Magento\Catalog\Model\View\Asset\Placeholder $subject
-     * @param $result
+     * @param string $result
      * @return string
      */
     public function afterGetUrl(
-        \Magento\Catalog\Model\View\Asset\Placeholder $subject, $result
+        \Magento\Catalog\Model\View\Asset\Placeholder $subject,
+        $result
     ) {
         if (!$this->helperData->isModuleEnabled()) {
             return $result;

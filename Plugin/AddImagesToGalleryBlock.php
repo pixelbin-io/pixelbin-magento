@@ -53,7 +53,7 @@ class AddImagesToGalleryBlock
     }
 
     /**
-     * afterGalleryImages Plugin to change images and use external images stored in custom attribute
+     * AfterGalleryImages Plugin to change images and use external images stored in custom attribute
      *
      * @param Gallery $subject
      * @param Collection|null $images
@@ -63,7 +63,6 @@ class AddImagesToGalleryBlock
     {
         try {
             $hasExternalImage = false;
-            // logic to get your external images url
             if (!$hasExternalImage) {
                 return $images;
             }

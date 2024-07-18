@@ -53,8 +53,10 @@ class AfterGetImageUrl
      * After Plugin to change Image Url on Call method for PDP page
      *
      * @param Image $image
-     * @param $method
+     * @param array $result
+     * @param string $method
      * @return array|null
+     * //@codingStandardsIgnoreStart
      */
     public function after__call(Image $image, $result, $method)
     {
