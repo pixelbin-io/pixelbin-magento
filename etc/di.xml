@@ -53,4 +53,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\MediaStorage\Model\File\Uploader">
+        <plugin name="pixelbin_file_uploader_plugin" type="Pixelbinio\Pixelbin\Model\MediaStorage\File\Uploader"/>
+    </type>
 </config>
