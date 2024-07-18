@@ -35,8 +35,7 @@ class Uploader
     public function __construct(
         UploadFileToPixelbin $uploadFileToPixelbin,
         HelperData           $helperData
-    )
-    {
+    ) {
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
         $this->helperData = $helperData;
     }
