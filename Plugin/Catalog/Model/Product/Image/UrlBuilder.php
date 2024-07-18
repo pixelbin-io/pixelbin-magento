@@ -78,6 +78,8 @@ class UrlBuilder
      */
     private $transformationModel;
 
+    protected $assetRepo;
+
     /**
      * @var Logger
      */

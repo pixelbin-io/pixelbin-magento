@@ -19,6 +19,8 @@ use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class AfterGetImage
 {
+    protected $assetRepo;
+
     /**
      * @var Logger
      */
