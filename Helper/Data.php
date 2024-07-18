@@ -262,8 +262,48 @@ class Data extends AbstractHelper
      * @throws NoSuchEntityException
      */
     public function replaceProductImageUrlWithPixelbin($imageUrl)
-    {
-        $pixelbinImage = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+    {   
+        $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+                    
+        $imagePathArray = explode('media/', $imagePath);
+        
+        if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
+            $pixelbinImage = $this->getAppZone().$imagePathArray[1];
+        } else {
+            $pixelbinImage = $imagePath;
+        }
+        
+        $storeId = $this->getStoreId();
+        
+        if ($this->isImageTransformationEnabled($storeId)) {
+            $productTransformation = $this->getProductCustomTransformation($storeId);        
+            $transformation = '/'.$productTransformation.'/';
+            $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+        }
+
+        if (isset($pixelbinImage)) {
+            $result = $pixelbinImage;
+        } elseif(strpos('Magento_Catalog/images/product/placeholder/thumbnail.jpg', $imageUrl) > 0) {
+            $result = $this->getDefaultImage();
+        } else {
+            $result = $this->getDefaultImage();
+        }
+
+        return $result;
+    }
+
+    public function replaceCmsImageUrlWithPixelbin($imageUrl)
+    {   
+        $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+                    
+        $imagePathArray = explode('media/', $imagePath);
+
+        if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
+            $pixelbinImage = $this->getAppZone().$imagePathArray[1];
+        } else {
+            $pixelbinImage = $imagePath;
+        }
+        
         $storeId = $this->getStoreId();
         if ($this->isImageTransformationEnabled($storeId)) {
             $productTransformation = $this->getProductCustomTransformation($storeId);

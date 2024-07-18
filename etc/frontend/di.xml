@@ -38,4 +38,12 @@
         <plugin name="placeholder_image_change" type="Pixelbinio\Pixelbin\Plugin\AfterPlaceholderLoad" sortOrder="110"/>
     </type>
 
+    <type name="Magento\Cms\Block\Block">
+        <plugin name="pixelbin_plugin_block_cms_block_block" type="Pixelbinio\Pixelbin\Plugin\Cms\Block\Block"/>
+    </type>
+
+    <type name="Magento\Cms\Block\Widget\Block">
+        <plugin name="pixelbin_plugin_block_cms_block_widget_block" type="Pixelbinio\Pixelbin\Plugin\Cms\Block\Widget\Block"/>
+    </type>
+
 </config>
