@@ -75,6 +75,13 @@ class UploadFileToPixelbin extends AbstractHelper
     protected $mediaDir = "";
 
     /**
+     * Cache key for pub directory absolute path
+     *
+     * @var string
+     */
+    protected $pubDir = "";
+
+    /**
      * Cache key for Pixelbin class object
      *
      * @var null|PixelbinClient
@@ -214,6 +221,21 @@ class UploadFileToPixelbin extends AbstractHelper
     }
 
     /**
+     * Get pub absolute path
+     *
+     * @return string
+     */
+    public function getPubAbsolutePath()
+    {
+        if (empty($this->pubDir)) {
+            $this->pubDir = $this->filesystem->getDirectoryRead(
+                DirectoryList::PUB
+            )->getAbsolutePath();
+        }
+        return $this->pubDir;
+    }
+
+    /**
      * Import file to pixelbin
      *
      * @param array $files
@@ -280,6 +302,62 @@ class UploadFileToPixelbin extends AbstractHelper
             $file["path_folder"] = implode('/', $filePathArr);
             $file["full_path"] = $fileName;
             $pathInfo = $this->fileIo->getPathInfo($file["file"]);
+            $file["file_name"] = $pathInfo["filename"];
+            $file["filename"] = $pathInfo["basename"];
+            $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
+            $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
+        } catch (\Exception $ex) {
+            $this->helperData->logData("file upload exception here => " . $ex->getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * Upload CMS image to pixelbin
+     *
+     * @param array $file
+     * @return bool
+     */
+    public function cmsUploadFileSync(array $file): bool
+    {
+        try {
+            $file["absolute_path"] = $file["path"]."/".$file["file"];
+            $mediaDir = $this->getMediaAbsolutePath();
+            $folders = str_replace($mediaDir, "", $file["path"]);
+            $fileName = $folders."/".$file["file"];
+            $filePathArr = explode("/", $fileName);
+            array_pop($filePathArr);
+            $file["path_folder"] = implode('/', $filePathArr);
+            $file["full_path"] = $fileName;
+            $pathInfo = $this->fileIo->getPathInfo($file["file"]);
+            $file["file_name"] = $pathInfo["filename"];
+            $file["filename"] = $pathInfo["basename"];
+            $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
+            $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
+        } catch (\Exception $ex) {
+            $this->helperData->logData("file upload exception here => " . $ex->getMessage());
+        }
+        return true;
+    }
+
+    /**
+     * Upload category image to pixelbin
+     *
+     * @param string $image
+     * @return bool
+     */
+    public function categoryUploadFileSync(string $image): bool
+    {
+        try {
+            $image = str_replace("/media", "", $image);
+            $mediaDir = $this->getMediaAbsolutePath();
+            $file["absolute_path"] = $mediaDir.$image;
+            $fileName = $image;
+            $filePathArr = explode("/", $fileName);
+            array_pop($filePathArr);
+            $file["path_folder"] = implode('/', $filePathArr);
+            $file["full_path"] = $fileName;
+            $pathInfo = $this->fileIo->getPathInfo($fileName);
             $file["file_name"] = $pathInfo["filename"];
             $file["filename"] = $pathInfo["basename"];
             $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);

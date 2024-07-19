@@ -16,4 +16,7 @@
     <event name="catalog_product_save_after">
         <observer name="pixel_after_catalog_product_save" instance="Pixelbinio\Pixelbin\Observer\ProductSaveAfter" />
     </event>
+    <event name="catalog_category_save_after">
+        <observer name="pixel_after_catalog_category_save" instance="Pixelbinio\Pixelbin\Observer\CategorySaveAfter"/>
+    </event>
 </config>

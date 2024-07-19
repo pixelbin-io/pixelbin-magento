@@ -11,12 +11,14 @@
  * @version     1.0.0
  */
 
-namespace Pixelbinio\Pixelbin\Model\MediaStorage\File;
+namespace Pixelbinio\Pixelbin\Observer;
 
+use Magento\Framework\Event\Observer;
+use Magento\Catalog\Model\Category;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 
-class Uploader
+class CategorySaveAfter implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var UploadFileToPixelbin
@@ -34,29 +36,26 @@ class Uploader
      */
     public function __construct(
         UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData           $helperData
+        HelperData $helperData
     ) {
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
         $this->helperData = $helperData;
     }
 
     /**
-     * After image Save
+     * Catalog category save after observer
      *
-     * @param \Magento\MediaStorage\Model\File\Uploader $subject
-     * @param array $result
-     * @return array
+     * @param Observer $observer
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function afterSave($subject, $result)
+    public function execute(Observer $observer)
     {
-        if ($this->helperData->isModuleEnabled()) {
-            if (!empty($result) && !empty($result['path']) && !empty($result['file'])) {
-                $filePath = $result['path'] . '/' . $result['file'];
-                if (!str_contains($filePath, 'tmp/')) {
-                    $this->uploadFileToPixelbin->cmsUploadFileSync($result);
-                }
-            }
-        }
-        return $result;
+        /**
+         * @var Category $category
+         */
+        $category = $observer->getEvent()->getCategory();
+        $imageUrl = $category->getImageUrl();
+        $this->uploadFileToPixelbin->categoryUploadFileSync($imageUrl);
     }
 }
