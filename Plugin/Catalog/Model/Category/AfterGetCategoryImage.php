@@ -11,13 +11,15 @@
  * @version     1.0.0
  */
 
-namespace Pixelbinio\Pixelbin\Plugin;
+namespace Pixelbinio\Pixelbin\Plugin\Catalog\Model\Category;
 
+use Magento\Catalog\Model\Category\Image;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
-class AfterPlaceholderLoad
+class AfterGetCategoryImage
 {
+
     /**
      * @var Logger
      */
@@ -29,37 +31,26 @@ class AfterPlaceholderLoad
     protected $helperData;
 
     /**
-     * @var \Magento\Framework\View\Asset\Repository
-     */
-    protected $assetRepo;
-
-    /**
-     * AfterGetImageData constructor.
-     *
      * @param Logger $logger
      * @param HelperData $helperData
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         Logger $logger,
-        HelperData $helperData,
-        \Magento\Framework\View\Asset\Repository $assetRepo
+        HelperData $helperData
     ) {
         $this->logger = $logger;
         $this->helperData = $helperData;
-        $this->assetRepo = $assetRepo;
     }
 
     /**
-     * After get url
+     * Build image url using base path and params
      *
-     * @param \Magento\Catalog\Model\View\Asset\Placeholder $subject
-     * @param string $result
+     * @param  Image $subject
      * @return string
      */
     public function afterGetUrl(
-        \Magento\Catalog\Model\View\Asset\Placeholder $subject,
-        $result
+        Image $subject,
+        $result,
     ) {
         if (!$this->helperData->isModuleEnabled()) {
             return $result;
@@ -67,12 +58,10 @@ class AfterPlaceholderLoad
 
         try {
             if ($result) {
-                if ($this->helperData->getConfigValue(HelperData::XML_PATH_SETUP_DEFAULT_IMAGE)) {
-                    return $this->helperData->getDefaultImage();
-                }
+                $result = $this->helperData->replaceProductImageUrlWithPixelbin($result);
             }
         } catch (\Exception $e) {
-            $this->logger->info("Image URL error - " . $e->getMessage());
+            $this->logger->info("Image URL PDP error" . $e->getMessage());
         }
 
         return $result;

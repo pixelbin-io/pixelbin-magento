@@ -45,7 +45,7 @@ class CmsBlockLazyloadAbstract
     protected function process($subject, $html)
     {
         if (!$this->helperData->isModuleEnabled()) {
-            return $result;
+            return $html;
         }
 
         if (stripos($html, "<img ") !== false) {

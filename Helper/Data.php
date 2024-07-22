@@ -263,62 +263,75 @@ class Data extends AbstractHelper
      */
     public function replaceProductImageUrlWithPixelbin($imageUrl)
     {   
-        $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-                    
-        $imagePathArray = explode('media/', $imagePath);
-        
-        if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
-            $pixelbinImage = $this->getAppZone().$imagePathArray[1];
-        } else {
-            $pixelbinImage = $imagePath;
-        }
-        
-        $storeId = $this->getStoreId();
-        
-        if ($this->isImageTransformationEnabled($storeId)) {
-            $productTransformation = $this->getProductCustomTransformation($storeId);        
-            $transformation = '/'.$productTransformation.'/';
-            $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-        }
+        if ($imageUrl != null) {
+            
+            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 || 
+                strpos($imageUrl, 'pixel_bin') > 0){
+                return $this->getDefaultImage();
+            }
 
-        if (isset($pixelbinImage)) {
-            $result = $pixelbinImage;
-        } elseif(strpos('Magento_Catalog/images/product/placeholder/thumbnail.jpg', $imageUrl) > 0) {
-            $result = $this->getDefaultImage();
-        } else {
-            $result = $this->getDefaultImage();
-        }
+            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+                        
+            $imagePathArray = explode('media/', $imagePath);
+            
+            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
+                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
+            } else {
+                $pixelbinImage = $imagePath;
+            }
+            
+            $storeId = $this->getStoreId();
+            
+            if ($this->isImageTransformationEnabled($storeId)) {
+                $productTransformation = $this->getProductCustomTransformation($storeId);        
+                $transformation = '/'.$productTransformation.'/';
+                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+            }
 
-        return $result;
+            if (@getimagesize($pixelbinImage)) {
+                $result = $pixelbinImage;
+            } else {
+                $result = $this->getDefaultImage();
+            }
+            return $result;
+        }
+        return '';
     }
 
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
     {   
-        $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-                    
-        $imagePathArray = explode('media/', $imagePath);
+        if ($imageUrl != null) {
 
-        if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
-            $pixelbinImage = $this->getAppZone().$imagePathArray[1];
-        } else {
-            $pixelbinImage = $imagePath;
-        }
-        
-        $storeId = $this->getStoreId();
-        if ($this->isImageTransformationEnabled($storeId)) {
-            $productTransformation = $this->getProductCustomTransformation($storeId);
-            $transformation = '/'.$productTransformation.'/';
-            $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-        }
+            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 || 
+                strpos($imageUrl, 'pixel_bin') > 0){
+                return $this->getDefaultImage();
+            }
 
-        if (isset($pixelbinImage)) {
-            $result = $pixelbinImage;
-        } elseif (strpos('Magento_Catalog/images/product/placeholder/thumbnail.jpg', $imageUrl) !== false) {
-            $result = $this->getDefaultImage();
-        } else {
-            $result = $this->getDefaultImage();
-        }
+            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+                        
+            $imagePathArray = explode('media/', $imagePath);
 
-        return $result;
+            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
+                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
+            } else {
+                $pixelbinImage = $imagePath;
+            }
+            
+            $storeId = $this->getStoreId();
+            if ($this->isImageTransformationEnabled($storeId)) {
+                $productTransformation = $this->getProductCustomTransformation($storeId);
+                $transformation = '/'.$productTransformation.'/';
+                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+            }
+
+            if (@getimagesize($pixelbinImage)) {
+                $result = $pixelbinImage;
+            } else {
+                $result = $this->getDefaultImage();
+            }
+
+            return $result;
+        }
+        return '';
     }
 }

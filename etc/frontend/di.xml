@@ -46,4 +46,12 @@
         <plugin name="pixelbin_plugin_block_cms_block_widget_block" type="Pixelbinio\Pixelbin\Plugin\Cms\Block\Widget\Block"/>
     </type>
 
+    <type name="Magento\Catalog\Block\Category\View">
+        <plugin name="pixelbin_plugin_block_catalog_category_view" type="Pixelbinio\Pixelbin\Plugin\Catalog\Block\Category\View"/>
+    </type>
+
+    <type name="Magento\Catalog\Model\Category\Image">
+        <plugin name="after_get_image_url_category" type="Pixelbinio\Pixelbin\Plugin\Catalog\Model\Category\AfterGetCategoryImage" />
+    </type>
+
 </config>
