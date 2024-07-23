@@ -109,7 +109,8 @@ class UploadFileToPixelbin extends AbstractHelper
         PixelbinImageSyncLogsFactory   $pixelbinImageSyncLogsFactory,
         PixelbinSyncCollectionFactory  $pixelbinSyncCollectionFactory,
         PixelbinSynchronisationFactory $pixelbinSynchronisationFactory
-    ) {
+    )
+    {
         $this->helperData = $helperData;
         $this->fileIo = $fileIo;
         $this->filesystem = $filesystem;
@@ -155,7 +156,6 @@ class UploadFileToPixelbin extends AbstractHelper
      */
     public function uploadFile(array $file, string $syncType): array
     {
-        $this->helperData->logData("file data => ".json_encode($file));
         try {
             $pixelbin = $this->getPixelbinObj();
             $result = $pixelbin->assets->fileUpload(
@@ -248,13 +248,24 @@ class UploadFileToPixelbin extends AbstractHelper
         $successCounts = [];
         $error = [];
         $errorCounts = [];
+        $excludeFolderCounts = [];
+        $excludeExtensionCounts = [];
         foreach ($files as $file) {
             try {
                 unset($file["content"]);
-                if ($file["filename"] == "LICENSE.txt") {
+                $folderMatchCount = 0;
+                str_replace(Data::EXCLUDE_FOLDERS, '', (string)$file["directory"], $folderMatchCount);
+                if ($folderMatchCount > 0) {
+                    $excludeFolderCounts = count($excludeFolderCounts) + 1;
+                    $this->helperData->logData("EXCLUDE_FOLDERS directory found => " . $file["directory"]);
                     continue;
                 }
                 $pathInfo = $this->fileIo->getPathInfo($file["filename"]);
+                if (in_array($pathInfo["extension"], Data::EXCLUDE_EXTENSION)) {
+                    $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
+                    $excludeExtensionCounts = count($excludeExtensionCounts) + 1;
+                    continue;
+                }
                 $file["file_name"] = $pathInfo["filename"];
                 $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
                 $syncCollection = $this->pixelbinSyncCollectionFactory->create()
@@ -269,7 +280,7 @@ class UploadFileToPixelbin extends AbstractHelper
                 $file["path_folder"] = implode('/', $filePathArr);
                 $file["full_path"] = $fileName;
                 $fileUploadResult = $this->uploadFile($file, $syncType);
-                $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
+                //$this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
                 $success[] = __("successfully uploaded %1", $fileName);
                 $successCounts[] = count($successCounts) + 1;
             } catch (\Exception $ex) {
@@ -283,6 +294,8 @@ class UploadFileToPixelbin extends AbstractHelper
             "successCount" => $successCounts,
             "errors" => $error,
             "errorCount" => $errorCounts,
+            "excludeFolderCounts" => $excludeFolderCounts,
+            "excludeExtensionCounts" => $excludeExtensionCounts,
         ];
     }
 
@@ -296,7 +309,7 @@ class UploadFileToPixelbin extends AbstractHelper
     {
         try {
             $file["absolute_path"] = $file["path"];
-            $fileName = "catalog/product".$file["file"];
+            $fileName = "catalog/product" . $file["file"];
             $filePathArr = explode("/", $fileName);
             array_pop($filePathArr);
             $file["path_folder"] = implode('/', $filePathArr);
@@ -321,10 +334,10 @@ class UploadFileToPixelbin extends AbstractHelper
     public function cmsUploadFileSync(array $file): bool
     {
         try {
-            $file["absolute_path"] = $file["path"]."/".$file["file"];
+            $file["absolute_path"] = $file["path"] . "/" . $file["file"];
             $mediaDir = $this->getMediaAbsolutePath();
             $folders = str_replace($mediaDir, "", $file["path"]);
-            $fileName = $folders."/".$file["file"];
+            $fileName = $folders . "/" . $file["file"];
             $filePathArr = explode("/", $fileName);
             array_pop($filePathArr);
             $file["path_folder"] = implode('/', $filePathArr);
@@ -351,7 +364,7 @@ class UploadFileToPixelbin extends AbstractHelper
         try {
             $image = str_replace("/media", "", $image);
             $mediaDir = $this->getMediaAbsolutePath();
-            $file["absolute_path"] = $mediaDir.$image;
+            $file["absolute_path"] = $mediaDir . $image;
             $fileName = $image;
             $filePathArr = explode("/", $fileName);
             array_pop($filePathArr);
