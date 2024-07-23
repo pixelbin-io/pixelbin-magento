@@ -35,7 +35,6 @@ class Data extends AbstractHelper
     /* Get system config fields */
     public const XML_PATH_EXTENSION_ENABLE = 'pixelbin/general/is_enable';
     public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
-    public const XML_PATH_APP_API_URL = 'pixelbin/app_configuration/api_url';
     public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
     public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
@@ -43,6 +42,21 @@ class Data extends AbstractHelper
     //@codingStandardsIgnoreLine
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     public const API_VERSION = "v2";
+    public const API_URL = "https://api.pixelbinz0.de";
+    public const EXCLUDE_FOLDERS = [
+        ".thumbscatalog",
+        ".thumbswysiwyg",
+        "catalog/tmp/",
+        "catalog/product/cache/",
+    ];
+    public const EXCLUDE_EXTENSION = [
+        ".css",
+        ".js",
+        ".htaccess",
+        ".json",
+        ".txt",
+        ".csv",
+    ];
 
     /**
      * @var Curl
@@ -133,7 +147,7 @@ class Data extends AbstractHelper
      */
     public function getApiUrl()
     {
-        return $this->getConfigValue(self::XML_PATH_APP_API_URL);
+        return self::API_URL;
     }
 
     /**
@@ -262,28 +276,28 @@ class Data extends AbstractHelper
      * @throws NoSuchEntityException
      */
     public function replaceProductImageUrlWithPixelbin($imageUrl)
-    {   
+    {
         if ($imageUrl != null) {
-            
-            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 || 
+
+            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
                 strpos($imageUrl, 'pixel_bin') > 0){
                 return $this->getDefaultImage();
             }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-                        
+
             $imagePathArray = explode('media/', $imagePath);
-            
+
             if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
                 $pixelbinImage = $this->getAppZone().$imagePathArray[1];
             } else {
                 $pixelbinImage = $imagePath;
             }
-            
+
             $storeId = $this->getStoreId();
-            
+
             if ($this->isImageTransformationEnabled($storeId)) {
-                $productTransformation = $this->getProductCustomTransformation($storeId);        
+                $productTransformation = $this->getProductCustomTransformation($storeId);
                 $transformation = '/'.$productTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
@@ -299,16 +313,16 @@ class Data extends AbstractHelper
     }
 
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
-    {   
+    {
         if ($imageUrl != null) {
 
-            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 || 
+            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
                 strpos($imageUrl, 'pixel_bin') > 0){
                 return $this->getDefaultImage();
             }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-                        
+
             $imagePathArray = explode('media/', $imagePath);
 
             if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
@@ -316,7 +330,7 @@ class Data extends AbstractHelper
             } else {
                 $pixelbinImage = $imagePath;
             }
-            
+
             $storeId = $this->getStoreId();
             if ($this->isImageTransformationEnabled($storeId)) {
                 $productTransformation = $this->getProductCustomTransformation($storeId);

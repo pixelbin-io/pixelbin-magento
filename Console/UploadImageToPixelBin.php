@@ -135,6 +135,8 @@ class UploadImageToPixelBin extends Command
         $progressBar->start();
         $successCount = [];
         $errorCount = [];
+        $excludeFolderCounts = [];
+        $excludeExtensionCounts = [];
         while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
             $progressBar->advance();
             $uploadResponse = $this->uploadFileToPixelbin->importFiles($files, SyncType::TYPE_CLI);
@@ -144,6 +146,12 @@ class UploadImageToPixelBin extends Command
             if (!empty($uploadResponse['errorCount'])) {
                 $errorCount[] = $uploadResponse['errorCount'];
             }
+            if (!empty($uploadResponse['excludeFolderCounts'])) {
+                $excludeFolderCounts[] = $uploadResponse['excludeFolderCounts'];
+            }
+            if (!empty($uploadResponse['excludeExtensionCounts'])) {
+                $excludeExtensionCounts[] = $uploadResponse['excludeExtensionCounts'];
+            }
             $offset += count($files);
         }
         $progressBar->finish();
@@ -151,6 +159,8 @@ class UploadImageToPixelBin extends Command
         $output->writeln("");
         $output->writeln("Successfully uploaded file count is => ".count($successCount));
         $output->writeln("<error>Failed to uploaded file count is => ".count($errorCount)."</error>");
+        $output->writeln("<error>Skipped due to folder restriction => ".count($excludeFolderCounts)."</error>");
+        $output->writeln("<error>Skipped due to file extension restriction => ".count($excludeExtensionCounts)."</error>");
     }
 
     /**
