@@ -66,9 +66,7 @@ class AfterGetItemData
         }
         try {
             if ($result['product_id'] > 0) {
-                //$this->logger->info("Image URL Minicart - " . json_encode($result));
                 $image = $this->helperData->replaceProductImageUrlWithPixelbin($result['product_image']['src']);
-                $this->logger->info("Image URL Minicart image - " . json_encode($image));
                 $result['product_image']['src'] = $image;
             }
         } catch (\Exception $e) {
