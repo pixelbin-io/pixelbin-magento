@@ -37,6 +37,7 @@ class Data extends AbstractHelper
     public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
     public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
+    public const XML_PATH_SETUP_USE_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/use_pixelbin_default_image';
     public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
     public const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
     //@codingStandardsIgnoreLine
@@ -57,6 +58,14 @@ class Data extends AbstractHelper
         ".txt",
         ".csv",
     ];
+
+    //= Lazyload
+    const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/is_enable';
+    const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
+    const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
+    const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';
+    const XML_PATH_LAZYLOAD_EFFECT = 'pixelbin/lazyload/effect';
+    const XML_PATH_LAZYLOAD_PLACEHOLDER = 'pixelbin/lazyload/placeholder';
 
     /**
      * @var Curl
@@ -258,6 +267,17 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Check use of default image enabled
+     *
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function isDefaultImageEnabled()
+    {
+        return $this->getConfigValue(self::XML_PATH_SETUP_USE_DEFAULT_IMAGE);
+    }
+
+    /**
      * Get default image
      *
      * @return string
@@ -279,9 +299,11 @@ class Data extends AbstractHelper
     {
         if ($imageUrl != null) {
 
-            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                strpos($imageUrl, 'pixel_bin') > 0){
-                return $this->getDefaultImage();
+            if ($this->isDefaultImageEnabled()) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
+                    strpos($imageUrl, 'pixel_bin') > 0){
+                    return $this->getDefaultImage();
+                }
             }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
@@ -304,21 +326,20 @@ class Data extends AbstractHelper
 
             if (@getimagesize($pixelbinImage)) {
                 $result = $pixelbinImage;
-            } else {
-                $result = $this->getDefaultImage();
-            }
-            return $result;
+            } 
         }
-        return '';
+        return $imageUrl;
     }
 
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
 
-            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                strpos($imageUrl, 'pixel_bin') > 0){
-                return $this->getDefaultImage();
+            if ($this->isDefaultImageEnabled()) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
+                    strpos($imageUrl, 'pixel_bin') > 0){
+                    return $this->getDefaultImage();
+                }
             }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
@@ -339,13 +360,43 @@ class Data extends AbstractHelper
             }
 
             if (@getimagesize($pixelbinImage)) {
-                $result = $pixelbinImage;
-            } else {
-                $result = $this->getDefaultImage();
+                $imageUrl = $pixelbinImage;
             }
-
-            return $result;
         }
-        return '';
+        return $imageUrl;
+    }
+
+    public function isEnabledLazyload()
+    {
+        return (bool) $this->getConfigValue(self::XML_PATH_LAZYLOAD_ENABLED, $storeId);
+    }
+
+    public function isLazyloadAutoReplaceCmsBlocks()
+    {
+        return (bool) $this->getConfigValue(self::XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS, $storeId);
+    }
+
+    public function getLazyloadIgnoredCmsBlocksArray()
+    {
+        $value = ($this->getConfigValue(self::XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS, $storeId))
+            ? (array) explode(',', $this->getConfigValue(self::XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS, $storeId))
+            : [];
+
+        return $value;
+    }
+
+    public function getLazyloadThreshold()
+    {
+        return (int) $this->getConfigValue(self::XML_PATH_LAZYLOAD_THRESHOLD, $storeId);
+    }
+
+    public function getLazyloadEffect()
+    {
+        return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_EFFECT, $storeId);
+    }
+
+    public function getLazyloadPlaceholder()
+    {
+        return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_PLACEHOLDER, $storeId);
     }
 }

@@ -174,12 +174,7 @@ class ImageFactory
 
         try {
             if (strpos($imageBlock->getImageUrl(), $mediaUrl . 'catalog/product') === 0) {
-                $viewImageConfig = $this->presentationConfig->getViewConfig()->getMediaAttributes(
-                    'Magento_Catalog',
-                    CatalogImageHelper::MEDIA_TYPE_CONFIG_NODE,
-                    $imageId
-                );
-
+                
                 $generatedImageUrl = $this->helperData->replaceProductImageUrlWithPixelbin($imageBlock->getImageUrl());
 
                 $imageBlock->setOriginalImageUrl($imageBlock->setImageUrl());

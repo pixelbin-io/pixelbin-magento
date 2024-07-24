@@ -67,7 +67,7 @@ class AfterPlaceholderLoad
 
         try {
             if ($result) {
-                if ($this->helperData->getConfigValue(HelperData::XML_PATH_SETUP_DEFAULT_IMAGE)) {
+                if ($this->helperData->isDefaultImageEnabled()) {
                     return $this->helperData->getDefaultImage();
                 }
             }
