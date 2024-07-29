@@ -1,9 +1,15 @@
 <?php
 /**
- * @var \Cloudinary\Cloudinary\Block\Lazyload $block
+ * @var \Pixelbinio\Pixelbin\Block\Lazyload $block
  */
 ?>
 <?php if (!$block->isEnabledLazyload()) {
     return;
 } ?>
-<script type="text/x-magento-init">{"*": {"cloudinaryLazyload": <?= $block->getLazyloadOptions() ?>}}</script>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "pixelbinLazyload": <?= $block->getLazyloadOptions() ?>
+        }
+    }
+</script>

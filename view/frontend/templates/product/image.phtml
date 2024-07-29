@@ -9,7 +9,7 @@
 /** @var $escaper \Magento\Framework\Escaper */
 ?>
 <!--deprecated template as image_with_borders is a primary one-->
-<img class="photo image cloudinary-lazyload <?= $escaper->escapeHtmlAttr($block->getClass()) ?>"
+<img class="photo image pixelbin-lazyload <?= $escaper->escapeHtmlAttr($block->getClass()) ?>"
     <?php foreach ($block->getCustomAttributes() as $name => $value): ?>
         <?= $escaper->escapeHtmlAttr($name) ?>="<?= $escaper->escapeHtmlAttr($value) ?>"
     <?php endforeach; ?>

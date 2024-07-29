@@ -6,10 +6,10 @@
 ?>
 <?php /** @var $block \Magento\Catalog\Block\Product\Image */ ?>
 
-<img class="photo image cloudinary-lazyload <?= $block->escapeHtmlAttr($block->getClass()) ?>"
+<img class="photo image pixelbin-lazyload <?= $block->escapeHtmlAttr($block->getClass()) ?>"
     <?= $block->escapeHtml($block->getCustomAttributes()) ?>
     src="<?= $block->getLazyloadPlaceholder() ?>"
-    data-original="<?= $block->escapeUrl($block->getImageUrl()) ?>"
+    data-original="<?= $block->escapeUrl($block->getLazyloadPlaceholder()) ?>"
     width="<?= $block->escapeHtmlAttr($block->getWidth()) ?>"
     height="<?= $block->escapeHtmlAttr($block->getHeight()) ?>"
     alt="<?= /* @noEscape */ $block->stripTags($block->getLabel(), null, true) ?>" />

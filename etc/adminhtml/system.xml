@@ -88,6 +88,7 @@
                 <field id="is_enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Enable Lazyload</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Enable lazyload (using <a href="https://github.com/tuupola/lazyload/tree/1.9.7" target="_blank" title="Lazy Load Plugin for jQuery" >Lazy Load Plugin for jQuery</a>).]]></comment>
                 </field>
                 <field id="is_enable_for_cms_block" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Apply on CMS Blocks</label>
@@ -97,17 +98,21 @@
                     <label>CMS Blocks to Exclude</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="threshold" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="threshold" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Lazyload Threshold</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>The threshold for how many pixels from the top of the page before lazy loading is applied to your images.</comment>
                 </field>
                 <field id="effect" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Lazyload Effect</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>The effect to use to show the loaded images.</comment>
+                    <config_path>pixelbin/lazyload/effect</config_path>
+                    <source_model>Pixelbinio\Pixelbin\Model\Config\Source\Lazyload\Effect</source_model>
                 </field>
                 <field id="placeholder" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Lazyload Placeholder</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>The transformation effect that will be used on the images as a loading placeholder.</comment>
+                    <config_path>pixelbin/lazyload/placeholder</config_path>
+                    <source_model>Pixelbinio\Pixelbin\Model\Config\Source\Lazyload\Placeholder</source_model>
                 </field>
             </group>
         </section>

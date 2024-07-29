@@ -62,7 +62,7 @@ class CmsBlockLazyloadAbstract
                     $placeholderUrl = $this->helperData->replaceCmsImageUrlWithPixelbin($image);
                     $modified++;
                     $element->setAttribute('class', 'pixelbin-lazyload ' . $element->getAttribute('class'));
-                    $element->setAttribute('data-original', $element->getAttribute('src'));
+                    $element->setAttribute('data-original', $placeholderUrl);
                     $element->setAttribute('src', $placeholderUrl);
                 }
             }

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <pixelbin>
+            <lazyload>
+                <is_enable>1</is_enable>
+                <threshold>500</threshold>
+                <effect>fadeIn</effect>
+                <placeholder>blur</placeholder>
+            </lazyload>
+        </pixelbin>
+    </default>
+</config>
