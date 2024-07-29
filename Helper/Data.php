@@ -37,9 +37,10 @@ class Data extends AbstractHelper
     public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
     public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
+    public const XML_PATH_SETUP_USE_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/use_pixelbin_default_image';
     public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
     public const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
-    //@codingStandardsIgnoreLine
+    public const XML_PATH_GLOBAL_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/global_custom_transformation';
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     public const API_VERSION = "v2";
     public const API_URL = "https://api.pixelbinz0.de";
@@ -57,6 +58,15 @@ class Data extends AbstractHelper
         ".txt",
         ".csv",
     ];
+
+    //= Lazyload
+    const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/is_enable';
+    const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
+    const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
+    const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';
+    const XML_PATH_LAZYLOAD_EFFECT = 'pixelbin/lazyload/effect';
+    const XML_PATH_LAZYLOAD_PLACEHOLDER = 'pixelbin/lazyload/placeholder';
+    const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
 
     /**
      * @var Curl
@@ -210,6 +220,17 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Get global custom transformation
+     *
+     * @param int $storeId
+     * @return mixed
+     */
+    public function getGlobalCustomTransformation($storeId = null)
+    {
+        return $this->getConfigValue(self::XML_PATH_GLOBAL_CUSTOM_TRANSFORMATION, $storeId);
+    }
+
+    /**
      * Get product custom transformation
      *
      * @param int $storeId
@@ -258,6 +279,17 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Check use of default image enabled
+     *
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    public function isDefaultImageEnabled()
+    {
+        return $this->getConfigValue(self::XML_PATH_SETUP_USE_DEFAULT_IMAGE);
+    }
+
+    /**
      * Get default image
      *
      * @return string
@@ -278,10 +310,11 @@ class Data extends AbstractHelper
     public function replaceProductImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
-
-            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                strpos($imageUrl, 'pixel_bin') > 0){
-                return $this->getDefaultImage();
+            if ($this->isDefaultImageEnabled()) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
+                    strpos($imageUrl, 'pixel_bin') > 0){
+                    return $this->getDefaultImage();
+                }
             }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
@@ -303,22 +336,21 @@ class Data extends AbstractHelper
             }
 
             if (@getimagesize($pixelbinImage)) {
-                $result = $pixelbinImage;
-            } else {
-                $result = $this->getDefaultImage();
-            }
-            return $result;
+                $imageUrl = $pixelbinImage;
+            } 
         }
-        return '';
+        return $imageUrl;
     }
 
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
 
-            if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                strpos($imageUrl, 'pixel_bin') > 0){
-                return $this->getDefaultImage();
+            if ($this->isDefaultImageEnabled()) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
+                    strpos($imageUrl, 'pixel_bin') > 0){
+                    return $this->getDefaultImage();
+                }
             }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
@@ -333,19 +365,50 @@ class Data extends AbstractHelper
 
             $storeId = $this->getStoreId();
             if ($this->isImageTransformationEnabled($storeId)) {
-                $productTransformation = $this->getProductCustomTransformation($storeId);
+                $productTransformation = $this->getGlobalCustomTransformation($storeId);
                 $transformation = '/'.$productTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
 
             if (@getimagesize($pixelbinImage)) {
-                $result = $pixelbinImage;
-            } else {
-                $result = $this->getDefaultImage();
+                $imageUrl = $pixelbinImage;
             }
-
-            return $result;
         }
-        return '';
+        return $imageUrl;
     }
+
+    public function isEnabledLazyload($storeId = null)
+    {
+        return (bool) $this->getConfigValue(self::XML_PATH_LAZYLOAD_ENABLED, $storeId);
+    }
+
+    public function isLazyloadAutoReplaceCmsBlocks($storeId = null)
+    {
+        return (bool) $this->getConfigValue(self::XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS, $storeId);
+    }
+
+    public function getLazyloadIgnoredCmsBlocksArray($storeId = null)
+    {
+        $value = ($this->getConfigValue(self::XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS, $storeId))
+            ? (array) explode(',', $this->getConfigValue(self::XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS, $storeId))
+            : [];
+
+        return $value;
+    }
+
+    public function getLazyloadThreshold($storeId = null)
+    {
+        return (int) $this->getConfigValue(self::XML_PATH_LAZYLOAD_THRESHOLD, $storeId);
+    }
+
+    public function getLazyloadEffect($storeId = null)
+    {
+        return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_EFFECT, $storeId);
+    }
+
+    public function getLazyloadPlaceholder($storeId = null)
+    {
+        return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_PLACEHOLDER, $storeId);
+    }
+
 }

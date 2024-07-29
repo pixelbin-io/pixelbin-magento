@@ -18,10 +18,6 @@
         <plugin name="after_get_image_url_plugin" type="Pixelbinio\Pixelbin\Plugin\AfterGetImageUrl"/>
     </type>
 
-    <type name="Magento\Catalog\Block\Product\View\Gallery">
-        <plugin name="add_images_to_gallery" type="Pixelbinio\Pixelbin\Plugin\AddImagesToGalleryBlock" />
-    </type>
-
     <type name="Magento\Catalog\Model\Product\Image\UrlBuilder">
         <plugin name="pixelbin_plugin_catalog_model_product_image_urlbuilder" type="Pixelbinio\Pixelbin\Plugin\Catalog\Model\Product\Image\UrlBuilder"/>
     </type>

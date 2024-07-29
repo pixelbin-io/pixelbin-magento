@@ -165,6 +165,15 @@ class ImageFactory
             return $imageBlock;
         }
 
+        // if ($this->helperData->isEnabledLazyload()) {
+        //     $useOldImageTheme = is_string($imageBlock->getCustomAttributes()) ? 'old_' : '';
+        //     $imageBlock->setTemplate(
+        //         \preg_match('/\/image_with_borders.phtml$/', $imageBlock->getTemplate()) ?
+        //             'Pixelbinio_Pixelbin::product/' . $useOldImageTheme . 'image_with_borders.phtml' : 'Pixelbinio_Pixelbin::' . $useOldImageTheme . 'product/image.phtml'
+        //     );
+        //     $imageBlock->setLazyloadPlaceholder(HelperData::LAZYLOAD_DATA_PLACEHOLDER);
+        // }
+
         //Skip on Magento versions prior to 2.3
         if (is_array($product)) {
             return $imageBlock;
@@ -174,18 +183,16 @@ class ImageFactory
 
         try {
             if (strpos($imageBlock->getImageUrl(), $mediaUrl . 'catalog/product') === 0) {
-                $viewImageConfig = $this->presentationConfig->getViewConfig()->getMediaAttributes(
-                    'Magento_Catalog',
-                    CatalogImageHelper::MEDIA_TYPE_CONFIG_NODE,
-                    $imageId
-                );
-
+                
                 $generatedImageUrl = $this->helperData->replaceProductImageUrlWithPixelbin($imageBlock->getImageUrl());
 
-                $imageBlock->setOriginalImageUrl($imageBlock->setImageUrl());
+                $imageBlock->setOriginalImageUrl($generatedImageUrl);
                 $imageBlock->setImageUrl($generatedImageUrl);
 
                 //Lazyload
+                if ($this->helperData->isEnabledLazyload()) {
+                    $imageBlock->setLazyloadPlaceholder($generatedImageUrl);
+                }
             }
         } catch (\Exception $e) {
             $imageBlock = $proceed($product, $imageId, $attributes);

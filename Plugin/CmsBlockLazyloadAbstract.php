@@ -59,11 +59,10 @@ class CmsBlockLazyloadAbstract
             foreach ($dom->getElementsByTagName('img') as $element) {
                 if (strpos($element->getAttribute('class'), "lazyload") === false && strpos($element->getAttribute('class'), "owl-lazy") === false && ($image = $element->getAttribute('src')) !== null) {
                     
-                    $this->logger->info("Image URL CMS " . $image);
                     $placeholderUrl = $this->helperData->replaceCmsImageUrlWithPixelbin($image);
                     $modified++;
-                    //$element->setAttribute('class', 'pixelbin-lazyload ' . $element->getAttribute('class'));
-                    $element->setAttribute('data-original', $element->getAttribute('src'));
+                    $element->setAttribute('class', 'pixelbin-lazyload ' . $element->getAttribute('class'));
+                    $element->setAttribute('data-original', $placeholderUrl);
                     $element->setAttribute('src', $placeholderUrl);
                 }
             }
