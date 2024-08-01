@@ -165,14 +165,14 @@ class ImageFactory
             return $imageBlock;
         }
 
-        // if ($this->helperData->isEnabledLazyload()) {
-        //     $useOldImageTheme = is_string($imageBlock->getCustomAttributes()) ? 'old_' : '';
-        //     $imageBlock->setTemplate(
-        //         \preg_match('/\/image_with_borders.phtml$/', $imageBlock->getTemplate()) ?
-        //             'Pixelbinio_Pixelbin::product/' . $useOldImageTheme . 'image_with_borders.phtml' : 'Pixelbinio_Pixelbin::' . $useOldImageTheme . 'product/image.phtml'
-        //     );
-        //     $imageBlock->setLazyloadPlaceholder(HelperData::LAZYLOAD_DATA_PLACEHOLDER);
-        // }
+        if ($this->helperData->isEnabledLazyload()) {
+            $useOldImageTheme = is_string($imageBlock->getCustomAttributes()) ? 'old_' : '';
+            $imageBlock->setTemplate(
+                \preg_match('/\/image_with_borders.phtml$/', $imageBlock->getTemplate()) ?
+                    'Pixelbinio_Pixelbin::product/' . $useOldImageTheme . 'image_with_borders.phtml' : 'Pixelbinio_Pixelbin::' . $useOldImageTheme . 'product/image.phtml'
+            );
+            $imageBlock->setLazyloadPlaceholder(HelperData::LAZYLOAD_DATA_PLACEHOLDER);
+        }
 
         //Skip on Magento versions prior to 2.3
         if (is_array($product)) {
