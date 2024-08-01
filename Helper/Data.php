@@ -60,7 +60,7 @@ class Data extends AbstractHelper
     ];
 
     //= Lazyload
-    const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/is_enable';
+    const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/lazyload_enabled';
     const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
     const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
     const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';

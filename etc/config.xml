@@ -4,7 +4,7 @@
     <default>
         <pixelbin>
             <lazyload>
-                <is_enable>1</is_enable>
+                <lazyload_enabled>1</lazyload_enabled>
                 <threshold>500</threshold>
                 <effect>fadeIn</effect>
                 <placeholder>blur</placeholder>
