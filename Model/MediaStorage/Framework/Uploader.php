@@ -41,6 +41,8 @@ class Uploader
     }
 
     /**
+     * After save image
+     *
      * @param \Magento\Framework\File\Uploader $subject
      * @param array $result
      * @return array

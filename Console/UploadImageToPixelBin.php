@@ -14,9 +14,7 @@
 namespace Pixelbinio\Pixelbin\Console;
 
 use Exception;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\MediaStorage\Model\File\Storage as StorageModel;
-use Magento\MediaStorage\Helper\File\Storage as StorageHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -126,7 +124,7 @@ class UploadImageToPixelBin extends Command
     {
         $sourceModel = $this->storageModel->getStorageModel();
         $offset = 0;
-        $steps = $this->getTotalSteps($sourceModel);
+        $steps = $this->helperData->getTotalSteps($sourceModel);
         $progressBar = new ProgressBar($output, $steps);
         $progressBar->setBarWidth(50);
         $progressBar->setFormat('verbose');
@@ -161,21 +159,5 @@ class UploadImageToPixelBin extends Command
         $output->writeln("<error>Failed to uploaded file count is => ".count($errorCount)."</error>");
         $output->writeln("<error>Skipped due to folder restriction => ".count($excludeFolderCounts)."</error>");
         $output->writeln("<error>Skipped due to file extension restriction => ".count($excludeExtensionCounts)."</error>");
-    }
-
-    /**
-     * Get TotalSteps
-     *
-     * @param [object] $sourceModel
-     * @return int
-     */
-    private function getTotalSteps($sourceModel)
-    {
-        $offset = 0;
-        while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
-            $offset += count($files);
-        }
-
-        return $offset;
     }
 }

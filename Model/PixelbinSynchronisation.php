@@ -63,6 +63,54 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
     /**
      * @inheritDoc
      */
+    public function getFileData()
+    {
+        return $this->getData(self::KEY_FILE_DATA);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFileData($fileData)
+    {
+        $this->setData(self::KEY_FILE_DATA, $fileData);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSyncStatus()
+    {
+        return $this->getData(self::KEY_SYNC_STATUS);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setSyncStatus($syncStatus)
+    {
+        $this->setData(self::KEY_SYNC_STATUS, $syncStatus);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getErrorMessage()
+    {
+        return $this->getData(self::KEY_ERROR_MESSAGE);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setErrorMessage($errorMessage)
+    {
+        $this->setData(self::KEY_ERROR_MESSAGE, $errorMessage);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCreatedAt()
     {
         return $this->getData(self::KEY_CREATED_AT);

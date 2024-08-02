@@ -51,22 +51,23 @@ class Data extends AbstractHelper
         "catalog/product/cache/",
     ];
     public const EXCLUDE_EXTENSION = [
-        ".css",
-        ".js",
-        ".htaccess",
-        ".json",
-        ".txt",
-        ".csv",
+        "css",
+        "js",
+        "htaccess",
+        "json",
+        "txt",
+        "csv",
     ];
 
     //= Lazyload
-    const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/is_enable';
-    const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
-    const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
-    const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';
-    const XML_PATH_LAZYLOAD_EFFECT = 'pixelbin/lazyload/effect';
-    const XML_PATH_LAZYLOAD_PLACEHOLDER = 'pixelbin/lazyload/placeholder';
-    const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
+    public const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/is_enable';
+    public const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
+    public const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
+    public const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';
+    public const XML_PATH_LAZYLOAD_EFFECT = 'pixelbin/lazyload/effect';
+    public const XML_PATH_LAZYLOAD_PLACEHOLDER = 'pixelbin/lazyload/placeholder';
+    public const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
+    public const LIMIT_FOR_CRON = 5;
 
     /**
      * @var Curl
@@ -337,7 +338,7 @@ class Data extends AbstractHelper
 
             if (@getimagesize($pixelbinImage)) {
                 $imageUrl = $pixelbinImage;
-            } 
+            }
         }
         return $imageUrl;
     }
@@ -409,6 +410,22 @@ class Data extends AbstractHelper
     public function getLazyloadPlaceholder($storeId = null)
     {
         return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_PLACEHOLDER, $storeId);
+    }
+
+    /**
+     * Get TotalSteps
+     *
+     * @param [object] $sourceModel
+     * @return int
+     */
+    public function getTotalSteps($sourceModel)
+    {
+        $offset = 0;
+        while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
+            $offset += count($files);
+        }
+
+        return $offset;
     }
 
 }

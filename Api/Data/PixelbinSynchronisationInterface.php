@@ -22,6 +22,9 @@ interface PixelbinSynchronisationInterface
 
     public const KEY_ENTITY_ID = "entity_id";
     public const KEY_IMAGE_PATH = "image_path";
+    public const KEY_FILE_DATA = "file_data";
+    public const KEY_SYNC_STATUS = "sync_status";
+    public const KEY_ERROR_MESSAGE = "error_message";
     public const KEY_CREATED_AT = "created_at";
     public const KEY_UPDATED_AT = "updated_at";
 
@@ -54,6 +57,51 @@ interface PixelbinSynchronisationInterface
      * @return $this
      */
     public function setImagePath($imagePath);
+
+    /**
+     * Set File Data
+     *
+     * @return string
+     */
+    public function getFileData();
+
+    /**
+     * Get File Data
+     *
+     * @param string $fileData
+     * @return $this
+     */
+    public function setFileData($fileData);
+
+    /**
+     * Set Sync status
+     *
+     * @return string
+     */
+    public function getSyncStatus();
+
+    /**
+     * Get Sync status
+     *
+     * @param string $syncStatus
+     * @return $this
+     */
+    public function setSyncStatus($syncStatus);
+
+    /**
+     * Set Error Message
+     *
+     * @return string
+     */
+    public function getErrorMessage();
+
+    /**
+     * Get Error Message
+     *
+     * @param string $errorMessage
+     * @return $this
+     */
+    public function setErrorMessage($errorMessage);
 
     /**
      * Get Created At
