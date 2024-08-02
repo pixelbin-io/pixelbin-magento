@@ -56,4 +56,7 @@
     <type name="Magento\MediaStorage\Model\File\Uploader">
         <plugin name="pixelbin_file_uploader_plugin" type="Pixelbinio\Pixelbin\Model\MediaStorage\File\Uploader"/>
     </type>
+    <type name="Magento\Framework\File\Uploader">
+        <plugin name="pixelbin_framework_file_uploader_plugin" type="Pixelbinio\Pixelbin\Model\MediaStorage\Framework\Uploader"/>
+    </type>
 </config>

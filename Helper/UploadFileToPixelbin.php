@@ -29,6 +29,7 @@ use Pixelbinio\Pixelbin\Model\PixelbinSynchronisationFactory;
 use Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation\CollectionFactory as PixelbinSyncCollectionFactory;
 use Pixelbinio\Pixelbin\Api\Data\PixelbinImageSyncLogsInterface;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
+use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
 
 class UploadFileToPixelbin extends AbstractHelper
 {
@@ -192,16 +193,38 @@ class UploadFileToPixelbin extends AbstractHelper
                 );
             }
             if (isset($file["full_path"])) {
-                $this->pixelbinSynchronisationFactory->create()
-                    ->setData([
-                        PixelbinSynchronisationInterface::KEY_IMAGE_PATH => $file["full_path"]
-                    ])->save();
+                $data = [
+                    PixelbinSynchronisationInterface::KEY_IMAGE_PATH => $file["full_path"],
+                    PixelbinSynchronisationInterface::KEY_SYNC_STATUS => SyncStatus::STATUS_SYNCED,
+                ];
+                $this->saveSynchronisationLogs($data);
             }
             return $result;
         } catch (\Exception $ex) {
             throw new LocalizedException(
                 __($ex->getMessage())
             );
+        }
+    }
+
+    /**
+     * Save synchronisation logs
+     *
+     * @param array $data
+     * @return \Pixelbinio\Pixelbin\Model\PixelbinSynchronisation
+     * @throws \Exception
+     */
+    public function saveSynchronisationLogs(array $data)
+    {
+        $imagePath = $data[PixelbinSynchronisationInterface::KEY_IMAGE_PATH];
+        $syncedCollection = $this->getSyncCollection($imagePath);
+        if ($syncedCollection->getSize() > 0) {
+            $syncedModel = $syncedCollection->getFirstItem();
+            return $this->pixelbinSynchronisationFactory->create()
+                ->addData($data)->setId($syncedModel->getEntityId())->save();
+        } else {
+            return $this->pixelbinSynchronisationFactory->create()
+                ->setData($data)->save();
         }
     }
 
@@ -260,7 +283,7 @@ class UploadFileToPixelbin extends AbstractHelper
                     $this->helperData->logData("EXCLUDE_FOLDERS directory found => " . $file["directory"]);
                     continue;
                 }
-                $pathInfo = $this->fileIo->getPathInfo($file["filename"]);
+                $pathInfo = $this->getPathInfo($file["filename"]);
                 if (in_array($pathInfo["extension"], Data::EXCLUDE_EXTENSION)) {
                     $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
                     $excludeExtensionCounts = count($excludeExtensionCounts) + 1;
@@ -268,10 +291,11 @@ class UploadFileToPixelbin extends AbstractHelper
                 }
                 $file["file_name"] = $pathInfo["filename"];
                 $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
-                $syncCollection = $this->pixelbinSyncCollectionFactory->create()
-                    ->addFieldToFilter(PixelbinSynchronisationInterface::KEY_IMAGE_PATH, $fileName);
-                if ($syncCollection->getSize() > 0) {
-                    continue;
+                if ($syncType != SyncType::TYPE_CRON) {
+                    $syncCollection = $this->getSyncCollection($fileName);
+                    if ($syncCollection->getSize() > 0) {
+                        continue;
+                    }
                 }
                 $mediaDir = $this->getMediaAbsolutePath();
                 $file["absolute_path"] = $mediaDir . $fileName;
@@ -300,6 +324,27 @@ class UploadFileToPixelbin extends AbstractHelper
     }
 
     /**
+     * Get sync collection
+     *
+     * @param string $fileName
+     * @param string $status
+     * @return \Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation\Collection
+     */
+    public function getSyncCollection($fileName, $status = "")
+    {
+        $syncCollection = $this->pixelbinSyncCollectionFactory->create()
+            ->addFieldToFilter(
+                PixelbinSynchronisationInterface::KEY_IMAGE_PATH, $fileName
+            );
+        if (!empty($status)) {
+            $syncCollection->addFieldToFilter(
+                PixelbinSynchronisationInterface::KEY_SYNC_STATUS, $status
+            );
+        }
+        return $syncCollection;
+    }
+
+    /**
      * Upload catalog image to pixelbin
      *
      * @param array $file
@@ -314,7 +359,7 @@ class UploadFileToPixelbin extends AbstractHelper
             array_pop($filePathArr);
             $file["path_folder"] = implode('/', $filePathArr);
             $file["full_path"] = $fileName;
-            $pathInfo = $this->fileIo->getPathInfo($file["file"]);
+            $pathInfo = $this->getPathInfo($file["file"]);
             $file["file_name"] = $pathInfo["filename"];
             $file["filename"] = $pathInfo["basename"];
             $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
@@ -342,7 +387,7 @@ class UploadFileToPixelbin extends AbstractHelper
             array_pop($filePathArr);
             $file["path_folder"] = implode('/', $filePathArr);
             $file["full_path"] = $fileName;
-            $pathInfo = $this->fileIo->getPathInfo($file["file"]);
+            $pathInfo = $this->getPathInfo($file["file"]);
             $file["file_name"] = $pathInfo["filename"];
             $file["filename"] = $pathInfo["basename"];
             $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
@@ -370,7 +415,7 @@ class UploadFileToPixelbin extends AbstractHelper
             array_pop($filePathArr);
             $file["path_folder"] = implode('/', $filePathArr);
             $file["full_path"] = $fileName;
-            $pathInfo = $this->fileIo->getPathInfo($fileName);
+            $pathInfo = $this->getPathInfo($fileName);
             $file["file_name"] = $pathInfo["filename"];
             $file["filename"] = $pathInfo["basename"];
             $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
@@ -379,5 +424,16 @@ class UploadFileToPixelbin extends AbstractHelper
             $this->helperData->logData("file upload exception here => " . $ex->getMessage());
         }
         return true;
+    }
+
+    /**
+     * Get file path info
+     *
+     * @param $fileName
+     * @return mixed
+     */
+    public function getPathInfo($fileName)
+    {
+        return $this->fileIo->getPathInfo($fileName);
     }
 }

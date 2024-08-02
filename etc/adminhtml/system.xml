@@ -43,6 +43,13 @@
                     <comment><![CDATA[Check how to get your secret key <a href="https://www.pixelbin.io/docs/getting-started/" target="_blank">Click Here</a>]]></comment>
                 </field>
             </group>
+            <group id="pixelbin_image" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Pixelbin Image Sync</label>
+                <field id="sync" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sync Image</label>
+                    <frontend_model>Pixelbinio\Pixelbin\Block\System\Config\SyncButton</frontend_model>
+                </field>
+            </group>
             <group id="pixelbin_setup" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pixelbin Setup</label>
                 <field id="cloud_name" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
