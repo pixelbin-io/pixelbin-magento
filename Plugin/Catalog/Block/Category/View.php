@@ -1,17 +1,26 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Block\Category;
 
 use Pixelbinio\Pixelbin\Plugin\CmsBlockLazyloadAbstract;
 use Magento\Catalog\Block\Category\View as CatalogCategoryBlock;
 
-/**
- * Class View
- */
 class View extends CmsBlockLazyloadAbstract
 {
     /**
-     * @method afterGetCmsBlockHtml
+     * Build image html
+     *
      * @param  CatalogCategoryBlock $subject
      * @param  string               $html
      * @return string

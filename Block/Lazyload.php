@@ -1,4 +1,16 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+
 namespace Pixelbinio\Pixelbin\Block;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
@@ -36,6 +48,8 @@ class Lazyload extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Is Enabled Lazy Load
+     *
      * @method isEnabledLazyload
      * @return boolean
      */
@@ -45,6 +59,8 @@ class Lazyload extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get lazy load options
+     *
      * @method getLazyloadOptions
      * @param  boolean            $json
      * @return string|array

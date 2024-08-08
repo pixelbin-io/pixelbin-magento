@@ -23,12 +23,22 @@ class CmsBlocks implements OptionSourceInterface
      */
     private $blockFactory;
 
+    /**
+     * CmsBlocks Construct
+     *
+     * @param BlockFactory $blockFactory
+     */
     public function __construct(
         BlockFactory $blockFactory
     ) {
         $this->blockFactory = $blockFactory;
     }
 
+    /**
+     * Get cms block options
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         $options = [];

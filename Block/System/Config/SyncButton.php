@@ -26,6 +26,12 @@ class SyncButton extends Field
 {
     protected const SYNC_BUTTON_TEMPLATE = 'system/config/sync_button.phtml';
 
+    /**
+     * @param Context $context
+     * @param PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory
+     * @param array $data
+     * @param SecureHtmlRenderer|null $secureRenderer
+     */
     public function __construct(
         Context $context,
         PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory,

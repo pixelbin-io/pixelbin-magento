@@ -110,8 +110,7 @@ class UploadFileToPixelbin extends AbstractHelper
         PixelbinImageSyncLogsFactory   $pixelbinImageSyncLogsFactory,
         PixelbinSyncCollectionFactory  $pixelbinSyncCollectionFactory,
         PixelbinSynchronisationFactory $pixelbinSynchronisationFactory
-    )
-    {
+    ) {
         $this->helperData = $helperData;
         $this->fileIo = $fileIo;
         $this->filesystem = $filesystem;
@@ -334,11 +333,13 @@ class UploadFileToPixelbin extends AbstractHelper
     {
         $syncCollection = $this->pixelbinSyncCollectionFactory->create()
             ->addFieldToFilter(
-                PixelbinSynchronisationInterface::KEY_IMAGE_PATH, $fileName
+                PixelbinSynchronisationInterface::KEY_IMAGE_PATH,
+                $fileName
             );
         if (!empty($status)) {
             $syncCollection->addFieldToFilter(
-                PixelbinSynchronisationInterface::KEY_SYNC_STATUS, $status
+                PixelbinSynchronisationInterface::KEY_SYNC_STATUS,
+                $status
             );
         }
         return $syncCollection;
@@ -429,7 +430,7 @@ class UploadFileToPixelbin extends AbstractHelper
     /**
      * Get file path info
      *
-     * @param $fileName
+     * @param string $fileName
      * @return mixed
      */
     public function getPathInfo($fileName)

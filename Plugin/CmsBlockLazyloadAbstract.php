@@ -1,14 +1,23 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Plugin;
 
+use Magento\Cms\Block\Widget\Block as CmsBlockWidget;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Magento\Framework\Registry;
 
-/**
- * Class CmsBlockLazyloadAbstract
- */
 class CmsBlockLazyloadAbstract
 {
     /**
@@ -20,7 +29,7 @@ class CmsBlockLazyloadAbstract
      * @var HelperData
      */
     protected $helperData;
-   
+
     /**
      * @var Registry
      */
@@ -42,6 +51,13 @@ class CmsBlockLazyloadAbstract
         $this->_coreRegistry = $coreRegistry;
     }
 
+    /**
+     * Process image
+     *
+     * @param CmsBlockWidget $subject
+     * @param string $html
+     * @return false|mixed|string
+     */
     protected function process($subject, $html)
     {
         if (!$this->helperData->isModuleEnabled()) {
@@ -57,19 +73,20 @@ class CmsBlockLazyloadAbstract
             $modified = 0;
 
             foreach ($dom->getElementsByTagName('img') as $element) {
-                if (strpos($element->getAttribute('class'), "lazyload") === false && strpos($element->getAttribute('class'), "owl-lazy") === false && ($image = $element->getAttribute('src')) !== null) {
-                    
+                if (strpos($element->getAttribute('class'), "lazyload") === false &&
+                    strpos($element->getAttribute('class'), "owl-lazy") === false &&
+                    ($image = $element->getAttribute('src')) !== null) {
+
                     $placeholderUrl = $this->helperData->replaceCmsImageUrlWithPixelbin($image);
                     $modified++;
 
-                    if ($this->helperData->isEnabledLazyload() && 
-                        $this->helperData->isLazyloadAutoReplaceCmsBlocks() && 
+                    if ($this->helperData->isEnabledLazyload() &&
+                        $this->helperData->isLazyloadAutoReplaceCmsBlocks() &&
                         !in_array($subject->getBlockId(), $this->helperData->getLazyloadIgnoredCmsBlocksArray())) {
 
                         $element->setAttribute('class', 'pixelbin-lazyload ' . $element->getAttribute('class'));
                         $element->setAttribute('data-original', $placeholderUrl);
                     }
-
                     $element->setAttribute('src', $placeholderUrl);
                 }
             }
@@ -78,7 +95,6 @@ class CmsBlockLazyloadAbstract
                 $html = $dom->saveHTML();
             }
         }
-
         return $html;
     }
 }

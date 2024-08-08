@@ -58,8 +58,7 @@ class PushImagesToPixelbin
         HelperData                    $helperData,
         PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory,
         UploadFileToPixelbin          $uploadFileToPixelbin
-    )
-    {
+    ) {
         $this->logger = $logger;
         $this->helperData = $helperData;
         $this->pixelbinSyncCollectionFactory = $pixelbinSyncCollectionFactory;
@@ -75,6 +74,9 @@ class PushImagesToPixelbin
     public function execute()
     {
         if (!$this->helperData->isModuleEnabled()) {
+            return;
+        }
+        if (!$this->helperData->isManualSyncCronEnabled()) {
             return;
         }
         try {
@@ -115,11 +117,11 @@ class PushImagesToPixelbin
     {
         $collection =  $this->pixelbinSyncCollectionFactory->create();
         $collection->addFieldToFilter(
-                PixelbinSynchronisationInterface::KEY_SYNC_STATUS,
-                [
+            PixelbinSynchronisationInterface::KEY_SYNC_STATUS,
+            [
                     "eq" => SyncStatus::STATUS_PENDING
                 ]
-            )->setPageSize(HelperData::LIMIT_FOR_CRON)
+        )->setPageSize(HelperData::LIMIT_FOR_CRON)
             ->setCurPage(1)
             ->setOrder(PixelbinSynchronisationInterface::KEY_SYNC_STATUS, "ASC")
             ->load();

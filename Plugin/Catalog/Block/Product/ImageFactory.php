@@ -18,6 +18,7 @@ use Magento\Catalog\Block\Product\Image as ImageBlock;
 use Magento\Catalog\Block\Product\ImageFactory as CatalogImageFactory;
 use Magento\Catalog\Helper\Image as CatalogImageHelper;
 use Magento\Catalog\Model\Product;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\View\ConfigInterface;
 use Pixelbinio\Pixelbin\Logger\Logger;
@@ -29,56 +30,6 @@ class ImageFactory
      * @var ObjectManagerInterface
      */
     protected $objectManager;
-
-    /**
-     * @var ConfigInterface
-     */
-    private $presentationConfig;
-
-    /**
-     * @var \Magento\Catalog\Model\Product\Image\ParamsBuilder
-     */
-    private $imageParamsBuilder;
-
-    /**
-     * @var CloudinaryImageFactory
-     */
-    private $cloudinaryImageFactory;
-
-    /**
-     * @var UrlGenerator
-     */
-    private $urlGenerator;
-
-    /**
-     * @var ProductInterface
-     */
-    private $product;
-
-    /**
-     * @var Dimensions
-     */
-    private $dimensions;
-
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @var string
-     */
-    private $imageFile;
-
-    /**
-     * @var bool
-     */
-    private $keepFrame;
-
-    /**
-     * @var TransformationModel
-     */
-    private $transformationModel;
 
     /**
      * @var Logger
@@ -97,26 +48,20 @@ class ImageFactory
 
     /**
      * @param ObjectManagerInterface $objectManager
-     * @param ConfigInterface $presentationConfig
      * @param Logger $logger
      * @param HelperData $helperData
      * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
         ObjectManagerInterface $objectManager,
-        ConfigInterface $presentationConfig,
         Logger $logger,
         HelperData $helperData,
         \Magento\Framework\View\Asset\Repository $assetRepo
     ) {
         $this->objectManager = $objectManager;
-        $this->presentationConfig = $presentationConfig;
         $this->logger = $logger;
         $this->helperData = $helperData;
         $this->assetRepo = $assetRepo;
-        $this->dimensions = null;
-        $this->imageFile = null;
-        $this->keepFrame = true;
     }
 
     /**
@@ -139,12 +84,13 @@ class ImageFactory
     /**
      * Create image block from product
      *
-     * @param  CatalogImageFactory $catalogImageFactory
-     * @param  callable            $proceed
-     * @param  Product             $product
-     * @param  string              $imageId
-     * @param  array|null          $attributes
+     * @param CatalogImageFactory $catalogImageFactory
+     * @param callable $proceed
+     * @param Product $product
+     * @param string $imageId
+     * @param array|null $attributes
      * @return ImageBlock
+     * @throws NoSuchEntityException
      */
     public function aroundCreate(
         CatalogImageFactory $catalogImageFactory,
@@ -169,7 +115,8 @@ class ImageFactory
             $useOldImageTheme = is_string($imageBlock->getCustomAttributes()) ? 'old_' : '';
             $imageBlock->setTemplate(
                 \preg_match('/\/image_with_borders.phtml$/', $imageBlock->getTemplate()) ?
-                    'Pixelbinio_Pixelbin::product/' . $useOldImageTheme . 'image_with_borders.phtml' : 'Pixelbinio_Pixelbin::' . $useOldImageTheme . 'product/image.phtml'
+                    'Pixelbinio_Pixelbin::product/' . $useOldImageTheme . 'image_with_borders.phtml' :
+                    'Pixelbinio_Pixelbin::' . $useOldImageTheme . 'product/image.phtml'
             );
             $imageBlock->setLazyloadPlaceholder(HelperData::LAZYLOAD_DATA_PLACEHOLDER);
         }
@@ -183,7 +130,7 @@ class ImageFactory
 
         try {
             if (strpos($imageBlock->getImageUrl(), $mediaUrl . 'catalog/product') === 0) {
-                
+
                 $generatedImageUrl = $this->helperData->replaceProductImageUrlWithPixelbin($imageBlock->getImageUrl());
 
                 $imageBlock->setOriginalImageUrl($generatedImageUrl);
@@ -197,7 +144,6 @@ class ImageFactory
         } catch (\Exception $e) {
             $imageBlock = $proceed($product, $imageId, $attributes);
         }
-
         return $imageBlock;
     }
 }

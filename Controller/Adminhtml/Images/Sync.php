@@ -51,8 +51,7 @@ class Sync extends Action
         HelperData $helperData,
         StorageModel $storageModel,
         UploadFileToPixelbin $uploadFileToPixelbin
-    )
-    {
+    ) {
         $this->helperData = $helperData;
         $this->storageModel = $storageModel;
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
