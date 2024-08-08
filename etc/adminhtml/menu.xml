@@ -24,9 +24,9 @@
              action="adminhtml/system_config/edit/section/pixelbin/" resource="Pixelbinio_Pixelbin::system_config"
              parent="Pixelbinio_Pixelbin::settings"/>
 
-        <add id="Pixelbinio_Pixelbin::logs" title="Logs" module="Pixelbinio_Pixelbin" sortOrder="20" resource="Pixelbinio_Pixelbin::logs"
-             parent="Pixelbinio_Pixelbin::menu"/>
-        <add id="Pixelbinio_Pixelbin::image_sync" title="Images Sync Logs" module="Pixelbinio_Pixelbin" sortOrder="10"
-             action="pixelbin/images/index" resource="Pixelbinio_Pixelbin::image_sync" parent="Pixelbinio_Pixelbin::logs"/>
+<!--        <add id="Pixelbinio_Pixelbin::logs" title="Logs" module="Pixelbinio_Pixelbin" sortOrder="20" resource="Pixelbinio_Pixelbin::logs"-->
+<!--             parent="Pixelbinio_Pixelbin::menu"/>-->
+<!--        <add id="Pixelbinio_Pixelbin::image_sync" title="Images Sync Logs" module="Pixelbinio_Pixelbin" sortOrder="10"-->
+<!--             action="pixelbin/images/index" resource="Pixelbinio_Pixelbin::image_sync" parent="Pixelbinio_Pixelbin::logs"/>-->
     </menu>
 </config>

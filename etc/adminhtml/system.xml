@@ -43,27 +43,28 @@
                     <comment><![CDATA[Check how to get your secret key <a href="https://www.pixelbin.io/docs/getting-started/" target="_blank">Click Here</a>]]></comment>
                 </field>
             </group>
-            <group id="pixelbin_image" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Pixelbin Image Sync</label>
-                <field id="sync" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Sync Image</label>
-                    <frontend_model>Pixelbinio\Pixelbin\Block\System\Config\SyncButton</frontend_model>
-                </field>
-            </group>
             <group id="pixelbin_setup" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pixelbin Setup</label>
-                <field id="cloud_name" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Auto Upload Mapping Feature</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="image_sync_time" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Cron Time to sync new images</label>
-                </field>
-                <field id="use_pixelbin_default_image" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <group id="pixelbin_image_sync" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pixelbin Manual Sync</label>
+                    <field id="enable_manual_sync_cron" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Enable Manual Sync Cron</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="image_sync_time" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Cron Time to sync images</label>
+                        <backend_model>Pixelbinio\Pixelbin\Model\Config\Backend\Cron\CronSyncTime</backend_model>
+                    </field>
+                    <field id="sync" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sync Image</label>
+                        <frontend_model>Pixelbinio\Pixelbin\Block\System\Config\SyncButton</frontend_model>
+                    </field>
+                </group>
+                <field id="use_pixelbin_default_image" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Use Pixelbin Default Image</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="default_image" translate="label" type="image" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="default_image" translate="label" type="image" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Default Image</label>
                     <backend_model>Magento\Config\Model\Config\Backend\File</backend_model>
                     <base_url type="media" scope_info="1">pixel_bin</base_url>

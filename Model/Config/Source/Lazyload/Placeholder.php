@@ -17,6 +17,11 @@ use Magento\Framework\Data\OptionSourceInterface;
 
 class Placeholder implements OptionSourceInterface
 {
+    /**
+     * Get all options
+     *
+     * @return array[]
+     */
     public function toOptionArray()
     {
         return [

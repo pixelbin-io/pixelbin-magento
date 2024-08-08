@@ -45,7 +45,8 @@ class AfterGetCategoryImage
     /**
      * Build image url using base path and params
      *
-     * @param  Image $subject
+     * @param Image $subject
+     * @param array|string|string[] $result
      * @return string
      */
     public function afterGetUrl(
@@ -55,7 +56,6 @@ class AfterGetCategoryImage
         if (!$this->helperData->isModuleEnabled()) {
             return $result;
         }
-
         try {
             if ($result) {
                 $result = $this->helperData->replaceProductImageUrlWithPixelbin($result);
@@ -63,7 +63,6 @@ class AfterGetCategoryImage
         } catch (\Exception $e) {
             $this->logger->info("Image URL PDP error" . $e->getMessage());
         }
-
         return $result;
     }
 }

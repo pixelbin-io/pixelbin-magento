@@ -6,10 +6,10 @@
 ?>
 <?php /** @var $block \Magento\Catalog\Block\Product\Image */ ?>
 
-<img class="photo image pixelbin-lazyload <?= $block->escapeHtmlAttr($block->getClass()) ?>"
-    <?= $block->escapeHtml($block->getCustomAttributes()) ?>
-    src="<?= $block->getLazyloadPlaceholder() ?>"
-    data-original="<?= $block->escapeUrl($block->getLazyloadPlaceholder()) ?>"
-    width="<?= $block->escapeHtmlAttr($block->getWidth()) ?>"
-    height="<?= $block->escapeHtmlAttr($block->getHeight()) ?>"
+<img class="photo image pixelbin-lazyload <?= /** @escapeNotVerified */ $escaper->escapeHtmlAttr($block->getClass()) ?>"
+    <?= $escaper->escapeHtml($block->getCustomAttributes()) ?>
+    src="<?= /** @escapeNotVerified */ $block->getLazyloadPlaceholder() ?>"
+    data-original="<?= $escaper->escapeUrl($block->getLazyloadPlaceholder()) ?>"
+    width="<?= $escaper->escapeHtmlAttr($block->getWidth()) ?>"
+    height="<?= $escaper->escapeHtmlAttr($block->getHeight()) ?>"
     alt="<?= /* @noEscape */ $block->stripTags($block->getLabel(), null, true) ?>" />

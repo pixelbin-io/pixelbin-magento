@@ -9,7 +9,7 @@
 <script type="text/x-magento-init">
     {
         "*": {
-            "pixelbinLazyload": <?= $block->getLazyloadOptions() ?>
+            "pixelbinLazyload": <?= /** @escapeNotVerified */ $block->getLazyloadOptions() ?>
         }
     }
 </script>

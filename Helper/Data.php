@@ -41,8 +41,10 @@ class Data extends AbstractHelper
     public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
     public const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
     public const XML_PATH_GLOBAL_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/global_custom_transformation';
+    //@codingStandardsIgnoreStart
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
-    public const API_VERSION = "v2";
+    //@codingStandardsIgnoreEnd
+    public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_setup/pixelbin_image_sync/enable_manual_sync_cron';
     public const API_URL = "https://api.pixelbinz0.de";
     public const EXCLUDE_FOLDERS = [
         ".thumbscatalog",
@@ -60,13 +62,15 @@ class Data extends AbstractHelper
     ];
 
     //= Lazyload
-    const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/lazyload_enabled';
-    const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
-    const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
-    const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';
-    const XML_PATH_LAZYLOAD_EFFECT = 'pixelbin/lazyload/effect';
-    const XML_PATH_LAZYLOAD_PLACEHOLDER = 'pixelbin/lazyload/placeholder';
-    const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
+    public const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/lazyload_enabled';
+    public const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
+    public const XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS = 'pixelbin/lazyload/is_exclude_for_cms_block';
+    public const XML_PATH_LAZYLOAD_THRESHOLD = 'pixelbin/lazyload/threshold';
+    public const XML_PATH_LAZYLOAD_EFFECT = 'pixelbin/lazyload/effect';
+    public const XML_PATH_LAZYLOAD_PLACEHOLDER = 'pixelbin/lazyload/placeholder';
+    //@codingStandardsIgnoreStart
+    public const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
+    //@codingStandardsIgnoreEnd
     public const LIMIT_FOR_CRON = 5;
 
     /**
@@ -149,6 +153,17 @@ class Data extends AbstractHelper
     public function isModuleEnabled($storeId = null)
     {
         return $this->getConfigValue(self::XML_PATH_EXTENSION_ENABLE, $storeId);
+    }
+
+    /**
+     * Check if cron setting is enabled
+     *
+     * @param int $storeId
+     * @return mixed
+     */
+    public function isManualSyncCronEnabled($storeId = null)
+    {
+        return $this->getConfigValue(self::XML_PATH_MANUAL_CRON_ENABLED, $storeId);
     }
 
     /**
@@ -313,7 +328,7 @@ class Data extends AbstractHelper
         if ($imageUrl != null) {
             if ($this->isDefaultImageEnabled()) {
                 if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                    strpos($imageUrl, 'pixel_bin') > 0){
+                    strpos($imageUrl, 'pixel_bin') > 0) {
                     return $this->getDefaultImage();
                 }
             }
@@ -343,13 +358,20 @@ class Data extends AbstractHelper
         return $imageUrl;
     }
 
+    /**
+     * Replace Cms Image Url With Pixelbin
+     *
+     * @param string $imageUrl
+     * @return array|mixed|string|string[]|null
+     * @throws NoSuchEntityException
+     */
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
 
             if ($this->isDefaultImageEnabled()) {
                 if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                    strpos($imageUrl, 'pixel_bin') > 0){
+                    strpos($imageUrl, 'pixel_bin') > 0) {
                     return $this->getDefaultImage();
                 }
             }
@@ -378,16 +400,34 @@ class Data extends AbstractHelper
         return $imageUrl;
     }
 
+    /**
+     * Is Enabled Lazy load
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
     public function isEnabledLazyload($storeId = null)
     {
         return (bool) $this->getConfigValue(self::XML_PATH_LAZYLOAD_ENABLED, $storeId);
     }
 
+    /**
+     * Is Lazyload auto replace Cms Blocks
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
     public function isLazyloadAutoReplaceCmsBlocks($storeId = null)
     {
         return (bool) $this->getConfigValue(self::XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS, $storeId);
     }
 
+    /**
+     * Get lazy load ignore cms blocks
+     *
+     * @param int|null $storeId
+     * @return array
+     */
     public function getLazyloadIgnoredCmsBlocksArray($storeId = null)
     {
         $value = ($this->getConfigValue(self::XML_PATH_LAZYLOAD_IGNORED_CMS_BLOCKS, $storeId))
@@ -397,16 +437,34 @@ class Data extends AbstractHelper
         return $value;
     }
 
+    /**
+     * Get lazyload threshold
+     *
+     * @param int|null $storeId
+     * @return int
+     */
     public function getLazyloadThreshold($storeId = null)
     {
         return (int) $this->getConfigValue(self::XML_PATH_LAZYLOAD_THRESHOLD, $storeId);
     }
 
+    /**
+     * Get Lazyload effect
+     *
+     * @param int|null $storeId
+     * @return string
+     */
     public function getLazyloadEffect($storeId = null)
     {
         return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_EFFECT, $storeId);
     }
 
+    /**
+     * Get lazyload placeholder
+     *
+     * @param int|null $storeId
+     * @return string
+     */
     public function getLazyloadPlaceholder($storeId = null)
     {
         return (string) $this->getConfigValue(self::XML_PATH_LAZYLOAD_PLACEHOLDER, $storeId);
@@ -427,5 +485,4 @@ class Data extends AbstractHelper
 
         return $offset;
     }
-
 }
