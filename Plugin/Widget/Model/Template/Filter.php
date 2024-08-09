@@ -5,7 +5,7 @@ namespace Pixelbinio\Pixelbin\Plugin\Widget\Model\Template;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Core\Image\ImageFactory;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
-use Pixelbinio\Pixelbin\Model\Template\Filter as CloudinaryWidgetFilter;
+use Pixelbinio\Pixelbin\Model\Template\Filter as WidgetFilter;
 use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -20,19 +20,14 @@ class Filter
     protected $_imageFactory;
 
     /**
-     * @var UrlGenerator
-     */
-    protected $_urlGenerator;
-
-    /**
-     * @var ConfigurationInterface
+     * @var HelperData
      */
     protected $helperData;
 
     /**
-     * @var CloudinaryWidgetFilter
+     * @var WidgetFilter
      */
-    protected $_cloudinaryWidgetFilter;
+    protected $widgetFilter;
 
     /**
      * @var Registry
@@ -43,21 +38,20 @@ class Filter
      * @method __construct
      * @param  StoreManagerInterface  $storeManager
      * @param  ImageFactory           $imageFactory
-     * @param  HelperData           $helperData
-     * @param  ConfigurationInterface $configuration
-     * @param  CloudinaryWidgetFilter $cloudinaryWidgetFilter
+     * @param  HelperData             $helperData
+     * @param  WidgetFilter           $widgetFilter
      * @param  Registry               $coreRegistry
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         ImageFactory $imageFactory,
         HelperData $helperData,
-        CloudinaryWidgetFilter $cloudinaryWidgetFilter,
+        WidgetFilter $widgetFilter,
         Registry $coreRegistry
     ) {
         $this->_imageFactory = $imageFactory;
         $this->helperData = $helperData;
-        $this->_cloudinaryWidgetFilter = $cloudinaryWidgetFilter;
+        $this->widgetFilter = $widgetFilter;
         $this->_coreRegistry = $coreRegistry;
     }
 
@@ -69,21 +63,23 @@ class Filter
      * @param  string[]                              $construction
      * @return string
      */
-    public function aroundMediaDirective(\Magento\Widget\Model\Template\Filter $widgetFilter, callable $proceed, $construction)
-    {
+    public function aroundMediaDirective(
+        \Magento\Widget\Model\Template\Filter $widgetFilter,
+        callable $proceed,
+        $construction
+    ) {
         if (!$this->helperData->isModuleEnabled()) {
             return $proceed($construction);
         }
 
-
-        $params = $this->_cloudinaryWidgetFilter->getParams($construction[2]);
+        $params = $this->widgetFilter->getParams($construction[2]);
         if (!isset($params['url'])) {
-
-
             return $proceed($construction);
         }
 
+        //@codingStandardsIgnoreStart
         $url = (preg_match('/^&quot;.+&quot;$/', $params['url'])) ? preg_replace('/(^&quot;)|(&quot;$)/', '', $params['url']) : $params['url'];
+        //@codingStandardsIgnoreEnd
 
         $image = $this->_imageFactory->build(
             $url,
@@ -94,7 +90,10 @@ class Filter
         );
 
         $generated = $this->helperData->getAppZone().$image;
+        
+        //@codingStandardsIgnoreStart
         if (@getimagesize($generated)) {
+        //@codingStandardsIgnoreEnd
             return $generated;
         } else {
             return $this->helperData->getDefaultImage();
