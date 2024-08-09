@@ -1,43 +1,98 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Core;
 
 class Image implements ImageInterface
 {
+    /**
+     * @var string
+     */
     private $imagePath;
 
+    /**
+     * @var string
+     */
     private $relativePath;
 
+    /**
+     * @var array
+     */
     private $pathInfo;
 
+    /**
+     * @param string $imagePath
+     * @param string $relativePath
+     */
     private function __construct($imagePath, $relativePath = '')
     {
         $this->imagePath = $imagePath;
         $this->relativePath = $relativePath;
+        //@codingStandardsIgnoreStart
         $this->pathInfo = pathinfo($this->imagePath);
+        //@codingStandardsIgnoreEnd
     }
 
-    public static function fromPath($imagePath, $relativePath = '')
+    /**
+     * Retruns Image path
+     *
+     * @param string $imagePath
+     * @param string $relativePath
+     * @return Image
+     */
+    public function fromPath($imagePath, $relativePath = '')
     {
         return new Image($imagePath, $relativePath);
     }
 
+    /**
+     * Returns a String
+     *
+     * @return string
+     */
     public function __toString()
     {
         return $this->imagePath;
     }
 
+    /**
+     * Get Relative Path
+     *
+     * @return string
+     */
     public function getRelativePath()
     {
         return $this->relativePath;
     }
 
+    /**
+     * Get Relative Folder
+     *
+     * @return string
+     */
     public function getRelativeFolder()
     {
+        //@codingStandardsIgnoreStart
         $result = dirname($this->getRelativePath());
+        //@codingStandardsIgnoreEnd
         return $result == '.' ? '' : $result;
     }
 
+    /**
+     * Get ID
+     *
+     * @return string
+     */
     public function getId()
     {
         return sprintf(
@@ -47,6 +102,11 @@ class Image implements ImageInterface
         );
     }
 
+    /**
+     * Get Id Without Extension
+     *
+     * @return string
+     */
     public function getIdWithoutExtension()
     {
         return sprintf(
@@ -56,6 +116,11 @@ class Image implements ImageInterface
         );
     }
 
+    /**
+     * Get Extension
+     *
+     * @return mixed
+     */
     public function getExtension()
     {
         return $this->pathInfo['extension'];

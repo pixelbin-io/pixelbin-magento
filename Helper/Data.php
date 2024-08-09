@@ -121,7 +121,7 @@ class Data extends AbstractHelper
         JsonHelperData        $jsonHelper,
         Logger                $logger,
         StoreManagerInterface $storeManager,
-        \Magento\Framework\Encryption\EncryptorInterface $encryptor
+        EncryptorInterface $encryptor
     ) {
         parent::__construct($context);
         $this->curl = $curl;
@@ -327,8 +327,8 @@ class Data extends AbstractHelper
     {
         if ($imageUrl != null) {
             if ($this->isDefaultImageEnabled()) {
-                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                    strpos($imageUrl, 'pixel_bin') > 0) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+                    strpos($imageUrl, 'pixel_bin') !== 0) {
                     return $this->getDefaultImage();
                 }
             }
@@ -351,7 +351,9 @@ class Data extends AbstractHelper
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
 
+            //@codingStandardsIgnoreStart
             if (@getimagesize($pixelbinImage)) {
+            //@codingStandardsIgnoreEnd
                 $imageUrl = $pixelbinImage;
             }
         }
@@ -370,8 +372,8 @@ class Data extends AbstractHelper
         if ($imageUrl != null) {
 
             if ($this->isDefaultImageEnabled()) {
-                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') > 0 ||
-                    strpos($imageUrl, 'pixel_bin') > 0) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+                    strpos($imageUrl, 'pixel_bin') !== 0) {
                     return $this->getDefaultImage();
                 }
             }
@@ -393,7 +395,9 @@ class Data extends AbstractHelper
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
 
+            //@codingStandardsIgnoreStart
             if (@getimagesize($pixelbinImage)) {
+            //@codingStandardsIgnoreEnd
                 $imageUrl = $pixelbinImage;
             }
         }
@@ -482,9 +486,6 @@ class Data extends AbstractHelper
         while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
             $offset += count($files);
         }
-
         return $offset;
     }
-
-    
 }
