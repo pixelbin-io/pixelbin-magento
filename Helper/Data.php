@@ -485,4 +485,6 @@ class Data extends AbstractHelper
 
         return $offset;
     }
+
+    
 }
