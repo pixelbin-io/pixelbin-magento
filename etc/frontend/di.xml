@@ -50,4 +50,8 @@
         <plugin name="after_get_image_url_category" type="Pixelbinio\Pixelbin\Plugin\Catalog\Model\Category\AfterGetCategoryImage" />
     </type>
 
+    <type name="Magento\Widget\Model\Template\Filter">
+        <plugin name="pixelbin_plugin_widget_model_template_filter" type="Pixelbinio\Pixelbin\Plugin\Widget\Model\Template\Filter"/>
+    </type>
+
 </config>
