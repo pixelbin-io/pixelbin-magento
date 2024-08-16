@@ -16,7 +16,7 @@
     <update handle="styles"/>
     <body>
         <referenceContainer name="content">
-            <uiComponent name="image_logs_data_list"/>
+            <uiComponent name="pixelbin_images_data_list"/>
         </referenceContainer>
     </body>
 </page>
