@@ -23,19 +23,20 @@
     </type>
 
     <!--  For images logs grid  -->
+     <virtualType name="Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">pixelbin_image_sync_logs</argument>
+            <argument name="resourceModel" xsi:type="string">Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs</argument>
+        </arguments>
+    </virtualType>
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="image_logs_data_list_data_source" xsi:type="string">Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Grid\Collection</item>
+                <item name="image_logs_data_list_data_source" xsi:type="string">
+                    Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Grid\Collection
+                </item>
             </argument>
-        </arguments>
-    </type>
-    <type name="Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs\Grid\Collection">
-        <arguments>
-            <argument name="mainTable" xsi:type="string">pixelbin_image_sync_logs</argument>
-            <argument name="eventPrefix" xsi:type="string">Pixelbinio_Pixelbin_grid_collection</argument>
-            <argument name="eventObject" xsi:type="string">image_grid_collection</argument>
-            <argument name="resourceModel" xsi:type="string">Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinImageSyncLogs</argument>
         </arguments>
     </type>
 

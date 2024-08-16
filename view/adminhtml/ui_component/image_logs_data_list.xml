@@ -12,100 +12,192 @@
  * @version     1.0.0
  */
 -->
-<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Ui/etc/ui_configuration.xsd">
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">image_logs_data_list.image_logs_data_list_data_source</item>
+            <item name="deps" xsi:type="string">image_logs_data_list.image_logs_data_list_data_source</item>
         </item>
+        <item name="spinner" xsi:type="string">grid_records_columns</item>
     </argument>
-    <settings>
-        <spinner>image_logs_data_columns</spinner>
-        <deps>
-            <dep>image_logs_data_list.image_logs_data_list_data_source</dep>
-        </deps>
-    </settings>
-    <dataSource name="image_logs_data_list_data_source" component="Magento_Ui/js/grid/provider">
-        <settings>
-            <updateUrl path="mui/index/render"/>
-            <filterUrlParams>
-                <param name="user_id">*</param>
-            </filterUrlParams>
-            <storageConfig>
-                <param name="indexField" xsi:type="string">entity_id</param>
-            </storageConfig>
-        </settings>
-        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="image_logs_data_list_data_source">
-            <settings>
-                <requestFieldName>id</requestFieldName>
-                <primaryFieldName>entity_id</primaryFieldName>
-            </settings>
-        </dataProvider>
+    <dataSource name="image_logs_data_list_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">
+                Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
+            </argument>
+            <argument name="name" xsi:type="string">image_logs_data_list_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
     </dataSource>
     <listingToolbar name="listing_top">
-        <settings>
-            <sticky>true</sticky>
-        </settings>
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+                <item name="stickyTmpl" xsi:type="string">ui/grid/sticky/toolbar</item>
+            </item>
+        </argument>
         <bookmark name="bookmarks"/>
         <columnsControls name="columns_controls"/>
         <filters name="listing_filters">
-            <settings>
-                <templates>
-                    <filters>
-                        <select>
-                            <param name="template" xsi:type="string">ui/grid/filters/elements/ui-select</param>
-                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
-                        </select>
-                    </filters>
-                </templates>
-                <storageConfig>
-                    <param name="provider" xsi:type="string">image_logs_data_list.image_logs_data_list.listing_top.bookmarks</param>
-                    <param name="namespace" xsi:type="string">current.filters</param>
-                </storageConfig>
-            </settings>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="columnsProvider" xsi:type="string">
+                        image_logs_data_list.image_logs_data_list.grid_records_columns
+                    </item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">
+                            image_logs_data_list.image_logs_data_list.listing_top.bookmarks
+                        </item>
+                        <item name="namespace" xsi:type="string">current.filters</item>
+                    </item>
+                    <item name="templates" xsi:type="array">
+                        <item name="filters" xsi:type="array">
+                            <item name="select" xsi:type="array">
+                                <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
+                                <item name="template" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                            </item>
+                        </item>
+                    </item>
+                    <item name="childDefaults" xsi:type="array">
+                        <item name="provider" xsi:type="string">
+                            image_logs_data_list.image_logs_data_list.listing_top.listing_filters
+                        </item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">
+                                image_logs_data_list.image_logs_data_list.grid_records_columns.${ $.index }:visible
+                            </item>
+                        </item>
+                    </item>
+                </item>
+                <item name="observers" xsi:type="array">
+                    <item name="column" xsi:type="string">column</item>
+                </item>
+            </argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="applied" xsi:type="array">
+                        <item name="quote_type" xsi:type="string">quote</item>
+                    </item>
+                </item>
+            </argument>
         </filters>
-        <massaction name="listing_massaction">
-            <action name="mass_delete">
-                <settings>
-                    <url path="pixelbin/images/massdelete"/>
-                    <type>delete_request</type>
-                    <label translate="true">Delete Request</label>
-                </settings>
-            </action>
-        </massaction>
-        <paging name="listing_paging"/>
+        <paging name="listing_paging">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">
+                            image_logs_data_list.image_logs_data_list.listing_top.bookmarks
+                        </item>
+                        <item name="namespace" xsi:type="string">current.paging</item>
+                    </item>
+                    <item name="selectProvider" xsi:type="string">
+                        image_logs_data_list.image_logs_data_list.grid_records_columns.ids
+                    </item>
+                </item>
+            </argument>
+        </paging>
+        <exportButton class="Magento\Ui\Component\ExportButton">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="options" xsi:type="array">
+                        <item name="csv" xsi:type="array">
+                            <item name="value" xsi:type="string">csv</item>
+                            <item name="label" xsi:type="string" translate="true">CSV</item>
+                            <item name="url" xsi:type="string">mui/export/gridToCsv</item>
+                        </item>
+                        <item name="xml" xsi:type="array">
+                            <item name="value" xsi:type="string">xml</item>
+                            <item name="label" xsi:type="string" translate="true">Excel XML</item>
+                            <item name="url" xsi:type="string">mui/export/gridToXml</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </exportButton>
     </listingToolbar>
-    <columns name="image_logs_data_columns">
-        <selectionsColumn name="ids" sortOrder="10">
-            <settings>
-                <resizeEnabled>false</resizeEnabled>
-                <resizeDefaultWidth>55</resizeDefaultWidth>
-                <indexField>entity_id</indexField>
-            </settings>
+    <columns name="grid_records_columns">
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">id</item>
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
+                </item>
+            </argument>
         </selectionsColumn>
-        <column name="entity_id" sortOrder="20">
-            <settings>
-                <filter>textRange</filter>
-                <sorting>desc</sorting>
-                <label translate="true">ID</label>
-            </settings>
+        <column name="entity_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="sorting" xsi:type="string">desc</item>
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
         </column>
-        <column name="request" sortOrder="30">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Request</label>
-            </settings>
+        <column name="request">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Request</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
         </column>
-        <column name="response" sortOrder="40">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Response</label>
-            </settings>
+        <column name="response">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Response</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
         </column>
-        <column name="sync_type" sortOrder="40">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Sync Type</label>
-            </settings>
+        <column name="sync_type">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Sync Type</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">dateRange</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="label" xsi:type="string" translate="true">Created At</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </column>
+        <column name="updated_at" class="Magento\Ui\Component\Listing\Columns\Date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">dateRange</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="label" xsi:type="string" translate="true">Updated At</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                </item>
+            </argument>
         </column>
     </columns>
 </listing>

@@ -348,7 +348,7 @@ class Data extends AbstractHelper
             if ($this->isImageTransformationEnabled($storeId)) {
                 $globalTransformation = $this->getGlobalCustomTransformation($storeId);
                 $productTransformation = $this->getProductCustomTransformation($storeId);
-                $transformation = '/'$globalTransformation.$productTransformation.'/';
+                $transformation = '/'.$globalTransformation.$productTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
 
