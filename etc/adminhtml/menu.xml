@@ -37,14 +37,14 @@
                parent="Pixelbinio_Pixelbin::settings"/>
 
           <add id="Pixelbinio_Pixelbin::logs" 
-               title="Logs" 
+               title="Pixelbin" 
                module="Pixelbinio_Pixelbin" 
                sortOrder="20" 
                resource="Pixelbinio_Pixelbin::logs"
                parent="Pixelbinio_Pixelbin::menu"/>
                
           <add id="Pixelbinio_Pixelbin::image_sync" 
-               title="Images Sync Logs" 
+               title="Images Sync" 
                module="Pixelbinio_Pixelbin" 
                sortOrder="10"
                action="pixelbin/images/index" 
