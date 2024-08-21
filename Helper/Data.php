@@ -489,4 +489,129 @@ class Data extends AbstractHelper
         }
         return $offset;
     }
+
+
+    /**
+     * Parse Cloudinary URL
+     * @method parseCloudinaryUrl
+     * @param  string             $url
+     * @param  string|null        $publicId
+     * @return array
+     */
+    public function parsePixelbinUrl($url, $publicId = null)
+    {
+        $parsedUrlParts = $this->mbParseUrl($url);
+        $url = preg_replace('/\?.*/', '', $url);
+
+        $parsed = [
+            "orig_url" => $url,
+            "scheme" => isset($parsedUrlParts["scheme"]) ? $parsedUrlParts["scheme"] : null,
+            "host" => isset($parsedUrlParts["host"]) ? $parsedUrlParts["host"] : null,
+            "path" => isset($parsedUrlParts["path"]) ? $parsedUrlParts["path"] : null,
+            "query" => isset($parsedUrlParts["query"]) ? $parsedUrlParts["query"] : null,
+            "extension" => \pathinfo($url, PATHINFO_EXTENSION),
+            "type" => null,
+            "cloudName" => null,
+            "version" => null,
+            "publicId" => ltrim((string) $publicId, '/') ?: null,
+            "transformations_string" => null,
+            "transformations" => [],
+            "transformationless_url" => $url,
+            "versionless_url" => $url,
+            "versionless_transformationless_url" => $url,
+            "thumbnail_url" => null,
+        ];
+
+        $_url = ltrim($parsed["path"], '/');
+        $_url = preg_replace('/\.[^.]+$/', '', $_url);
+
+        preg_match('/\/v[0-9]{1,10}\//', $_url, $version);
+        if ($version && isset($version[0])) {
+            $parsed["version"] = trim($version[0], '/');
+        }
+
+        if (!$parsed["publicId"] && $parsed["version"]) {
+            $parsed["publicId"] = preg_replace('/.+\/v[0-9]{1,10}\//', '', $_url);
+        }
+
+        $_url = preg_replace('/(\/|\/v[0-9]{1,10}\/)' . \preg_quote((string) $parsed["publicId"], '/') . '$/', '', $_url);
+        $_url = explode('/', $_url);
+
+        $slug = \array_shift($_url);
+        if (\in_array($slug, ["image","video"])) {
+            $parsed["type"] = $slug;
+        } else {
+            $parsed["cloudName"] = $slug;
+        }
+
+        $slug = \array_shift($_url);
+        $parsed["type"] = ($parsed["cloudName"] && $slug  === "video") ? "video" : "image";
+
+        if (isset($parsed['extension'])) {
+            $parsed['type'] = (in_array($parsed['extension'], $this->getSupportedVideoFormats())) ? 'video' : 'image';
+        }
+
+        $slug = \array_shift($_url);
+        $parsed["transformations_string"] = ($slug === 'upload' ? '' : $slug) . implode('/', $_url);
+
+        if ($parsed["transformations_string"]) {
+            $parsed["transformations"] = explode(',', \str_replace('/', ',', $parsed["transformations_string"]));
+            $parsed["transformationless_url"] = preg_replace('/\/' . \preg_quote($parsed["transformations_string"], '/') . '\//', '/', $url, 1);
+        }
+
+        $parsed["versionless_url"] = preg_replace('/\/v[0-9]{1,10}\//', '/', $url, 1);
+        $parsed["versionless_transformationless_url"] = preg_replace('/\/v[0-9]{1,10}\//', '/', $parsed["transformationless_url"], 1);
+
+        if ($parsed["type"] === "video") {
+            $parsed["thumbnail_url"] = preg_replace('/\.[^.]+$/', '', $url);
+            $parsed["thumbnail_url"] = preg_replace('/\/v[0-9]{1,10}\//', '/', $parsed["thumbnail_url"]);
+            $parsed["thumbnail_url"] = preg_replace('/\/(' . \preg_quote((string) $parsed["publicId"], '/') . ')$/', '/so_auto/$1.jpg', $parsed["thumbnail_url"]);
+        }
+
+        return $parsed;
+    }
+
+    /**
+     * UTF-8 aware parse_url() replacement.
+     *
+     * @return array
+     */
+    public function mbParseUrl($url, $component = -1)
+    {
+        $enc_url = preg_replace_callback(
+            '%[^:/@?&=#]+%usD',
+            function ($matches) {
+                return rawurlencode($matches[0]);
+            },
+            $url
+        );
+        $parts = parse_url($enc_url, $component);
+        if ($parts === false) {
+            throw new \InvalidArgumentException('Malformed URL: ' . $url);
+        }
+        if (is_array($parts)) {
+            foreach ($parts as $name => $value) {
+                $parts[$name] = rawurldecode($value);
+            }
+        } else {
+            $parts = rawurldecode($parts);
+        }
+        return $parts;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormatsToPreserve()
+    {
+        return ['png', 'webp', 'gif', 'svg'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSupportedVideoFormats()
+    {
+        return ['mp4', 'webm', 'ogv', 'mov', 'wmv'];
+    }
 }
