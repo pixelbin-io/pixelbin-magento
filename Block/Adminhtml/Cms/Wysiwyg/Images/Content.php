@@ -51,15 +51,15 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
      */
     public function getPixelbinMediaLibraryWidgetOptions($multiple = false, $refresh = false)
     {
-        if (!($pixelbinMLoptions = $this->mediaLibraryHelper->getPixelbinOptions($multiple, $refresh))) {
+        if (!($pixelbinOptions = $this->mediaLibraryHelper->getPixelbinOptions($multiple, $refresh))) {
             return null;
         }
 
         try {
             if (version_compare($this->productMetadata->getVersion(), '2.3.5', '<=')) {
-                $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
+                $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/ajax/retrieveImage');
             } else {
-                $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
+                $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/ajax/retrieveImage');
             }
 
             //Try to add session param on Magento versions prior to 2.3.5
@@ -71,13 +71,23 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
 
         return $this->_jsonEncoder->encode(
             [
-            'cldMLid' => 'wysiwyg_media_gallery',
-            'imageUploaderUrl' => $imageUploadUrl,
-            'triggerSelector' => '.media-gallery-modal',
-            'triggerEvent' => 'fileuploaddone',
-            'pixelbinMLoptions' => $pixelbinMLoptions,
-            'addTmpExtension' => false,
-            'pixelbinMLshowOptions' => $this->mediaLibraryHelper->getPixelbinShowOptions("image"),
+                'htmlId' => $this->getHtmlId(),
+                'cldMLid' => 'wysiwyg_media_gallery',
+                'cloud_name' => $pixelbinOptions["cloud_name"] ?? "",
+                'remove_header' => true,
+                'max_files' => "1",
+                'insert_caption' => "Insert",
+                'inline_container' => false,
+                'default_transformations' => [[]],
+                'button_class' => 'add_from_pixelbin',
+                'button_caption' => '',
+                'imageUploaderUrl' => $imageUploadUrl,
+                'triggerSelector' => '.media-gallery-modal',
+                'triggerEvent' => 'fileuploaddone',
+                'pixelbinMLoptions' => $pixelbinOptions,
+                'addTmpExtension' => false,
+                'pixelbin_options' => $pixelbinOptions,
+                'pixelbinShowOptions' => $this->mediaLibraryHelper->getPixelbinShowOptions("image"),
             ]
         );
     }

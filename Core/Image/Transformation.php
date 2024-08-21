@@ -1,15 +1,15 @@
 <?php
 
-namespace Cloudinary\Cloudinary\Core\Image;
+namespace Pixelbinio\Pixelbin\Core\Image;
 
-use Cloudinary\Cloudinary\Core\Image\Transformation\Crop;
-use Cloudinary\Cloudinary\Core\Image\Transformation\DefaultImage;
-use Cloudinary\Cloudinary\Core\Image\Transformation\Dimensions;
-use Cloudinary\Cloudinary\Core\Image\Transformation\Dpr;
-use Cloudinary\Cloudinary\Core\Image\Transformation\FetchFormat;
-use Cloudinary\Cloudinary\Core\Image\Transformation\Freeform;
-use Cloudinary\Cloudinary\Core\Image\Transformation\Gravity;
-use Cloudinary\Cloudinary\Core\Image\Transformation\Quality;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\Crop;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\DefaultImage;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\Dimensions;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\Dpr;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\FetchFormat;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\Freeform;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\Gravity;
+use Pixelbinio\Pixelbin\Core\Image\Transformation\Quality;
 
 class Transformation
 {
