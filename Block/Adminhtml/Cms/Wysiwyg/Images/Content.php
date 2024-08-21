@@ -43,15 +43,15 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
     }
 
     /**
-     * Get Cloudinary media library widget options
+     * Get pixelbin media library widget options
      *
      * @param bool $multiple Allow multiple
      * @param bool $refresh Refresh options
      * @return string
      */
-    public function getCloudinaryMediaLibraryWidgetOptions($multiple = false, $refresh = false)
+    public function getPixelbinMediaLibraryWidgetOptions($multiple = false, $refresh = false)
     {
-        if (!($cloudinaryMLoptions = $this->mediaLibraryHelper->getCloudinaryMLOptions($multiple, $refresh))) {
+        if (!($pixelbinMLoptions = $this->mediaLibraryHelper->getPixelbinOptions($multiple, $refresh))) {
             return null;
         }
 
@@ -75,9 +75,9 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
             'imageUploaderUrl' => $imageUploadUrl,
             'triggerSelector' => '.media-gallery-modal',
             'triggerEvent' => 'fileuploaddone',
-            'pixelbinMLoptions' => $cloudinaryMLoptions,
+            'pixelbinMLoptions' => $pixelbinMLoptions,
             'addTmpExtension' => false,
-            'pixelbinMLshowOptions' => $this->mediaLibraryHelper->getCloudinaryMLshowOptions("image"),
+            'pixelbinMLshowOptions' => $this->mediaLibraryHelper->getPixelbinShowOptions("image"),
             ]
         );
     }

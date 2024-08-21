@@ -43,7 +43,7 @@ class AddFromPixelbin implements ButtonProviderInterface
      */
     public function getButtonData(): array
     {
-        $pixelbinMLwidgetOprions = json_decode($this->images->getCloudinaryMediaLibraryWidgetOptions(),true);
+        $pixelbinMLwidgetOprions = json_decode($this->images->getPixelbinMediaLibraryWidgetOptions(),true);
 
 
         $buttonData = [

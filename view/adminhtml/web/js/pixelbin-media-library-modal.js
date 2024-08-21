@@ -80,11 +80,11 @@ define([
                             console.log(data);
                             $('body').first().css('overflow', 'initial');
                             if (widget.isMediaBrowser()) {
-                                return widget.cloudinaryInsertHandler(data);
+                                return widget.pixelbinInsertHandler(data);
                             } else {
                                 // new media gallery
                                 data['newGalleryMode'] = 1;
-                                widget.cloudinaryInsertHandler(data);
+                                widget.pixelbinInsertHandler(data);
                                 if (uiRegistry.get('media_gallery_listing.media_gallery_listing_data_source')) {
                                     $(window).trigger('reload.MediaGallery');
                                 }
@@ -112,7 +112,7 @@ define([
          * Fired on trigger "openMediaLibrary"
          */
         openMediaLibrary: function() {
-            window.ml.show(this.options.cloudinaryMLshowOptions);
+            window.ml.show(this.options.pixelbinMLshowOptions);
         },
         showLoader: function () {
             this.loader(true);
@@ -132,9 +132,9 @@ define([
         },
 
         /**
-         * Fired on trigger "cloudinaryInsertHandler"
+         * Fired on trigger "pixelbinInsertHandler"
          */
-        cloudinaryInsertHandler: function(data) {
+        pixelbinInsertHandler: function(data) {
             var widget = this;
             var aggregatedErrorMessages = [];
             var $i = data.assets.length;
@@ -162,7 +162,7 @@ define([
                             if (file.file && !file.error) {
                                 var context = (asset.context && asset.context.custom) ? asset.context.custom : {};
                                 if (asset.resource_type === "video") {
-                                    file.video_provider = 'cloudinary';
+                                    file.video_provider = 'pixelbin';
                                     file.media_type = "external-video";
                                     file.video_url = asset.asset_url;
                                     file.video_title = context.caption || context.alt || asset.public_id || "";
@@ -170,7 +170,7 @@ define([
                                     if (file.using_placeholder_fallback) {
                                         notification().add({
                                             error: false,
-                                            message: $t("Couldn't automatically generate Cloudinary video thumbnail, using fallback placeholder instead. You can always replace that manually later"),
+                                            message: $t("Couldn't automatically generate pixelbin video thumbnail, using fallback placeholder instead. You can always replace that manually later"),
                                             insertMethod: function(constructedMessage) {
                                                 aggregatedErrorMessages.push(constructedMessage);
                                             }
@@ -186,7 +186,7 @@ define([
                                 file.free_transformation = asset.free_transformation;
                                 file.asset_derived_image_url = asset.asset_derived_image_url;
                                 file.image_url = asset.asset_image_url;
-                                file.cloudinary_asset = asset;
+                                file.pixelbin_asset = asset;
 
                                 if (widget.options.triggerSelector && widget.options.triggerEvent) {
                                     $(widget.options.triggerSelector).last().trigger(widget.options.triggerEvent, file);
