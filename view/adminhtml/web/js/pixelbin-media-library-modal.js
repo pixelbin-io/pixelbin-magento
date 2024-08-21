@@ -112,7 +112,7 @@ define([
          * Fired on trigger "openMediaLibrary"
          */
         openMediaLibrary: function() {
-            window.ml.show(this.options.pixelbinMLshowOptions);
+            window.ml.show(this.options.pixelbinShowOptions);
         },
         showLoader: function () {
             this.loader(true);
