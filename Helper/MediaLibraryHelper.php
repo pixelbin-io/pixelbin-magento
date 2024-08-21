@@ -42,7 +42,7 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @method getCloudinaryMLOptions
+     * @method getPixelbinOptions
      * @param bool $multiple Allow multiple
      * @param bool $refresh Refresh options
      * @return array
@@ -68,7 +68,7 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @method getCloudinaryMLshowOptions
+     * @method getPixelbinShowOptions
      * @param string|null $resourceType
      * @param string $path
      * @return [type]

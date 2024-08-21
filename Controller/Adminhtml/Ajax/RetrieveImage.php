@@ -357,6 +357,6 @@ class RetrieveImage extends \Magento\Backend\App\Action
                 break;
             }
         }
-        return $this->_view->getLayout()->createBlock("Magento\Theme\Block\Html\Header\Logo")->getViewFileUrl('Cloudinary_Cloudinary::images/cloudinary_cloud_glyph_blue.png');
+        return $this->_view->getLayout()->createBlock("Magento\Theme\Block\Html\Header\Logo")->getViewFileUrl('Pixelbinio_Pixelbin::images/pixelbin_logo_light.png');
     }
 }

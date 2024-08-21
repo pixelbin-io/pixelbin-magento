@@ -1,0 +1,95 @@
+<?php
+namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
+
+use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\UrlInterface;
+use Magento\Backend\App\Action;
+use Magento\Framework\Controller\Result\RawFactory as ResultRawFactory;
+use Magento\Backend\App\Action\Context;
+use Magento\Cms\Model\Wysiwyg\Images\GetInsertImageContent;
+use Magento\Framework\Filesystem as FileSysten;
+use Magento\Catalog\Helper\Image as CatalogImageHelper;
+use Pixelbinio\Pixelbin\Core\Image\Transformation;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+
+class UpdateAdminImage extends Action
+{
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var UrlInterface
+     */
+    protected $urlInterface;
+
+    protected $resultFactory;
+
+    protected $filesystem;
+
+    private $_authorised;
+
+    protected $transformation;
+
+    /**
+     * @var HelperData
+     */
+    private $helperData;
+
+    /**
+     * @param ImageFactory $imageFactory
+     * @param UrlGenerator $urlGenerator
+     * @param ConfigurationInterface $configuration
+     * @param StoreManagerInterface $storeManager
+     * @param UrlInterface $urlInterface
+     */
+    public function __construct(
+        Context $context,
+        StoreManagerInterface $storeManager,
+        UrlInterface $urlInterface,
+        ResultRawFactory $resultFactory,
+        FileSysten $filesystem,
+        Transformation $transformation,
+        HelperData $helperData
+    ) {
+        parent::__construct($context);
+        $this->storeManager = $storeManager;
+        $this->urlInterface = $urlInterface;
+        $this->resultFactory = $resultFactory;
+        $this->filesystem = $filesystem;
+        $this->transformation = $transformation;
+        $this->helperData = $helperData;
+    }
+
+    public function execute()
+    {
+        $result = [];
+        if ($this->configuration->isEnabled()) {
+            try{
+                $remoteImageUrl = $this->getRequest()->getParam('remote_image');
+                $filedId = str_replace($this->storeManager->getStore()->getBaseUrl(), '', $remoteImageUrl);
+
+                $result =  Media::fromParams(
+                        $filedId,
+                        [   'transformation' => $this->transformation->build(),
+                            'secure' => true,
+                            'sign_url' => $this->configuration->getUseSignedUrls(),
+                            'version' => 1
+                        ]
+                    ) . '?_i=AB';
+
+            } catch (\Exception $e) {
+                $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
+            }
+        }
+
+
+        $response = $this->resultFactory->create();
+        $response->setHeader('Content-type', 'text/plain');
+        $response->setContents(json_encode($result));
+        return $response;
+    }
+}
