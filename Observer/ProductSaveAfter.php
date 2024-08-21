@@ -15,33 +15,9 @@ namespace Pixelbinio\Pixelbin\Observer;
 
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Event\Observer;
-use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
-use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
-class ProductSaveAfter implements \Magento\Framework\Event\ObserverInterface
+class ProductSaveAfter extends AbstractObserver
 {
-    /**
-     * @var UploadFileToPixelbin
-     */
-    protected $uploadFileToPixelbin;
-
-    /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
-     * @param UploadFileToPixelbin $uploadFileToPixelbin
-     * @param HelperData $helperData
-     */
-    public function __construct(
-        UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData $helperData
-    ) {
-        $this->uploadFileToPixelbin = $uploadFileToPixelbin;
-        $this->helperData = $helperData;
-    }
-
     /**
      * Catalog product save after observer
      *
@@ -50,11 +26,13 @@ class ProductSaveAfter implements \Magento\Framework\Event\ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /** @var Product $product */
-        $product = $observer->getEvent()->getProduct();
-        $images = $product->getMediaGalleryImages();
-        foreach ($images as $image) {
-            $this->uploadFileToPixelbin->catalogUploadFileSync($image->getData());
+        if ($this->helperData->isModuleEnabled()) {
+            /** @var Product $product */
+            $product = $observer->getEvent()->getProduct();
+            $images = $product->getMediaGalleryImages();
+            foreach ($images as $image) {
+                $this->uploadFileToPixelbin->catalogUploadFileSync($image->getData());
+            }
         }
     }
 }

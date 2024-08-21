@@ -15,33 +15,9 @@ namespace Pixelbinio\Pixelbin\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Catalog\Model\Category;
-use Pixelbinio\Pixelbin\Helper\Data as HelperData;
-use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 
-class CategorySaveAfter implements \Magento\Framework\Event\ObserverInterface
+class CategorySaveAfter extends AbstractObserver
 {
-    /**
-     * @var UploadFileToPixelbin
-     */
-    protected $uploadFileToPixelbin;
-
-    /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
-     * @param UploadFileToPixelbin $uploadFileToPixelbin
-     * @param HelperData $helperData
-     */
-    public function __construct(
-        UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData $helperData
-    ) {
-        $this->uploadFileToPixelbin = $uploadFileToPixelbin;
-        $this->helperData = $helperData;
-    }
-
     /**
      * Catalog category save after observer
      *
@@ -51,11 +27,13 @@ class CategorySaveAfter implements \Magento\Framework\Event\ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        /**
-         * @var Category $category
-         */
-        $category = $observer->getEvent()->getCategory();
-        $imageUrl = $category->getImageUrl();
-        $this->uploadFileToPixelbin->categoryUploadFileSync($imageUrl);
+        if ($this->helperData->isModuleEnabled()) {
+            /**
+             * @var Category $category
+             */
+            $category = $observer->getEvent()->getCategory();
+            $imageUrl = $category->getImageUrl();
+            $this->uploadFileToPixelbin->categoryUploadFileSync($imageUrl);
+        }
     }
 }
