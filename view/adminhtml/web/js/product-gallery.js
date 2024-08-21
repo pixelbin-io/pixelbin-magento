@@ -574,9 +574,9 @@ define([
                 imageSizeKb = imageData.sizeLabel,
                 image = document.createElement('img'),
                 sizeSpan = this.$dialog.find(this.options.imageSizeLabel)
-                .find('[data-message]'),
+                    .find('[data-message]'),
                 resolutionSpan = this.$dialog.find(this.options.imageResolutionLabel)
-                .find('[data-message]'),
+                    .find('[data-message]'),
                 sizeText = sizeSpan.attr('data-message').replace('{size}', imageSizeKb),
                 resolutionText;
 

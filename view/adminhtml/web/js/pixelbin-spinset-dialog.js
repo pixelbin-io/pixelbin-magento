@@ -28,12 +28,12 @@ define(
                     type: 'slide',
                     //appendTo: this._gallery,
                     modalClass: 'cldspinset-dialog form-inline',
-                    title: $.mage.__('Add Spinset from pixelbin'),
+                    title: $.mage.__('Add Spinset from Pixelbin'),
                     buttons: [{
-                            text: $.mage.__('Save'),
-                            class: 'action-primary video-create-button',
-                            click: $.proxy(widget._onCreate, widget)
-                        },
+                        text: $.mage.__('Save'),
+                        class: 'action-primary video-create-button',
+                        click: $.proxy(widget._onCreate, widget)
+                    },
                         {
                             text: $.mage.__('Cancel'),
                             class: 'video-cancel-button',
@@ -49,6 +49,7 @@ define(
                     },
 
                     /**
+                     * Closed
                      * Closed
                      */
                     closed: function() {

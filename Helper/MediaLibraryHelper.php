@@ -1,51 +1,44 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Helper;
 
-use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Magento\Framework\App\Helper\Context;
 
 class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
-     * @var ConfigurationInterface
+     * @var Data
      */
-    protected $helperData;
+    protected $helper;
 
     /**
-     * Cloudinary credentials
+     * Pixelbin Options
      * @var array|null
      */
-    protected $credentials;
-
-    /**
-     * Current timestamp
-     * @var int|null
-     */
-    protected $timestamp;
-
-    /**
-     * Sugnature
-     * @var string|null
-     */
-    protected $signature;
-
-    /**
-     * Cloudinary ML Options
-     * @var array|null
-     */
-    protected $cloudinaryMLoptions;
+    protected $pixelbinOptions;
 
     /**
      * @param Context $context
-     * @param HelperData $helperData
+     * @param Data $helper
      */
     public function __construct(
         Context $context,
-        HelperData $helperData
-    ) {
+        Data $helper
+    )
+    {
+        $this->helper = $helper;
         parent::__construct($context);
-        $this->helperData = $helperData;
     }
 
     /**
@@ -54,41 +47,33 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param bool $refresh Refresh options
      * @return array
      */
-    public function getCloudinaryMLOptions($multiple = false, $refresh = true)
+    public function getPixelbinOptions($multiple = false, $refresh = true)
     {
-        if ((is_null($this->cloudinaryMLoptions) || $refresh) && $this->helperData->isModuleEnabled()) {
-            $this->cloudinaryMLoptions = [];
-            $this->timestamp = time();
-            
-            if (!$this->helperData->getAppCloudName() || !$this->helperData->getAppApiSecret()) {
-                
-            } else {
-                $this->cloudinaryMLoptions = [
-                    'cloud_name' => $this->helperData->getAppCloudName(),
-                    'api_key' => $this->helperData->getAppApiSecret(),
-                    'cms_type' => 'magento',
-                    //'default_transformations' => [['quality' => 'auto'],['format' => 'auto']],
-                    'integration' => [
-                        'type' => 'magento_plugin',
-                        'platform' => ""
-                    ]
-                ];
-            }
+        if ($this->helper->isModuleEnabled()) {
+            $this->pixelbinOptions = [];
+            $this->pixelbinOptions = [
+                'cloud_name' => $this->helper->getAppCloudName(),
+                'api_key' => $this->helper->getAppApiSecret(),
+                'cms_type' => 'magento',
+                'integration' => [
+                    'type' => 'magento_plugin'
+                ]
+            ];
         }
-        if ($this->cloudinaryMLoptions) {
-            $this->cloudinaryMLoptions['multiple'] = $multiple;
+        if ($this->pixelbinOptions) {
+            $this->pixelbinOptions['multiple'] = $multiple;
         }
 
-        return $this->cloudinaryMLoptions;
+        return $this->pixelbinOptions;
     }
 
     /**
      * @method getCloudinaryMLshowOptions
-     * @param  string|null $resourceType
-     * @param  string $path
+     * @param string|null $resourceType
+     * @param string $path
      * @return [type]
      */
-    public function getCloudinaryMLshowOptions($resourceType = null, $path = "")
+    public function getPixelbinShowOptions($resourceType = null, $path = "")
     {
         $options = [];
         if ($resourceType || $resourceType) {
@@ -98,13 +83,5 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
             ];
         }
         return $options;
-    }
-
-    /**
-     * @return null
-     */
-    public function getCname()
-    {
-        return $this->helperData->getAppCloudName();
     }
 }

@@ -20,17 +20,14 @@ define([
     $.widget('mage.pixelbinMediaLibraryModal', {
 
         options: {
-            buttonSelector: null,
-            triggerSelector: null, // #media_gallery_content .image.image-placeholder > .uploader' / '.media-gallery-modal'
-            triggerEvent: null, // 'addItem' / 'fileuploaddone'
-            callbackHandler: null,
-            callbackHandlerMethod: null,
-            imageParamName: 'image',
-            pixelbinMLoptions: {}, // Options for pixelbin-ML createMediaLibrary()
-            pixelbinMLshowOptions: {}, // Options for pixelbin-ML show()
-            cldMLid: 0,
-            useDerived: true,
-            addTmpExtension: false,
+            cloud_name: "",
+            remove_header: true,
+            max_files: "1",
+            insert_caption: "",
+            inline_container: "",
+            default_transformations: [[]],
+            button_class: "",
+            button_caption: ""
         },
 
         /**
@@ -70,20 +67,24 @@ define([
             var uiRegistry = registry;
 
 
-            window.pixelbin_ml = window.pixelbin_ml || [];
+            window.pixelbin = window.pixelbin || [];
+            console.log('all options');
+            console.log(this.options)
             this.options.cldMLid = this.options.cldMLid || 0;
 
-            if (typeof window.pixelbin_ml[this.options.cldMLid] === "undefined") {
-                this.pixelbin_ml = window.pixelbin_ml[this.options.cldMLid] = pixelbin.createMediaLibrary(
-                    this.options.pixelbinMLoptions, {
+            if (typeof window.pixelbin[this.options.cldMLid] === "undefined") {
+                window.ml = window.pixelbin.createMediaLibrary(
+                    this.options, {
                         insertHandler: function(data) {
+                            console.log("insert handler data");
+                            console.log(data);
                             $('body').first().css('overflow', 'initial');
                             if (widget.isMediaBrowser()) {
-                                return widget.pixelbinInsertHandler(data);
+                                return widget.cloudinaryInsertHandler(data);
                             } else {
                                 // new media gallery
                                 data['newGalleryMode'] = 1;
-                                widget.pixelbinInsertHandler(data);
+                                widget.cloudinaryInsertHandler(data);
                                 if (uiRegistry.get('media_gallery_listing.media_gallery_listing_data_source')) {
                                     $(window).trigger('reload.MediaGallery');
                                 }
@@ -111,7 +112,7 @@ define([
          * Fired on trigger "openMediaLibrary"
          */
         openMediaLibrary: function() {
-            this.pixelbin_ml.show(this.options.pixelbinMLshowOptions);
+            window.ml.show(this.options.cloudinaryMLshowOptions);
         },
         showLoader: function () {
             this.loader(true);
@@ -131,9 +132,9 @@ define([
         },
 
         /**
-         * Fired on trigger "pixelbinInsertHandler"
+         * Fired on trigger "cloudinaryInsertHandler"
          */
-        pixelbinInsertHandler: function(data) {
+        cloudinaryInsertHandler: function(data) {
             var widget = this;
             var aggregatedErrorMessages = [];
             var $i = data.assets.length;
@@ -144,26 +145,6 @@ define([
                 if (widget.options.imageUploaderUrl) {
                     asset.asset_url = asset.asset_image_url = asset.secure_url;
                     asset.free_transformation = "";
-                    if (asset.derived && asset.derived[0] && asset.derived[0].secure_url) {
-                        asset.asset_derived_url = asset.asset_derived_image_url = asset.derived[0].secure_url;
-                        asset.free_transformation = (asset.derived[0].hasOwnProperty('raw_transformation')) ?
-                            asset.derived[0].raw_transformation :
-                            asset.asset_derived_image_url
-                                .replace(new RegExp('^.*pixelbin.com/(' + this.options.pixelbinMLoptions.cloud_name + '/)?' + asset.resource_type + '/' + asset.type + '/'), '')
-                                .replace(/\.[^/.]+$/, '')
-                                .replace(new RegExp('\/' + widget.escapeRegex(encodeURI(decodeURI(asset.public_id))) + '$'), '')
-                                .replace(new RegExp('\/v[0-9]{1,10}$'), '')
-                                .replace(new RegExp('\/'), ',');
-                        if (widget.options.useDerived) {
-                            asset.asset_url = asset.asset_image_url = asset.derived[0].secure_url;
-                        }
-                    }
-                    if (asset.resource_type === "video") {
-                        asset.asset_image_url = asset.asset_url
-                            .replace(/\.[^/.]+$/, "")
-                            .replace(new RegExp('\/v[0-9]{1,10}\/'), '/')
-                            .replace(new RegExp('\/(' + widget.escapeRegex(encodeURI(decodeURI(asset.public_id))) + ')$'), '/so_auto/$1.jpg');
-                    }
                     $.ajax({
                         url: widget.options.imageUploaderUrl,
                         data: {
@@ -181,7 +162,7 @@ define([
                             if (file.file && !file.error) {
                                 var context = (asset.context && asset.context.custom) ? asset.context.custom : {};
                                 if (asset.resource_type === "video") {
-                                    file.video_provider = 'pixelbin';
+                                    file.video_provider = 'cloudinary';
                                     file.media_type = "external-video";
                                     file.video_url = asset.asset_url;
                                     file.video_title = context.caption || context.alt || asset.public_id || "";
@@ -189,7 +170,7 @@ define([
                                     if (file.using_placeholder_fallback) {
                                         notification().add({
                                             error: false,
-                                            message: $t("Couldn't automatically generate pixelbin video thumbnail, using fallback placeholder instead. You can always replace that manually later"),
+                                            message: $t("Couldn't automatically generate Cloudinary video thumbnail, using fallback placeholder instead. You can always replace that manually later"),
                                             insertMethod: function(constructedMessage) {
                                                 aggregatedErrorMessages.push(constructedMessage);
                                             }
@@ -205,7 +186,7 @@ define([
                                 file.free_transformation = asset.free_transformation;
                                 file.asset_derived_image_url = asset.asset_derived_image_url;
                                 file.image_url = asset.asset_image_url;
-                                file.pixelbin_asset = asset;
+                                file.cloudinary_asset = asset;
 
                                 if (widget.options.triggerSelector && widget.options.triggerEvent) {
                                     $(widget.options.triggerSelector).last().trigger(widget.options.triggerEvent, file);
