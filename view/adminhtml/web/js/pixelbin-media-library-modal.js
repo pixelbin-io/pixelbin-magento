@@ -66,7 +66,6 @@ define([
             var widget = this;
             var uiRegistry = registry;
 
-
             window.pixelbin = window.pixelbin || [];
             console.log('all options');
             console.log(this.options)

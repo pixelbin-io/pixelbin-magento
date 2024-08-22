@@ -11,7 +11,7 @@ define(
         'mage/translate',
         'mage/backend/tree-suggest',
         'mage/backend/validation',
-        'Cloudinary_Cloudinary/js/get-video-information'
+        'Pixelbinio_Pixelbin/js/get-video-information'
     ],
     function($, _) {
         'use strict';
@@ -272,7 +272,7 @@ define(
 
                     this._videoUrlWidget = this.element.find(this._videoUrlSelector).videoData({
                         youtubeKey: this.options.youTubeApiKey,
-                        cloudinaryPlaceholder: this.options.cloudinaryPlaceholder,
+                        pixelbinPlaceholder: this.options.pixelbinPlaceholder,
                         eventSource: 'focusout'
                     });
 
@@ -401,7 +401,7 @@ define(
                     this._blockActionButtons(true, true);
                     $.ajax({
                         url: url,
-                        data: 'remote_image=' + (videoProvider === 'cloudinary' ? encodeURI(sourceUrl) : sourceUrl),
+                        data: 'remote_image=' + (videoProvider === 'pixelbin' ? encodeURI(sourceUrl) : sourceUrl),
                         type: 'post',
                         success: $.proxy(
                             function(result) {

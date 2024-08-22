@@ -57,15 +57,15 @@ define(
             },
 
             inputName: function() {
-                return 'product[cloudinary_free_transform][' + this.id + ']';
+                return 'product[pixelbin_free_transform][' + this.id + ']';
             },
 
             changesName: function() {
-                return 'product[cloudinary_free_transform_changes][' + this.id + ']';
+                return 'product[pixelbin_free_transform_changes][' + this.id + ']';
             },
 
             imageSrcForTransform: function(transform) {
-                return 'http://res.cloudinary.com/m2501/image/upload/' + transform + '/sample.jpg';
+                return 'http://res.pixelbin.com/m2501/image/upload/' + transform + '/sample.jpg';
             },
 
             refreshImage: function() {
@@ -107,7 +107,7 @@ define(
         return Collection.extend({
             defaults: {
                 ajaxUrl: "",
-                template: 'Cloudinary_Cloudinary/product/free_transform',
+                template: 'Pixelbinio_Pixelbin/product/free_transform',
                 tableRows: {}
             },
 
@@ -125,11 +125,11 @@ define(
 
 
             getTransforms: function() {
-                return registry.get('product_form.product_form_data_source').data.product.cloudinary_transforms;
+                return registry.get('product_form.product_form_data_source').data.product.pixelbin_transforms;
             },
 
             getAjaxUrl: function() {
-                return registry.get('product_form.product_form_data_source').data.product.cloudinary_ajax_url;
+                return registry.get('product_form.product_form_data_source').data.product.pixelbin_ajax_url;
             },
 
             createRow: function(params) {
