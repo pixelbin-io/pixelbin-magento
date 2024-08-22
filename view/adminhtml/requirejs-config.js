@@ -3,7 +3,8 @@ var config = {
         '*': {
             pixelbinMediaLibraryModal: 'Pixelbinio_Pixelbin/js/pixelbin-media-library-modal',
             cldspinsetDialog: 'Pixelbinio_Pixelbin/js/pixelbin-spinset-dialog',
-            productGallery: 'Pixelbinio_Pixelbin/js/product-gallery'
+            productGallery: 'Pixelbinio_Pixelbin/js/product-gallery',
+            updateCmsImages: 'Pixelbinio_Pixelbin/js/cms/preview-update',
         }
     },
     paths: {

@@ -57,9 +57,9 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
 
         try {
             if (version_compare($this->productMetadata->getVersion(), '2.3.5', '<=')) {
-                $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/ajax/retrieveImage');
+                $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
             } else {
-                $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/ajax/retrieveImage');
+                $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
             }
 
             //Try to add session param on Magento versions prior to 2.3.5

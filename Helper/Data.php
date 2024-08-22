@@ -614,4 +614,15 @@ class Data extends AbstractHelper
     {
         return ['mp4', 'webm', 'ogv', 'mov', 'wmv'];
     }
+
+    public function generateCLDuniqid()
+    {
+        return strtolower(uniqid(self::CLD_UNIQID_PREFIX)) . '_';
+    }
+
+    public function addUniquePrefixToBasename($filename, $uniqid = null)
+    {
+        $uniqid = $uniqid ? $uniqid : $this->generateCLDuniqid();
+        return dirname($filename) . '/' . $uniqid . basename($filename);
+    }
 }
