@@ -119,14 +119,4 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
         }
         return htmlspecialchars((string)$string, ENT_COMPAT, 'UTF-8', false);
     }
-
-    /**
-     * Returns image json
-     *
-     * @return string
-     */
-    public function getImagesJson()
-    {
-        return '[]';
-    }
 }
