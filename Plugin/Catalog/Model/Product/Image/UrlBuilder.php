@@ -34,21 +34,6 @@ class UrlBuilder
     private $presentationConfig;
 
     /**
-     * @var \Magento\Catalog\Model\Product\Image\ParamsBuilder
-     */
-    private $imageParamsBuilder;
-
-    /**
-     * @var CloudinaryImageFactory
-     */
-    private $cloudinaryImageFactory;
-
-    /**
-     * @var UrlGenerator
-     */
-    private $urlGenerator;
-
-    /**
      * @var ProductInterface
      */
     private $product;
@@ -59,11 +44,6 @@ class UrlBuilder
     private $dimensions;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var string
      */
     private $imageFile;
@@ -72,11 +52,6 @@ class UrlBuilder
      * @var bool
      */
     private $keepFrame;
-
-    /**
-     * @var TransformationModel
-     */
-    private $transformationModel;
 
     /**
      * @var Logger

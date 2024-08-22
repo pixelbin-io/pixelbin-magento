@@ -62,7 +62,7 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
     }
 
     /**
-     * Get Cloudinary media library widget options
+     * Get Pixelbin media library widget options
      *
      * @param bool $multiple Allow multiple
      * @param bool $refresh Refresh options

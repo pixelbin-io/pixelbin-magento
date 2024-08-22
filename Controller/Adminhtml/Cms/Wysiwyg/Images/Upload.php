@@ -162,7 +162,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $path = ($this->getStorage()->getSession()->getCurrentPath()) ?? null;
 
             if (!$path){
-                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/cloudinary';
+                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/pixelbin';
             }
 
             if (!$this->validatePath($path, DirectoryList::MEDIA)) {

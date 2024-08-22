@@ -33,11 +33,11 @@ define([
                 return validateIsUrl(href) && (
                     href.match(/youtube\.com|youtu\.be/) ||
                     href.match(/vimeo\.com/) ||
-                    href.match(/cloudinary/) ||
+                    href.match(/pixelbin/) ||
                     href.match(/\.(mp4|ogv|webm)(?!\w)/)
                 );
             },
-            $.mage.__('Please enter a valid video URL. Valid URLs have a video file extension (.mp4, .webm, .ogv) or links to videos on YouTube, Vimeo or Cloudinary.')//eslint-disable-line max-len
+            $.mage.__('Please enter a valid video URL. Valid URLs have a video file extension (.mp4, .webm, .ogv) or links to videos on YouTube, Vimeo or pixelbin.')//eslint-disable-line max-len
         );
 
         validator.addRule(
@@ -52,11 +52,11 @@ define([
                 return validateIsUrl(href) && (
                     href.match(/youtube\.com|youtu\.be/) ||
                     href.match(/vimeo\.com/) ||
-                    href.match(/cloudinary/) ||
+                    href.match(/pixelbin/) ||
                     href.match(/\.(mp4|ogv|webm)(?!\w)/)
                 );
             },
-            $.mage.__('Please enter a valid video URL. Valid URLs have a video file extension (.mp4, .webm, .ogv) or links to videos on YouTube, Vimeo or Cloudinary.')//eslint-disable-line max-len
+            $.mage.__('Please enter a valid video URL. Valid URLs have a video file extension (.mp4, .webm, .ogv) or links to videos on YouTube, Vimeo or pixelbin.')//eslint-disable-line max-len
         );
 
         return validator;

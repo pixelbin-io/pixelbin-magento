@@ -492,8 +492,8 @@ class Data extends AbstractHelper
 
 
     /**
-     * Parse Cloudinary URL
-     * @method parseCloudinaryUrl
+     * Parse Pixelbin URL
+     * @method parsePixelbinUrl
      * @param  string             $url
      * @param  string|null        $publicId
      * @return array
