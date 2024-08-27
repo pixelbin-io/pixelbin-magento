@@ -13,11 +13,14 @@
 
 namespace Pixelbinio\Pixelbin\Model\MediaStorage\Framework;
 
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 
 class Uploader
 {
+    const ALLOWED_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
+
     /**
      * @var UploadFileToPixelbin
      */
@@ -29,15 +32,23 @@ class Uploader
     protected $helperData;
 
     /**
+     * @var DirectoryList
+     */
+    private $directoryList;
+
+    /**
      * @param UploadFileToPixelbin $uploadFileToPixelbin
      * @param HelperData $helperData
+     * @param DirectoryList $directoryList
      */
     public function __construct(
         UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData           $helperData
+        HelperData           $helperData,
+        DirectoryList $directoryList
     ) {
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
         $this->helperData = $helperData;
+        $this->directoryList = $directoryList;
     }
 
     /**
@@ -58,5 +69,51 @@ class Uploader
             }
         }
         return $result;
+    }
+
+    /**
+     * @param  string $filepath
+     * @return string
+     */
+    protected function isAllowedImageExtension($filepath)
+    {
+        return in_array(pathinfo($filepath, PATHINFO_EXTENSION), self::ALLOWED_EXTENSIONS);
+    }
+
+    /**
+     * @param  string $filepath
+     * @return bool
+     */
+    protected function isMediaFilePath($filepath)
+    {
+        return strpos($filepath, $this->directoryList->getPath('media')) === 0;
+    }
+
+    /**
+     * @param  string $filepath
+     * @return string
+     */
+    protected function isMediaTmpFilePath($filepath)
+    {
+        return strpos($filepath, sprintf('%s/tmp', $this->directoryList->getPath('media'))) === 0;
+    }
+
+    /**
+     * @param  array $result
+     * @return string
+     */
+    protected function absoluteFilePath(array $result)
+    {
+        return sprintf('%s%s%s', $result['path'], DIRECTORY_SEPARATOR, $result['file']);
+    }
+
+    /**
+     * @param  string $filepath
+     * @return string
+     */
+    protected function mediaRelativePath($filepath)
+    {
+        $pubPath = $this->directoryList->getPath(DirectoryList::PUB) . DIRECTORY_SEPARATOR;
+        return (strpos($filepath, $pubPath) === 0) ? str_replace($pubPath, '', $filepath) : $filepath;
     }
 }

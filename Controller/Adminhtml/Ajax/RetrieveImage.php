@@ -179,7 +179,11 @@ class RetrieveImage extends \Magento\Backend\App\Action
             $this->imageAdapter->validateUploadFile($localFileFullPath);
             $result = $this->appendResultSaveRemoteImage($localUniqFilePath, $baseTmpMediaPath);
         } catch (\Exception $e) {
-            $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
+            $result = [
+                'error' => $e->getMessage(),
+                'errorcode' => $e->getCode(),
+                'trace' => $e->getTraceAsString()
+            ];
             $fileWriter = $this->fileSystem->getDirectoryWrite(DirectoryList::MEDIA);
             if (isset($localFileFullPath) && $fileWriter->isExist($localFileFullPath)) {
                 $fileWriter->delete($localFileFullPath);
@@ -298,8 +302,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
         $this->curl->setConfig(['header' => false]);
         $this->curl->write('GET', $fileUrl);
         $image = $this->curl->read();
-
-        if (empty($image) && $this->getRequest()->getParam('asset')["resource_type"] === 'video') {
+        if ($this->getRequest()->getParam('asset')["assetType"] === 'video') {
             //Fallback for video thumbnail image, use placeholder or store logo
             $this->usingPlaceholderFallback = true;
             $this->curl->close();
