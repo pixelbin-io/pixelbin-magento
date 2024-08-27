@@ -1,6 +1,8 @@
 var config = {
     map: {
         '*': {
+            newVideoDialog: 'Pixelbinio_Pixelbin/js/new-video-dialog',
+            'Magento_ProductVideo/js/get-video-information': 'Pixelbinio_Pixelbin/js/get-video-information',
             pixelbinMediaLibraryModal: 'Pixelbinio_Pixelbin/js/pixelbin-media-library-modal',
             cldspinsetDialog: 'Pixelbinio_Pixelbin/js/pixelbin-spinset-dialog',
             productGallery: 'Pixelbinio_Pixelbin/js/product-gallery',

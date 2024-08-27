@@ -11,7 +11,12 @@ $elementName = $block->getElement()->getName() . '[images]';
 $formName = $block->getFormName();
 $pixelbinWidgetOptions = $block->getPixelbinMediaLibraryWidgetOptions();
 ?>
-
+<style>
+    #gallery_top_pixelbin_buttons_container {
+        display: inline-block;
+        position: relative;
+    }
+</style>
 <div class="row">
     <div class="add-video-button-container">
         <button id="add_video_button"
@@ -22,6 +27,24 @@ $pixelbinWidgetOptions = $block->getPixelbinMediaLibraryWidgetOptions();
                 data-ui-id="widget-button-1">
             <span><?= $block->escapeHtml(__('Add Video')) ?></span>
         </button>
+
+        <?php if ($pixelbinWidgetOptions): ?>
+            <div id="gallery_top_pixelbin_buttons_container">
+                <div id="gallery_top_add_from_pixelbin_dd">
+                    <div id="gallery_top_add_from_pixelbin_dd_inner">
+                        <button id="gallery_top_add_from_pixelbin_button_<?= /* @escapeNotVerified */ $block->getHtmlId() ?>"
+                                title="<?= $block->escapeHtml(__('Add Video From Pixelbin')) ?>"
+                                data-role="add-from-pixelbin-button"
+                                type="button"
+                                data-mage-init='{"pixelbinMediaLibraryModal": <?= $pixelbinWidgetOptions ?>}'
+                                class="action-secondary add-from-pixelbin-button">
+                            <span><?= $block->escapeHtml(__('Add Video From Pixelbin')) ?></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
     </div>
 </div>
 

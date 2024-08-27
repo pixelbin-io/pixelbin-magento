@@ -3,4 +3,6 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery\Content"
                 type="Pixelbinio\Pixelbin\Block\Adminhtml\Product\Helper\Form\Gallery\Content"/>
+    <preference for="Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVideo"
+                type="Pixelbinio\Pixelbin\Block\Adminhtml\Product\Edit\NewVideo" />
 </config>

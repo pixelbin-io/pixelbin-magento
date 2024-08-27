@@ -160,21 +160,21 @@ define([
                         function(file) {
                             if (file.file && !file.error) {
                                 var context = (asset.context && asset.context.custom) ? asset.context.custom : {};
-                                if (asset.resource_type === "video") {
+                                if (asset.assetType === "video") {
                                     file.video_provider = 'pixelbin';
                                     file.media_type = "external-video";
-                                    file.video_url = asset.asset_url;
-                                    file.video_title = context.caption || context.alt || asset.public_id || "";
+                                    file.video_url = asset.url;
+                                    file.video_title = context.caption || context.alt || asset.name || "";
                                     file.video_description = (context.description || context.alt || context.caption || "").replace(/(&nbsp;|<([^>]+)>)/ig, '');
-                                    if (file.using_placeholder_fallback) {
-                                        notification().add({
-                                            error: false,
-                                            message: $t("Couldn't automatically generate pixelbin video thumbnail, using fallback placeholder instead. You can always replace that manually later"),
-                                            insertMethod: function(constructedMessage) {
-                                                aggregatedErrorMessages.push(constructedMessage);
-                                            }
-                                        });
-                                    }
+                                    // if (file.using_placeholder_fallback) {
+                                    //     notification().add({
+                                    //         error: false,
+                                    //         message: $t("Couldn't automatically generate pixelbin video thumbnail, using fallback placeholder instead. You can always replace that manually later"),
+                                    //         insertMethod: function(constructedMessage) {
+                                    //             aggregatedErrorMessages.push(constructedMessage);
+                                    //         }
+                                    //     });
+                                    // }
                                 } else {
                                     file.media_type = "image";
                                     file.label = asset.label = context.alt || context.caption || asset.public_id || "";
@@ -189,7 +189,7 @@ define([
 
                                 if (widget.options.triggerSelector && widget.options.triggerEvent) {
                                     $(widget.options.triggerSelector).last().trigger(widget.options.triggerEvent, file);
-                                    if (asset.resource_type === "video") {
+                                    if (asset.assetType === "video") {
                                         $(widget.options.triggerSelector).last().find('img[src="' + file.url + '"]').addClass('video-item');
                                     }
                                 }
@@ -200,7 +200,7 @@ define([
                                 console.error(file);
                                 notification().add({
                                     error: true,
-                                    message: $t('An error occured during ' + asset.resource_type + ' insert (' + asset.public_id + ')!') + '%s%sError: ' + file.error.replace(/File:.*$/, ''),
+                                    message: $t('An error occured during ' + asset.assetType + ' insert (' + asset.public_id + ')!') + '%s%sError: ' + file.error.replace(/File:.*$/, ''),
                                     insertMethod: function(constructedMessage) {
                                         aggregatedErrorMessages.push(constructedMessage.replace('%s%s', '<br>'));
                                     }
@@ -215,7 +215,7 @@ define([
                             console.error(response);
                             notification().add({
                                 error: true,
-                                message: $t('An error occured during ' + asset.resource_type + ' insert (' + asset.public_id + ')!')
+                                message: $t('An error occured during ' + asset.assetType + ' insert (' + asset.public_id + ')!')
                             });
                             if (!$i && aggregatedErrorMessages.length) {
                                 widget.notifyError(aggregatedErrorMessages);
