@@ -20,6 +20,7 @@ use Magento\MediaStorage\Model\ResourceModel\File\Storage\File;
 use Magento\MediaGalleryUi\Model\UploadImage as MediaGalleryUploader;
 use Magento\MediaGalleryApi\Api\Data\AssetInterfaceFactory;
 use Magento\MediaGalleryApi\Api\SaveAssetsInterface;
+use Pixelbinio\Pixelbin\Logger\Logger;
 
 /**
  * Upload image.
@@ -100,6 +101,11 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     protected $mediaAssetSave;
 
     /**
+     * @var Logger
+     */
+    protected $logger;
+
+    /**
      * @method __construct
      * @param  Context                $context
      * @param  Registry               $coreRegistry
@@ -131,7 +137,8 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         HelperData $helperData,
         MediaGalleryUploader $mediaGalleryUploader,
         AssetInterfaceFactory $mediaAsset,
-        SaveAssetsInterface $mediaAssetSave
+        SaveAssetsInterface $mediaAssetSave,
+        Logger $logger
 
     ) {
         parent::__construct($context, $coreRegistry, $resultJsonFactory, $directoryResolver);
@@ -147,6 +154,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         $this->mediaGalleryUploader = $mediaGalleryUploader;
         $this->mediaAsset = $mediaAsset;
         $this->mediaAssetSave = $mediaAssetSave;
+        $this->logger = $logger;
     }
 
     /**
@@ -162,7 +170,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $path = ($this->getStorage()->getSession()->getCurrentPath()) ?? null;
 
             if (!$path){
-                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/pixelbin';
+                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/wysiwyg';
             }
 
             if (!$this->validatePath($path, DirectoryList::MEDIA)) {
@@ -170,14 +178,14 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                     __('Directory %1 is not under storage root path.', $path)
                 );
             }
-            $localFileName = $this->remoteFileUrl = $this->getRequest()->getParam('remote_image');
+            $allData = $this->getRequest()->getParams();
+            
+            $localFileName = $this->remoteFileUrl = $allData["asset"]["url"];
             $this->validateRemoteFile($this->remoteFileUrl);
             $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
-            $this->parsedRemoteFileUrl["transformations_string"] = $this->getRequest()->getParam('asset')["free_transformation"];
-            // if ($this->helperData->isEnabledLocalMapping()) {
-            //     $this->cldUniqid = $this->helperData->generateCLDuniqid();
-            //     $localFileName = $this->helperData->addUniquePrefixToBasename($localFileName, $this->cldUniqid);
-            // }
+            
+            $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
+            
             $localFileName = Uploader::getCorrectFileName(basename($localFileName));
             $localFilePath = $this->appendNewFileName($path . DIRECTORY_SEPARATOR . $localFileName);
             $this->validateRemoteFileExtensions($localFilePath);
@@ -186,20 +194,20 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $this->getStorage()->resizeFile($localFilePath, true);
             $this->imageAdapter->validateUploadFile($localFilePath);
             $result = $this->appendResultSaveRemoteImage($localFilePath);
-            $asset = $this->getRequest()->getParam('asset');
+            
+            $asset = $allData['asset'];
             $reg = preg_match('/^(.*)\/media\//',$localFilePath,$substruct);
             $newPath = str_replace($substruct[0],'',$localFilePath);
             $ma = $this->mediaAsset->create(
                 [
-                    //'id' => 2020,
                     'path' => $newPath,
                     'description' => $localFileName,
-                    'contentType' => $asset['resource_type'],
+                    'contentType' => $asset['assetType'].'/'.$asset['format'],
                     'title' => $localFileName,
                     'source' => 'Pixelbin',
                     'width' => $asset['width'],
                     'height' => $asset['height'],
-                    'size' => $asset['bytes']
+                    'size' => $asset['size']
                 ]
             );
             $this->mediaAssetSave->execute([$ma]);
