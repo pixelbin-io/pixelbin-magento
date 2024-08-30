@@ -170,7 +170,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $path = ($this->getStorage()->getSession()->getCurrentPath()) ?? null;
 
             if (!$path){
-                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/wysiwyg';
+                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/';
             }
 
             if (!$this->validatePath($path, DirectoryList::MEDIA)) {
@@ -181,14 +181,19 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $allData = $this->getRequest()->getParams();
             
             $localFileName = $this->remoteFileUrl = $allData["asset"]["url"];
+            $imagePathArray = explode($this->helperData->getAppZone(), $localFileName);
             $this->validateRemoteFile($this->remoteFileUrl);
             $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
             
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
             
-            $localFileName = Uploader::getCorrectFileName(basename($localFileName));
-            $localFilePath = $this->appendNewFileName($path . DIRECTORY_SEPARATOR . $localFileName);
+            
+            $localFileName = Uploader::getCorrectFileName(basename($imagePathArray[1]));
+            $extraPathName = explode($localFileName, $imagePathArray[1]);
+            
+            $localFilePath = $this->appendNewFileName($path . $extraPathName[0] . $localFileName);
             $this->validateRemoteFileExtensions($localFilePath);
+            
 
             $this->retrieveRemoteImage($this->remoteFileUrl, $localFilePath);
             $this->getStorage()->resizeFile($localFilePath, true);
