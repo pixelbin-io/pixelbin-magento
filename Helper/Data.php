@@ -71,7 +71,7 @@ class Data extends AbstractHelper
     //@codingStandardsIgnoreStart
     public const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
     //@codingStandardsIgnoreEnd
-    public const LIMIT_FOR_CRON = 5;
+    public const LIMIT_FOR_CRON = 500;
 
     /**
      * @var Curl

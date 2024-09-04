@@ -67,26 +67,6 @@ class UpdateAdminImage extends Action
     public function execute()
     {
         $result = [];
-        if ($this->configuration->isEnabled()) {
-            try{
-                $remoteImageUrl = $this->getRequest()->getParam('remote_image');
-                $filedId = str_replace($this->storeManager->getStore()->getBaseUrl(), '', $remoteImageUrl);
-
-                $result =  Media::fromParams(
-                        $filedId,
-                        [   'transformation' => $this->transformation->build(),
-                            'secure' => true,
-                            'sign_url' => $this->configuration->getUseSignedUrls(),
-                            'version' => 1
-                        ]
-                    ) . '?_i=AB';
-
-            } catch (\Exception $e) {
-                $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
-            }
-        }
-
-
         $response = $this->resultFactory->create();
         $response->setHeader('Content-type', 'text/plain');
         $response->setContents(json_encode($result));
