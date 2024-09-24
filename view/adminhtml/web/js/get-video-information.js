@@ -363,24 +363,24 @@ define(
 
                     this.element.append(
                         $('<iframe/>')
-                        .attr('frameborder', 0)
-                        .attr('id', 'pixelbin' + this._code + (new Date().getTime()))
-                        .attr('class', 'cld-video-player')
-                        .attr('width', this._width)
-                        .attr('height', this._height)
-                        .attr('src', this._videoSrc.replace(/(^\w+:|^)/, ''))
-                        .on(
-                            "loadstart",
-                            function() {
-                                $('body').loader('show');
-                            }
-                        )
-                        .on(
-                            "load",
-                            function() {
-                                $('body').loader('hide');
-                            }
-                        )
+                            .attr('frameborder', 0)
+                            .attr('id', 'pixelbin' + this._code + (new Date().getTime()))
+                            .attr('class', 'cld-video-player')
+                            .attr('width', this._width)
+                            .attr('height', this._height)
+                            .attr('src', this._videoSrc.replace(/(^\w+:|^)/, ''))
+                            .on(
+                                "loadstart",
+                                function() {
+                                    $('body').loader('show');
+                                }
+                            )
+                            .on(
+                                "load",
+                                function() {
+                                    $('body').loader('hide');
+                                }
+                            )
                     );
                 }
             }
@@ -589,7 +589,6 @@ define(
                             thumbnail,
                             thumbnail_bytes;
                         var self = this;
-
                         try {
                             data = JSON.parse(data);
                         } catch (e) {
@@ -690,9 +689,9 @@ define(
                             url: '/rest/V1/pixelbin/resources/video',
                             dataType: 'json',
                             data: {
-                                id: videoInfo.id
+                                id: videoInfo.videoSrc
                             },
-                            timeout: 5000,
+                            timeout: false,
                             success: $.proxy(_onpixelbinLoaded, self),
 
                             /**

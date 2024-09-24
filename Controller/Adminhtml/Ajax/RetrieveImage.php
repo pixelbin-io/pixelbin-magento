@@ -164,7 +164,8 @@ class RetrieveImage extends \Magento\Backend\App\Action
     {
         $allData = $this->getRequest()->getParams();
         try {
-            $localUniqFilePath = $this->remoteFileUrl = $allData["asset"]["url"];
+            //$localUniqFilePath = $this->remoteFileUrl = $allData["asset"]["url"];
+            $localUniqFilePath = $this->remoteFileUrl = $this->getPlaceholderUrl();
             $this->validateRemoteFile($this->remoteFileUrl);
             $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
