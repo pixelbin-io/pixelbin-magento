@@ -13,6 +13,7 @@
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
 
+use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\ValidatorException;
 use Pixelbinio\Pixelbin\Model\Framework\File\Uploader;
 use Magento\Backend\App\Action\Context;
@@ -31,6 +32,7 @@ use Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload as PageBui
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Model\Design\Config\FileUploader\FileProcessor;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Magento\Framework\Filesystem\Driver\File;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -115,19 +117,25 @@ class RetrieveImage extends \Magento\Backend\App\Action
     private $helperData;
 
     /**
+     * @var File
+     */
+    protected File $fileDriver;
+
+    /**
      * @method __construct
-     * @param  Context                $context
-     * @param  ResultRawFactory       $resultRawFactory
-     * @param  ProductMediaConfig     $mediaConfig
-     * @param  Filesystem             $fileSystem
-     * @param  ImageAdapterFactory    $imageAdapterFactory
-     * @param  Curl                   $curl
-     * @param  FileUtility            $fileUtility
-     * @param  FileProcessor          $fileProcessor
-     * @param  AllowedProtocols       $protocolValidator
-     * @param  NotProtectedExtension  $extensionValidator
-     * @param  StoreManagerInterface  $storeManager
-     * @param  HelperData $helperData
+     * @param Context $context
+     * @param ResultRawFactory $resultRawFactory
+     * @param ProductMediaConfig $mediaConfig
+     * @param Filesystem $fileSystem
+     * @param ImageAdapterFactory $imageAdapterFactory
+     * @param Curl $curl
+     * @param FileUtility $fileUtility
+     * @param FileProcessor $fileProcessor
+     * @param AllowedProtocols $protocolValidator
+     * @param NotProtectedExtension $extensionValidator
+     * @param StoreManagerInterface $storeManager
+     * @param HelperData $helperData
+     * @param File $fileDriver
      */
     public function __construct(
         Context $context,
@@ -141,7 +149,8 @@ class RetrieveImage extends \Magento\Backend\App\Action
         AllowedProtocols $protocolValidator,
         NotProtectedExtension $extensionValidator,
         StoreManagerInterface $storeManager,
-        HelperData $helperData
+        HelperData $helperData,
+        File $fileDriver
     ) {
         parent::__construct($context);
         $this->resultRawFactory = $resultRawFactory;
@@ -155,17 +164,18 @@ class RetrieveImage extends \Magento\Backend\App\Action
         $this->protocolValidator = $protocolValidator;
         $this->storeManager = $storeManager;
         $this->helperData = $helperData;
+        $this->fileDriver = $fileDriver;
     }
 
     /**
      * @return \Magento\Framework\Controller\Result\Raw
+     * @throws FileSystemException
      */
     public function execute()
     {
         $allData = $this->getRequest()->getParams();
         try {
-            //$localUniqFilePath = $this->remoteFileUrl = $allData["asset"]["url"];
-            $localUniqFilePath = $this->remoteFileUrl = $this->getPlaceholderUrl();
+            $localUniqFilePath = $this->remoteFileUrl = $allData["asset"]["url"];
             $this->validateRemoteFile($this->remoteFileUrl);
             $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
@@ -306,10 +316,10 @@ class RetrieveImage extends \Magento\Backend\App\Action
         if ($this->getRequest()->getParam('asset')["assetType"] === 'video') {
             //Fallback for video thumbnail image, use placeholder or store logo
             $this->usingPlaceholderFallback = true;
-            $this->curl->close();
-            $this->curl->setConfig(['header' => false, 'verifypeer' => false, 'verifyhost' => 0]);
-            $this->curl->write('GET', $this->getPlaceholderUrl());
-            $image = $this->curl->read();
+            $mediaDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::APP)
+                ->getAbsolutePath();
+            $defaultImage = $mediaDirectory.HelperData::DEFAULT_PIXELBIN_IMAGE;
+            $image = $this->fileDriver->fileGetContents($defaultImage);
         }
 
         if (empty($image)) {
