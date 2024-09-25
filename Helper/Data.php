@@ -73,6 +73,8 @@ class Data extends AbstractHelper
     //@codingStandardsIgnoreEnd
     public const LIMIT_FOR_CRON = 500;
 
+    public const DEFAULT_PIXELBIN_IMAGE = "code/Pixelbinio/Pixelbin/view/base/web/images/pixelbin_logo_light.png";
+
     /**
      * @var Curl
      */
