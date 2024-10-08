@@ -134,7 +134,7 @@
         <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="indexField" xsi:type="string">id</item>
+                    <item name="indexField" xsi:type="string">entity_id</item>
                     <item name="label" xsi:type="string" translate="true">ID</item>
                     <item name="sortOrder" xsi:type="number">0</item>
                 </item>
