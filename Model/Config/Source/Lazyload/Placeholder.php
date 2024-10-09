@@ -29,18 +29,18 @@ class Placeholder implements OptionSourceInterface
                 'value' => 'blur',
                 'label' => 'Blur',
             ],
-            [
-                'value' => 'pixelate',
-                'label' => 'Pixelate',
-            ],
-            [
-                'value' => 'predominant-color',
-                'label' => 'Predominant color',
-            ],
-            [
-                'value' => 'vectorize',
-                'label' => 'Vectorize',
-            ],
+            // [
+            //     'value' => 'pixelate',
+            //     'label' => 'Pixelate',
+            // ],
+            // [
+            //     'value' => 'predominant-color',
+            //     'label' => 'Predominant color',
+            // ],
+            // [
+            //     'value' => 'vectorize',
+            //     'label' => 'Vectorize',
+            // ],
         ];
     }
 }
