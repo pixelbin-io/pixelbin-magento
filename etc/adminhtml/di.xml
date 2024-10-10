@@ -5,4 +5,12 @@
                 type="Pixelbinio\Pixelbin\Block\Adminhtml\Product\Helper\Form\Gallery\Content"/>
     <preference for="Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVideo"
                 type="Pixelbinio\Pixelbin\Block\Adminhtml\Product\Edit\NewVideo" />
+    <type name="Magento\MediaGalleryIntegration\Plugin\SaveImageInformation">
+        <arguments>
+            <argument name="imageExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+                <item name="webp" xsi:type="string">webp</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

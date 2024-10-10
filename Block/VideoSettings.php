@@ -41,13 +41,13 @@ class VideoSettings extends template
 
             $transformation = [];
 
-            $autoplay = 'never';
+            $autoplay = 'always';
             $controls = null;
             $isLoop =  false;
             $playerSettings = [
                 "cloudName" => $this->_helper->getAppCloudName(),
                 'controls' => ($controls == 'all'),
-                'autoplay' => ($autoplay != 'never'),
+                'autoplay' => $autoplay,
                 'loop' => $isLoop,
                 'chapters' => false
             ];

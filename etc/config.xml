@@ -15,6 +15,24 @@
                 <effect>fadeIn</effect>
                 <placeholder>blur</placeholder>
             </lazyload>
+            <extensions>
+                <vector>
+                    <svg>svg</svg>
+                    <svg_xml>svg+xml</svg_xml>
+                </vector>
+                <web_image>
+                    <webp>webp</webp>
+                </web_image>
+            </extensions>
         </pixelbin>
+        <dev>
+            <image>
+                <adapters>
+                    <GD2>
+                        <class>Pixelbinio\Pixelbin\Model\Image\Adapter\Gd2</class>
+                    </GD2>
+                </adapters>
+            </image>
+        </dev>
     </default>
 </config>

@@ -61,4 +61,66 @@
         <plugin name="pixelbin_framework_file_uploader_plugin" type="Pixelbinio\Pixelbin\Model\MediaStorage\Framework\Uploader"/>
     </type>
     <preference for="Pixelbinio\Pixelbin\Api\ResourcesManagementInterface" type="Pixelbinio\Pixelbin\Model\Repository\ResourcesManagement"/>
+    <type name="Magento\Cms\Model\Wysiwyg\Images\Storage">
+        <arguments>
+            <argument name="extensions" xsi:type="array">
+                <item name="allowed" xsi:type="array">
+                    <item name="svg" xsi:type="string">image/svg</item>
+                    <item name="svg-xml" xsi:type="string">image/svg+xml</item>
+                    <item name="webp" xsi:type="string">image/webp</item>
+                </item>
+                <item name="image_allowed" xsi:type="array">
+                    <item name="svg" xsi:type="string">image/svg</item>
+                    <item name="svg-xml" xsi:type="string">image/svg+xml</item>
+                    <item name="webp" xsi:type="string">image/webp</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\CategoryImageUpload" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+                <item name="webp" xsi:type="string">webp</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="svg" xsi:type="string">image/svg</item>
+                <item name="svg-xml" xsi:type="string">image/svg+xml</item>
+                <item name="webp" xsi:type="string">image/webp</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\MediaGallerySynchronization\Model\FetchMediaStorageFileBatches">
+        <arguments>
+            <argument name="fileExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+                <item name="webp" xsi:type="string">webp</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\MediaStorage\App\Media">
+        <plugin name="pixelbin-web-images-media-plugin" type="Pixelbinio\Pixelbin\Plugin\App\MediaPlugin" />
+    </type>
+    <type name="Magento\MediaStorage\Model\File\Validator\NotProtectedExtension">
+        <plugin name="pixelbin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\File\Validator\NotProtectedExtensionPlugin" />
+    </type>
+    <type name="Magento\Cms\Model\Wysiwyg\Images\Storage">
+        <plugin name="pixelbin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Wysiwyg\Images\StoragePlugin" />
+    </type>
+    <type name="Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Thumbnail">
+        <plugin name="pixelbinallow-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\Images\ThumbnailPlugin" />
+    </type>
+    <type name="Magento\Cms\Controller\Adminhtml\Wysiwyg\Directive">
+        <plugin name="allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\DirectivePlugin" />
+    </type>
+    <type name="Magento\MediaGallerySynchronization\Model\CreateAssetFromFile">
+        <arguments>
+            <argument name="assetFactory" xsi:type="object">Pixelbinio\Pixelbin\Model\AssetFactory</argument>
+        </arguments>
+    </type>
+    <type name="Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload">
+        <arguments>
+            <argument name="uploaderFactory" xsi:type="object">Pixelbinio\Pixelbin\Model\File\UploaderFactory</argument>
+        </arguments>
+    </type>
 </config>

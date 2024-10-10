@@ -90,7 +90,7 @@ class Filter
         );
 
         $generated = $this->helperData->getAppZone().$image;
-        
+        //echo $generated; die;
         //@codingStandardsIgnoreStart
         if (@getimagesize($generated)) {
         //@codingStandardsIgnoreEnd
