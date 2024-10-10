@@ -15,6 +15,7 @@ namespace Pixelbinio\Pixelbin\Model\MediaStorage\File;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
+use Magento\MediaStorage\Model\File\Uploader as FileUploader;
 
 class Uploader
 {
@@ -48,7 +49,7 @@ class Uploader
      * @param array $extensions
      * @return array
      */
-    public function beforeSetAllowedExtensions(Uploader $uploader, $extensions = [])
+    public function beforeSetAllowedExtensions(FileUploader $uploader, $extensions = [])
     {
         $extensions = array_merge(
             $extensions,

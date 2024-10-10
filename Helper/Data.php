@@ -45,8 +45,8 @@ class Data extends AbstractHelper
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     //@codingStandardsIgnoreEnd
     public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_setup/pixelbin_image_sync/enable_manual_sync_cron';
-    const XML_PATH_VECTOR_EXTENSIONS = 'magestyapps_webimages/extensions/vector';
-    const XML_PATH_WEB_IMAGE_EXTENSIONS = 'magestyapps_webimages/extensions/web_image';
+    const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
+    const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
     public const API_URL = "https://api.pixelbinz0.de";
     public const EXCLUDE_FOLDERS = [
         ".thumbscatalog",

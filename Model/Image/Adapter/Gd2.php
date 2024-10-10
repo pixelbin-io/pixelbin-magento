@@ -16,7 +16,7 @@ namespace Pixelbinio\Pixelbin\Model\Image\Adapter;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Image\Adapter\AbstractAdapter;
 use Magento\Framework\Phrase;
-use Pixelbinio\Pixelbin\Helper\Data as HelerData;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 /**
  * Gd2 adapter.
@@ -59,20 +59,20 @@ class Gd2 extends AbstractAdapter
     protected $_resized = false;
 
     /**
-     * @var HelerData
+     * @var HelperData
      */
     private $helper;
 
     /**
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \Psr\Log\LoggerInterface $logger
-     * @param HelerData $helper
+     * @param HelperData $helper
      * @param array $data
      */
     public function __construct(
         \Magento\Framework\Filesystem $filesystem,
         \Psr\Log\LoggerInterface $logger,
-        HelerData $helper,
+        HelperData $helper,
         array $data = []
     ) {
         parent::__construct($filesystem, $logger, $data);
