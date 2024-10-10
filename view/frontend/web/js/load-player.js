@@ -432,11 +432,13 @@ define(
                                 .attr('class', 'cld-video-player')
                                 .attr('width', this._width)
                                 .attr('height', this._height)
-                                .attr('src', this._videoUrl.replace(/(^\w+:|^)/, ''))
+                                .attr('src', this._videoUrl.replace(/(^\w+:|^)/, '')+"?autoplay=1&mute=1")
                                 .attr('webkitallowfullscreen', '')
                                 .attr('mozallowfullscreen', '')
                                 .attr('allowfullscreen', '')
                                 .attr('referrerPolicy', 'origin')
+                                .attr('autoplay', 'autoplay')
+                                .attr('allow', 'autoplay')
                                 .on(
                                     "load",
                                     function () {
