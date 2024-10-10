@@ -350,8 +350,28 @@ class Data extends AbstractHelper
             if ($this->isImageTransformationEnabled($storeId)) {
                 $globalTransformation = $this->getGlobalCustomTransformation($storeId);
                 $productTransformation = $this->getProductCustomTransformation($storeId);
-                $transformation = '/'.$globalTransformation.$productTransformation.'/';
-                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+
+                if ($globalTransformation && !$productTransformation) {
+                    $transformation = '/'.$globalTransformation.'/';
+                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                }
+
+                if (!$globalTransformation && $productTransformation) {
+                    $transformation = '/'.$productTransformation.'/';
+                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                }
+
+                if ($globalTransformation && $productTransformation) {
+                    if ($globalTransformation === $productTransformation) {
+                        $transformation = '/'.$globalTransformation.'/';
+                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                    } else {
+                        $transformation = '/'.$productTransformation.'/';
+                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                    }
+                }
+
+                $this->logger->info("pixelbinImage - ".$pixelbinImage);
             }
 
             //@codingStandardsIgnoreStart
