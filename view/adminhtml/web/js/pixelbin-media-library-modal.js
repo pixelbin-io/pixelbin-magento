@@ -94,6 +94,11 @@ define([
             } else {
                 this.pixelbin_ml = window.pixelbin_ml[this.options.cldMLid];
             }
+            $(document).on("click", "#close_pixelbin_widget_container", function (){
+                console.log("ckliecked herer");
+                window.ml.hide();
+                $(this).hide();
+            });
 
         },
         getMageMediaBrowserData: function () {
@@ -112,6 +117,7 @@ define([
          */
         openMediaLibrary: function() {
             window.ml.show(this.options.pixelbinShowOptions);
+            $("#close_pixelbin_widget_container").show();
         },
         showLoader: function () {
             this.loader(true);

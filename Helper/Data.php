@@ -45,6 +45,8 @@ class Data extends AbstractHelper
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     //@codingStandardsIgnoreEnd
     public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_setup/pixelbin_image_sync/enable_manual_sync_cron';
+    const XML_PATH_VECTOR_EXTENSIONS = 'magestyapps_webimages/extensions/vector';
+    const XML_PATH_WEB_IMAGE_EXTENSIONS = 'magestyapps_webimages/extensions/web_image';
     public const API_URL = "https://api.pixelbinz0.de";
     public const EXCLUDE_FOLDERS = [
         ".thumbscatalog",
@@ -603,27 +605,45 @@ class Data extends AbstractHelper
     /**
      * @return array
      */
-    public function getFormatsToPreserve()
-    {
-        return ['png', 'webp', 'gif', 'svg'];
-    }
-
-    /**
-     * @return array
-     */
     public function getSupportedVideoFormats()
     {
         return ['mp4', 'webm', 'ogv', 'mov', 'wmv'];
     }
 
-    public function generateCLDuniqid()
+    /**
+     * Check if the file is a vector image
+     *
+     * @param $file
+     * @return bool
+     */
+    public function isVectorImage($file)
     {
-        return strtolower(uniqid(self::CLD_UNIQID_PREFIX)) . '_';
+        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        if (empty($extension) && file_exists($file)) {
+            $mimeType = mime_content_type($file);
+            $extension = str_replace('image/', '', $mimeType);
+        }
+
+        return in_array($extension, $this->getVectorExtensions());
     }
 
-    public function addUniquePrefixToBasename($filename, $uniqid = null)
+    /**
+     * Get vector image extensions
+     *
+     * @return array
+     */
+    public function getVectorExtensions()
     {
-        $uniqid = $uniqid ? $uniqid : $this->generateCLDuniqid();
-        return dirname($filename) . '/' . $uniqid . basename($filename);
+        return $this->scopeConfig->getValue(self::XML_PATH_VECTOR_EXTENSIONS, 'store') ?: [];
+    }
+
+    /**
+     * Get web image extensions
+     *
+     * @return array
+     */
+    public function getWebImageExtensions()
+    {
+        return $this->scopeConfig->getValue(self::XML_PATH_WEB_IMAGE_EXTENSIONS, 'store') ?: [];
     }
 }

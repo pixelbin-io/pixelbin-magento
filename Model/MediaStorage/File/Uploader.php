@@ -40,6 +40,25 @@ class Uploader
         $this->helperData = $helperData;
     }
 
+
+    /**
+     * Add web images to the list ollowed extension for media storage
+     *
+     * @param \Magento\MediaStorage\Model\File\Uploader $uploader
+     * @param array $extensions
+     * @return array
+     */
+    public function beforeSetAllowedExtensions(Uploader $uploader, $extensions = [])
+    {
+        $extensions = array_merge(
+            $extensions,
+            array_values($this->helperData->getVectorExtensions()),
+            array_values($this->helperData->getWebImageExtensions())
+        );
+
+        return [$extensions];
+    }
+
     /**
      * After image Save
      *
