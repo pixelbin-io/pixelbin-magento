@@ -168,14 +168,13 @@
                 </item>
             </argument>
         </column>
-        <column name="sync_status">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Sync Status</item>
-                    <item name="sortOrder" xsi:type="number">40</item>
-                </item>
-            </argument>
+        <column name="sync_status" component="Magento_Ui/js/grid/columns/select" sortOrder="50">
+            <settings>
+                <options class="Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Sync Status</label>
+            </settings>
         </column>
         <column name="error_message">
             <argument name="data" xsi:type="array">
