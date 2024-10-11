@@ -77,6 +77,7 @@ define([
                         insertHandler: function(data) {
                             console.log("insert handler data");
                             console.log(data);
+                            $("#close_pixelbin_widget_container").hide();
                             $('body').first().css('overflow', 'initial');
                             if (widget.isMediaBrowser()) {
                                 return widget.pixelbinInsertHandler(data);

@@ -40,11 +40,13 @@ class UpdateAdminImage extends Action
     private $helperData;
 
     /**
-     * @param ImageFactory $imageFactory
-     * @param UrlGenerator $urlGenerator
-     * @param ConfigurationInterface $configuration
+     * @param Context $context
      * @param StoreManagerInterface $storeManager
      * @param UrlInterface $urlInterface
+     * @param ResultRawFactory $resultFactory
+     * @param FileSysten $filesystem
+     * @param Transformation $transformation
+     * @param HelperData $helperData
      */
     public function __construct(
         Context $context,
