@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Pixelbinio_Pixelbin::css/pixelbin.css"/>
+    </head>
     <body>
         <referenceContainer name="after.body.start">
             <block class="Pixelbinio\Pixelbin\Block\Adminhtml\Cms\Wysiwyg\Images\Content" name="pixelbin_iframe_close_btn" template="Pixelbinio_Pixelbin::button.phtml"/>

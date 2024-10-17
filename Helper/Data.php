@@ -48,6 +48,7 @@ class Data extends AbstractHelper
     const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
     const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
     public const API_URL = "https://api.pixelbinz0.de";
+    public const ZONE_DEFAULT_URL = "https://cdn.pixelbinz0.de/v2/";
     public const EXCLUDE_FOLDERS = [
         ".thumbscatalog",
         ".thumbswysiwyg",
@@ -76,6 +77,11 @@ class Data extends AbstractHelper
     public const LIMIT_FOR_CRON = 500;
 
     public const DEFAULT_PIXELBIN_IMAGE = "code/Pixelbinio/Pixelbin/view/base/web/images/pixelbin_logo_light.png";
+
+    /**
+     * @var null
+     */
+    protected $_appZoneLink = null;
 
     /**
      * @var Curl
@@ -199,7 +205,14 @@ class Data extends AbstractHelper
      */
     public function getAppZone($storeId = null)
     {
-        return $this->getConfigValue(self::XML_PATH_APP_ZONE, $storeId);
+        if ($this->_appZoneLink === null) {
+            $zoneSlug = $this->getConfigValue(self::XML_PATH_APP_ZONE, $storeId);
+            if (!empty($zoneSlug)) {
+                $this->_appZoneLink = self::ZONE_DEFAULT_URL.$this->getAppCloudName()."/".$zoneSlug."original/";
+            }
+            $this->_appZoneLink = self::ZONE_DEFAULT_URL.$this->getAppCloudName()."/original/";
+        }
+        return $this->_appZoneLink;
     }
 
     /**

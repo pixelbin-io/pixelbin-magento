@@ -123,7 +123,7 @@ class PushImagesToPixelbin
                 ]
         )->setPageSize(HelperData::LIMIT_FOR_CRON)
             ->setCurPage(1)
-            ->setOrder(PixelbinSynchronisationInterface::KEY_SYNC_STATUS, "ASC")
+            ->setOrder(PixelbinSynchronisationInterface::KEY_ENTITY_ID, "ASC")
             ->load();
         return $collection;
     }
