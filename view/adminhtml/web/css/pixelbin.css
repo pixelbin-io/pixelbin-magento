@@ -1,0 +1,30 @@
+.product-image-wrapper-new {
+    background: #fff;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 150px;
+    line-height: 1;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    position: relative;
+    width: 150px;
+}
+.product-image-wrapper-new img {
+    position: relative;
+    top: 35px;
+}
+#close_pixelbin_widget_container{
+    display:none;
+    position: fixed;
+    top: 0;
+    z-index: 999999;
+    right: 25px;
+    background: rgb(0, 0, 0);
+    border-radius: 20px;
+    border-color: rgb(255, 255, 255);
+}
+#gallery_top_pixelbin_buttons_container {
+    display: inline-block;
+    position: relative;
+}

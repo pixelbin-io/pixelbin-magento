@@ -11,12 +11,6 @@ $elementName = $block->getElement()->getName() . '[images]';
 $formName = $block->getFormName();
 $pixelbinWidgetOptions = $block->getPixelbinMediaLibraryWidgetOptions();
 ?>
-<style>
-    #gallery_top_pixelbin_buttons_container {
-        display: inline-block;
-        position: relative;
-    }
-</style>
 <div class="row">
     <div class="add-video-button-container">
         <button id="add_video_button"
@@ -63,7 +57,8 @@ $elementToggleCode = $element->getToggleCode() ? $element->getToggleCode() : 'to
 
     <?php if ($pixelbinWidgetOptions): ?>
         <div id="gallery_inner_add_from_pixelbin_placeholder_button_<?= /* @escapeNotVerified */ $block->getHtmlId() ?>" class="image image-placeholder add-from-pixelbin-button" data-role="add-from-pixelbin-button" data-mage-init='{"pixelbinMediaLibraryModal": <?= $pixelbinWidgetOptions ?>}'>
-            <div class="product-image-wrapper">
+            <div class="product-image-wrapper-new">
+                <img src="<?= $this->getViewFileUrl("Pixelbinio_Pixelbin::images/pixelbin_logo_light.png") ?>" alt="">
                 <p class="image-placeholder-text">
                     <?= $block->escapeHtml(__('Add from Pixelbin')) ?>
                 </p>
