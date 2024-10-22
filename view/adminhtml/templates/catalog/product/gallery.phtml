@@ -58,7 +58,7 @@ $elementToggleCode = $element->getToggleCode() ? $element->getToggleCode() : 'to
     <?php if ($pixelbinWidgetOptions): ?>
         <div id="gallery_inner_add_from_pixelbin_placeholder_button_<?= /* @escapeNotVerified */ $block->getHtmlId() ?>" class="image image-placeholder add-from-pixelbin-button" data-role="add-from-pixelbin-button" data-mage-init='{"pixelbinMediaLibraryModal": <?= $pixelbinWidgetOptions ?>}'>
             <div class="product-image-wrapper-new">
-                <img src="<?= $this->getViewFileUrl("Pixelbinio_Pixelbin::images/pixelbin_logo_light.png") ?>" alt="">
+                <img src="<?= \Pixelbinio\Pixelbin\Helper\Data::PIXELBIN_DEFAULT_IMAGE_URL ?>" alt="Pixel defult image">
                 <p class="image-placeholder-text">
                     <?= $block->escapeHtml(__('Add from Pixelbin')) ?>
                 </p>
