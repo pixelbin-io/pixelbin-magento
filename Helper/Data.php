@@ -75,8 +75,8 @@ class Data extends AbstractHelper
     public const LAZYLOAD_DATA_PLACEHOLDER = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC';
     //@codingStandardsIgnoreEnd
     public const LIMIT_FOR_CRON = 500;
-
-    public const DEFAULT_PIXELBIN_IMAGE = "code/Pixelbinio/Pixelbin/view/base/web/images/pixelbin_logo_light.png";
+    public const DEFAULT_PIXELBIN_IMAGE = "code/Pixelbinio/Pixelbin/view/base/web/images/pixelbin_cloud_glyph_blue.png";
+    public const PIXELBIN_DEFAULT_IMAGE_URL = "https://cdn.pixelbin.io/v2/dummy-cloudname/original/magento_icons_and_images/pixelbin_logo.png";
 
     /**
      * @var null
