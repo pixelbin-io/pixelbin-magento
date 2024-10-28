@@ -5,7 +5,7 @@
         <pixelbin>
             <pixelbin_setup>
                 <pixelbin_image_sync>
-                    <image_sync_time>*/5 * * *</image_sync_time>
+                    <image_sync_time>*/5 * * * *</image_sync_time>
                     <enable_manual_sync_cron>1</enable_manual_sync_cron>
                 </pixelbin_image_sync>
             </pixelbin_setup>
