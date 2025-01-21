@@ -12,8 +12,6 @@ define([
     'mage/backend/validation',
     'pixelbinMediaLibraryAll',
     'es6Promise',
-
-
 ], function($, mageUtils, registry, productGallery, uiAlert, notification, $t, imageUploader) {
     'use strict';
 
@@ -75,7 +73,6 @@ define([
                 window.ml = window.pixelbin.createMediaLibrary(
                     this.options, {
                         insertHandler: function(data) {
-                            console.log("insert handler data");
                             console.log(data);
                             $("#close_pixelbin_widget_container").hide();
                             $('body').first().css('overflow', 'initial');
@@ -96,7 +93,6 @@ define([
                 this.pixelbin_ml = window.pixelbin_ml[this.options.cldMLid];
             }
             $(document).on("click", "#close_pixelbin_widget_container", function (){
-                console.log("ckliecked herer");
                 window.ml.hide();
                 $(this).hide();
             });
@@ -144,9 +140,8 @@ define([
             var widget = this;
             var aggregatedErrorMessages = [];
             var $i = data.assets.length;
-
+            var targetPath = $('.admin__current-filters-list li span[data-bind*="text: preview"]').text();
             data.assets.forEach(asset => {
-                //console.log(asset);
                 $i--;
                 if (widget.options.imageUploaderUrl) {
                     asset.asset_url = asset.asset_image_url = asset.secure_url;
@@ -157,6 +152,7 @@ define([
                             asset: asset,
                             remote_image: asset.asset_image_url,
                             param_name: widget.options.imageParamName,
+                            target_path: targetPath,
                             form_key: window.FORM_KEY
                         },
                         method: 'POST',

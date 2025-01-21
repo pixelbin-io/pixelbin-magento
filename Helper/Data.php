@@ -45,10 +45,10 @@ class Data extends AbstractHelper
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     //@codingStandardsIgnoreEnd
     public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_setup/pixelbin_image_sync/enable_manual_sync_cron';
-    public const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
-    public const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
-    public const API_URL = "https://api.pixelbinz0.de";
-    public const ZONE_DEFAULT_URL = "https://cdn.pixelbinz0.de/v2/";
+    const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
+    const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
+    public const API_URL = "https://api.pixelbin.io";
+    public const ZONE_DEFAULT_URL = "https://cdn.pixelbin.io/v2/";
     public const EXCLUDE_FOLDERS = [
         ".thumbscatalog",
         ".thumbswysiwyg",

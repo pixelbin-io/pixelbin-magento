@@ -10,7 +10,8 @@ var config = {
         }
     },
     paths: {
-        pixelbinMediaLibraryAll: "//cdn.jsdelivr.net/gh/pixelbin-io/media-library-widget/dist/bundle",
+        //pixelbinMediaLibraryAll: "//cdn.jsdelivr.net/gh/pixelbin-io/media-library-widget/dist/bundle",
+        pixelbinMediaLibraryAll: "//cdn.jsdelivr.net/gh/pixelbin-io/media-library-widget@main/dist/bundle",
         es6Promise: "//cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min",
         'uiComponent': 'Magento_Ui/js/core/app',
     },
