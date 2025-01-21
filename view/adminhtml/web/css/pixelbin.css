@@ -37,3 +37,6 @@
     left: 4px;
     top: 4px;
 }
+.gallery {
+    overflow: visible !important;
+}
