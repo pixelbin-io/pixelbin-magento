@@ -21,10 +21,29 @@ use Pixelbin\Utils\Url;
 
 class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagementInterface
 {
+    /**
+     * @var
+     */
     private $initialized;
+
+    /**
+     * @var
+     */
     private $id;
+
+    /**
+     * @var
+     */
     private $maxResults;
+
+    /**
+     * @var string
+     */
     protected $_resourceType = "image";
+
+    /**
+     * @var array
+     */
     protected $_resourceData = [];
 
     /**
@@ -87,23 +106,39 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
         return $this;
     }
 
+    /**
+     * @param $id
+     * @return $this
+     */
     public function setId($id)
     {
         $this->id = $id;
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Setting the max results
+     * 
+     * @param $maxResults
+     * @return $this
+     */
     public function setMaxResults($maxResults)
     {
         $this->maxResults = $maxResults;
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getMaxResults()
     {
         return $this->maxResults;

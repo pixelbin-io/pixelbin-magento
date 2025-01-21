@@ -75,7 +75,9 @@ class ThumbnailPlugin
             /** @var Raw $resultRaw */
             $resultRaw = $this->resultRawFactory->create();
             $resultRaw->setHeader('Content-Type', 'image/svg+xml');
+            //@codingStandardsIgnoreStart
             $resultRaw->setContents(file_get_contents($thumb));
+            //@codingStandardsIgnoreEnd
 
             return $resultRaw;
         } catch (\Exception $e) {

@@ -39,7 +39,7 @@ class StoragePlugin
      *
      * @param Storage $storage
      * @param callable $proceed
-     * @param $source
+     * @param string $source
      * @param bool $keepRatio
      * @return mixed
      */
@@ -57,8 +57,8 @@ class StoragePlugin
      *
      * @param Storage $storage
      * @param callable $proceed
-     * @param $filePath
-     * @param false $checkFile
+     * @param string $filePath
+     * @param bool $checkFile
      */
     public function aroundGetThumbnailPath(Storage $storage, callable $proceed, $filePath, $checkFile = false)
     {

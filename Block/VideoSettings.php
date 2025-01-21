@@ -22,8 +22,7 @@ class VideoSettings extends template
         Template\Context $context,
         Helper $helper,
         array $data = []
-    )
-    {
+    ) {
         $this->_helper = $helper;
         parent::__construct($context, $data);
     }
@@ -31,7 +30,8 @@ class VideoSettings extends template
     /**
      * @return array
      */
-    public function getVideoSettings() {
+    public function getVideoSettings()
+    {
         $settings = [];
         $sourceTypes = null;
         $videoFreeParams = false;
@@ -68,10 +68,10 @@ class VideoSettings extends template
                 $streamModeQuality = null;
                 $progressiveSourceTypes = null;
 
-                if ($streamModeFormat == 'none' && $progressiveSourceTypes){
-                    $sourceTypes = explode(',',(string)$progressiveSourceTypes);
+                if ($streamModeFormat == 'none' && $progressiveSourceTypes) {
+                    $sourceTypes = explode(',', (string)$progressiveSourceTypes);
                 }
-                if ($streamModeQuality){
+                if ($streamModeQuality) {
                     $transformation[]=  $streamModeQuality;
                 }
             }
@@ -85,7 +85,7 @@ class VideoSettings extends template
             ];
 
             if ($transformation && is_array($transformation)) {
-                $settings['transformation'] = implode(',',$transformation);
+                $settings['transformation'] = implode(',', $transformation);
             }
 
             if ($sourceTypes) {

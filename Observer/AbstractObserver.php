@@ -17,7 +17,7 @@ use Magento\Framework\Event\Observer;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
-abstract  class AbstractObserver implements \Magento\Framework\Event\ObserverInterface
+abstract class AbstractObserver implements \Magento\Framework\Event\ObserverInterface
 {
     /**
      * @var UploadFileToPixelbin

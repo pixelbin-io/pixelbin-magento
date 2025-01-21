@@ -1,4 +1,15 @@
 <?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Cms\Wysiwyg\Images;
 
@@ -94,10 +105,19 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      */
     private $helperData;
 
+    /**
+     * @var MediaGalleryUploader
+     */
     private $mediaGalleryUploader;
 
+    /**
+     * @var AssetInterfaceFactory
+     */
     protected $mediaAsset;
 
+    /**
+     * @var SaveAssetsInterface
+     */
     protected $mediaAssetSave;
 
     /**
@@ -119,7 +139,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      * @param  File                   $fileUtility
      * @param  AllowedProtocols       $protocolValidator
      * @param  NotProtectedExtension  $extensionValidator
-     * @param  HelperData $helperData
+     * @param  HelperData             $helperData
      */
     public function __construct(
         Context $context,
@@ -139,7 +159,6 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         AssetInterfaceFactory $mediaAsset,
         SaveAssetsInterface $mediaAssetSave,
         Logger $logger
-
     ) {
         parent::__construct($context, $coreRegistry, $resultJsonFactory, $directoryResolver);
         $this->directoryList = $directoryList;
@@ -169,7 +188,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $this->_initAction();
             $path = ($this->getStorage()->getSession()->getCurrentPath()) ?? null;
 
-            if (!$path){
+            if (!$path) {
                 $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/';
             }
 
@@ -179,30 +198,30 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                 );
             }
             $allData = $this->getRequest()->getParams();
-            
+
             $localFileName = $this->remoteFileUrl = $allData["asset"]["url"];
             $imagePathArray = explode($this->helperData->getAppZone(), $localFileName);
             $this->validateRemoteFile($this->remoteFileUrl);
             $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
-            
+
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
-            
-            
+
+
             $localFileName = Uploader::getCorrectFileName(basename($imagePathArray[1]));
             $extraPathName = explode($localFileName, $imagePathArray[1]);
-            
+
             $localFilePath = $this->appendNewFileName($path . $extraPathName[0] . $localFileName);
             $this->validateRemoteFileExtensions($localFilePath);
-            
+
 
             $this->retrieveRemoteImage($this->remoteFileUrl, $localFilePath);
             $this->getStorage()->resizeFile($localFilePath, true);
             $this->imageAdapter->validateUploadFile($localFilePath);
             $result = $this->appendResultSaveRemoteImage($localFilePath);
-            
+
             $asset = $allData['asset'];
-            $reg = preg_match('/^(.*)\/media\//',$localFilePath,$substruct);
-            $newPath = str_replace($substruct[0],'',$localFilePath);
+            $reg = preg_match('/^(.*)\/media\//', $localFilePath, $substruct);
+            $newPath = str_replace($substruct[0], '', $localFilePath);
             $ma = $this->mediaAsset->create(
                 [
                     'path' => $newPath,
@@ -216,7 +235,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                 ]
             );
             $this->mediaAssetSave->execute([$ma]);
-            
+
         } catch (\Exception $e) {
             $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
         }
@@ -320,6 +339,8 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     }
 
     /**
+     * Append a new file name
+     *
      * @param string $localFilePath
      * @return string
      */
@@ -331,8 +352,11 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     }
 
     /**
-     * @param string $localTmpFile
+     * Append an absolute file system path
+     *
+     * @param $localTmpFile
      * @return string
+     * @throws \Magento\Framework\Exception\ValidatorException
      */
     protected function appendAbsoluteFileSystemPath($localTmpFile)
     {
@@ -341,5 +365,4 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         $pathToSave = $mediaDirectory->getAbsolutePath();
         return $pathToSave . $localTmpFile;
     }
-
 }

@@ -83,7 +83,10 @@ class CronSyncTime extends Value
      */
     public function afterSave()
     {
+        //@codingStandardsIgnoreStart
         $generateSchedule = $this->getData('groups/pixelbin_setup/groups/pixelbin_image_sync/fields/image_sync_time/value');
+        //@codingStandardsIgnoreEnd
+
         try {
             $this->configValueFactory->create()->load(
                 self::GENERATE_SCAN_PATH,

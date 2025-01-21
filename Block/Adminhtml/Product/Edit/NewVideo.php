@@ -57,8 +57,7 @@ class NewVideo extends \Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVid
         HelperData            $helperData,
         StoreManagerInterface $storeManager,
         array                 $data = []
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $registry,

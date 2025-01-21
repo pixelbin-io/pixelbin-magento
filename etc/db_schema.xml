@@ -18,7 +18,7 @@
         <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="10" identity="true"
                 comment="Entity Id"/>
         <column xsi:type="varchar" length="255" name="image_path" comment="Image Path"/>
-        <column xsi:type="text" name="file_data" default="null" comment="File Data"/>
+        <column xsi:type="text" name="file_data" nullable="true" comment="File Data"/>
         <column xsi:type="varchar" length="255" name="sync_status" comment="Sync Status"/>
         <column xsi:type="varchar" length="255" name="error_message" comment="Error Message"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
@@ -34,7 +34,7 @@
                 comment="Entity Id"/>
         <column xsi:type="text" name="request" comment="Request"/>
         <column xsi:type="text" name="response" comment="Response"/>
-        <column xsi:type="varchar" length="255" name="sync_type" default="null" comment="Sync Type"/>
+        <column xsi:type="varchar" length="255" name="sync_type" nullable="true" comment="Sync Type"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"

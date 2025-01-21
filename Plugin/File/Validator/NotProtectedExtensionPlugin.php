@@ -37,7 +37,7 @@ class NotProtectedExtensionPlugin
      * Remove vector images from protected extensions list
      *
      * @param NotProtectedExtension $subject
-     * @param $result
+     * @param string $result
      * @return string|string[]
      */
     public function afterGetProtectedFileExtensions(NotProtectedExtension $subject, $result)

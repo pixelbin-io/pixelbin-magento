@@ -23,7 +23,7 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
     protected $helper;
 
     /**
-     * Pixelbin Options
+     * Pixelbin Options array
      * @var array|null
      */
     protected $pixelbinOptions;
@@ -35,13 +35,14 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public function __construct(
         Context $context,
         Data $helper
-    )
-    {
+    ) {
         $this->helper = $helper;
         parent::__construct($context);
     }
 
     /**
+     * Get Pixelbin Options from Config Data
+     *
      * @method getPixelbinOptions
      * @param bool $multiple Allow multiple
      * @param bool $refresh Refresh options
@@ -68,6 +69,8 @@ class MediaLibraryHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Path and Resouce type for Pixelbin options
+     *
      * @method getPixelbinShowOptions
      * @param string|null $resourceType
      * @param string $path

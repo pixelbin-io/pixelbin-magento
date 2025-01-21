@@ -45,8 +45,8 @@ class Data extends AbstractHelper
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     //@codingStandardsIgnoreEnd
     public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_setup/pixelbin_image_sync/enable_manual_sync_cron';
-    const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
-    const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
+    public const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
+    public const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
     public const API_URL = "https://api.pixelbinz0.de";
     public const ZONE_DEFAULT_URL = "https://cdn.pixelbinz0.de/v2/";
     public const EXCLUDE_FOLDERS = [
@@ -76,7 +76,9 @@ class Data extends AbstractHelper
     //@codingStandardsIgnoreEnd
     public const LIMIT_FOR_CRON = 500;
     public const DEFAULT_PIXELBIN_IMAGE = "code/Pixelbinio/Pixelbin/view/base/web/images/pixelbin_cloud_glyph_blue.png";
+    //@codingStandardsIgnoreStart
     public const PIXELBIN_DEFAULT_IMAGE_URL = "https://cdn.pixelbin.io/v2/dummy-cloudname/original/magento_icons_and_images/pixelbin_logo.png";
+    //@codingStandardsIgnoreEnd
 
     /**
      * @var null
@@ -527,7 +529,6 @@ class Data extends AbstractHelper
         return $offset;
     }
 
-
     /**
      * Parse Pixelbin URL
      * @method parsePixelbinUrl
@@ -571,7 +572,10 @@ class Data extends AbstractHelper
             $parsed["publicId"] = preg_replace('/.+\/v[0-9]{1,10}\//', '', $_url);
         }
 
+        //@codingStandardsIgnoreStart
         $_url = preg_replace('/(\/|\/v[0-9]{1,10}\/)' . \preg_quote((string) $parsed["publicId"], '/') . '$/', '', $_url);
+        //@codingStandardsIgnoreEnd
+
         $_url = explode('/', $_url);
 
         $slug = \array_shift($_url);
@@ -636,6 +640,7 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Supported video formats
      * @return array
      */
     public function getSupportedVideoFormats()
@@ -646,18 +651,19 @@ class Data extends AbstractHelper
     /**
      * Check if the file is a vector image
      *
-     * @param $file
+     * @param string $file
      * @return bool
      */
     public function isVectorImage($file)
     {
+        //@codingStandardsIgnoreStart
         $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
         if (empty($extension) && file_exists($file)) {
             $mimeType = mime_content_type($file);
             $extension = str_replace('image/', '', $mimeType);
         }
-
         return in_array($extension, $this->getVectorExtensions());
+        //@codingStandardsIgnoreEnd
     }
 
     /**

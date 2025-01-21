@@ -72,6 +72,8 @@ class Uploader
     }
 
     /**
+     * Value for allowed image extension
+     *
      * @param  string $filepath
      * @return string
      */
@@ -81,8 +83,11 @@ class Uploader
     }
 
     /**
-     * @param  string $filepath
+     * Value for media file path
+     *
+     * @param $filepath
      * @return bool
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function isMediaFilePath($filepath)
     {
@@ -90,8 +95,11 @@ class Uploader
     }
 
     /**
-     * @param  string $filepath
-     * @return string
+     * Value for media temp file path
+     *
+     * @param $filepath
+     * @return bool
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function isMediaTmpFilePath($filepath)
     {
@@ -99,6 +107,8 @@ class Uploader
     }
 
     /**
+     * Value for absolute file path
+     *
      * @param  array $result
      * @return string
      */
@@ -108,8 +118,11 @@ class Uploader
     }
 
     /**
-     * @param  string $filepath
-     * @return string
+     * Value for media relative path
+     *
+     * @param $filepath
+     * @return array|mixed|string|string[]
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     protected function mediaRelativePath($filepath)
     {
