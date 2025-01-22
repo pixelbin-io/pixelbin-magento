@@ -340,25 +340,25 @@ define(
                     var self = this;
 
                     self.element.on(
-                            'finish_update_video finish_create_video', $.proxy(
-                                function(element, playerData) {
-                                    if (!self._onlyVideoPlayer ||
-                                        !self._isEditPage && playerData.oldVideoId !== playerData.newVideoId ||
-                                        playerData.oldVideoId && playerData.oldVideoId !== playerData.newVideoId
-                                    ) {
-                                        self.element.updateInputFields({
-                                            reset: false,
-                                            data: {
-                                                title: data.title,
-                                                description: data.description
-                                            }
-                                        });
-                                        this._loadRemotePreview(data.thumbnail, data.videoProvider);
-                                    }
-                                    self._onlyVideoPlayer = true;
-                                }, this
-                            )
+                        'finish_update_video finish_create_video', $.proxy(
+                            function(element, playerData) {
+                                if (!self._onlyVideoPlayer ||
+                                    !self._isEditPage && playerData.oldVideoId !== playerData.newVideoId ||
+                                    playerData.oldVideoId && playerData.oldVideoId !== playerData.newVideoId
+                                ) {
+                                    self.element.updateInputFields({
+                                        reset: false,
+                                        data: {
+                                            title: data.title,
+                                            description: data.description
+                                        }
+                                    });
+                                    this._loadRemotePreview(data.thumbnail, data.videoProvider);
+                                }
+                                self._onlyVideoPlayer = true;
+                            }, this
                         )
+                    )
                         .createVideoPlayer({
                             videoId: data.videoId,
                             videoProvider: data.videoProvider,
@@ -397,11 +397,19 @@ define(
                 _loadRemotePreview: function(sourceUrl, videoProvider) {
                     var url = this.options.saveRemoteVideoUrl,
                         self = this;
+                    var defaultImageUrl = this.options.pixelbinPlaceholder
                     this._getPreviewImage().attr('src', sourceUrl).hide();
                     this._blockActionButtons(true, true);
                     $.ajax({
                         url: url,
-                        data: 'remote_image=' + (videoProvider === 'pixelbin' ? encodeURI(sourceUrl) : sourceUrl),
+                        data: {
+                            "remote_image": (videoProvider === 'pixelbin' ? encodeURI(sourceUrl) : sourceUrl),
+                            "asset": {
+                                "assetType": "video",
+                                "url": defaultImageUrl,
+                                "free_transformation": ""
+                            }
+                        },
                         type: 'post',
                         success: $.proxy(
                             function(result) {
@@ -704,10 +712,10 @@ define(
                         modalClass: 'mage-new-video-dialog form-inline',
                         title: $.mage.__('New Video'),
                         buttons: [{
-                                text: $.mage.__('Save'),
-                                class: 'action-primary video-create-button',
-                                click: $.proxy(widget._onCreate, widget)
-                            },
+                            text: $.mage.__('Save'),
+                            class: 'action-primary video-create-button',
+                            click: $.proxy(widget._onCreate, widget)
+                        },
                             {
                                 text: $.mage.__('Cancel'),
                                 class: 'video-cancel-button',
