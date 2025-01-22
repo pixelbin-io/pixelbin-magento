@@ -385,8 +385,6 @@ class Data extends AbstractHelper
                         $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
                     }
                 }
-
-                $this->logger->info("pixelbinImage - ".$pixelbinImage);
             }
 
             //@codingStandardsIgnoreStart
@@ -432,7 +430,6 @@ class Data extends AbstractHelper
                 $transformation = '/'.$globalTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
-
             //@codingStandardsIgnoreStart
             if (@getimagesize($pixelbinImage)) {
             //@codingStandardsIgnoreEnd

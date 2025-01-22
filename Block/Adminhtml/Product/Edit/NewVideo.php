@@ -81,11 +81,11 @@ class NewVideo extends \Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVid
         return $this->jsonEncoder->encode(
             [
                 'saveVideoUrl' => $this->getUrl('catalog/product_gallery/upload'),
-                'saveRemoteVideoUrl' => $this->getUrl('product_video/product_gallery/retrieveImage'),
+                'saveRemoteVideoUrl' => $this->getUrl('pixelbin/ajax/retrieveImage'),
                 'htmlId' => $this->getHtmlId(),
                 'youTubeApiKey' => $this->mediaHelper->getYouTubeApiKey(),
                 'videoSelector' => $this->videoSelector,
-                'cloudinaryPlaceholder' => $this->getPlaceholderUrl(),
+                'pixelbinPlaceholder' => $this->getPlaceholderUrl(),
             ]
         );
     }
