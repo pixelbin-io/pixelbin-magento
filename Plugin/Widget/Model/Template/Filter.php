@@ -101,7 +101,12 @@ class Filter
         );
 
         $generated = $this->helperData->getAppZone().$image;
-        //echo $generated; die;
+        $storeId = $this->helperData->getStoreId();
+        if ($this->helperData->isImageTransformationEnabled($storeId)) {
+            $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
+            $transformation = '/'.$globalTransformation.'/';
+            $generated = preg_replace('/\/original\//', "$transformation", $generated);
+        }
         //@codingStandardsIgnoreStart
         if (@getimagesize($generated)) {
         //@codingStandardsIgnoreEnd
