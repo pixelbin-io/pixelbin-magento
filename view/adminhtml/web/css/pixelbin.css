@@ -40,3 +40,7 @@
 .gallery {
     overflow: visible !important;
 }
+
+.image.image-placeholder #fileUploader {
+    border: none !important;
+}
