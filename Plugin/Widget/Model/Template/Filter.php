@@ -95,7 +95,6 @@ class Filter
         $image = $this->_imageFactory->build(
             $url,
             function () use ($proceed, $construction) {
-
                 return $proceed($construction);
             }
         );
@@ -104,17 +103,17 @@ class Filter
         $storeId = $this->helperData->getStoreId();
         if ($this->helperData->isImageTransformationEnabled($storeId)) {
             $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
-            $transformation = '/'.$globalTransformation.'/';
-            $generated = preg_replace('/\/original\//', "$transformation", $generated);
+            if ($globalTransformation) {
+                $transformation = '/'.$globalTransformation.'/';
+                $generated = preg_replace('/\/original\//', "$transformation", $generated);
+            }
         }
         //@codingStandardsIgnoreStart
         if (@getimagesize($generated)) {
         //@codingStandardsIgnoreEnd
             return $generated;
-        } else {
-            return $this->helperData->getDefaultImage();
         }
 
-        return $generated;
+        return $this->helperData->getMediaUrl().$image;
     }
 }
