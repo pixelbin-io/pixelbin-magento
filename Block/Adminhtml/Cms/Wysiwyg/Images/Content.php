@@ -32,13 +32,16 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
      */
     protected $mediaLibraryHelper;
 
-
+    /**
+     * @var ProductMetadataInterface
+     */
     protected $productMetadata;
 
     /**
      * @param Context $context
      * @param EncoderInterface $jsonEncoder
      * @param MediaLibraryHelper $mediaLibraryHelper
+     * @param ProductMetadataInterface $productMetadata
      * @param array $data
      */
     public function __construct(
@@ -59,22 +62,20 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
      * @param bool $multiple Allow multiple
      * @param bool $refresh Refresh options
      * @return string
+     * @throws \Exception
      */
     public function getPixelbinMediaLibraryWidgetOptions($multiple = false, $refresh = false)
     {
         if (!($pixelbinOptions = $this->mediaLibraryHelper->getPixelbinOptions($multiple, $refresh))) {
             return null;
         }
-
         try {
             if (version_compare($this->productMetadata->getVersion(), '2.3.5', '<=')) {
                 $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
             } else {
                 $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
             }
-
             //Try to add session param on Magento versions prior to 2.3.5
-
         } catch (\Exception $e) {
             //Catch deprecation error on Magento 2.3.5 and above
             throw new \Exception($e->getMessage());
