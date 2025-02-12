@@ -83,13 +83,13 @@ class Url implements ResolverInterface, ResetAfterRequestInterface
             if (!$this->helperData->isModuleEnabled()) {
                 return $imageFinalPath;
             }
-            return $this->helperData->replaceProductImageUrlWithPixelbin($imageFinalPath);
+            return $this->helperData->replaceGraphqlProductImageUrlWithPixelbin($imageFinalPath);
         } elseif (isset($value['file'])) {
             $imageFinalPath = $this->getImageUrl('image', $value['file']);
             if (!$this->helperData->isModuleEnabled()) {
                 return $imageFinalPath;
             }
-            return $this->helperData->replaceProductImageUrlWithPixelbin($imageFinalPath);
+            return $this->helperData->replaceGraphqlProductImageUrlWithPixelbin($imageFinalPath);
         }
         return [];
     }

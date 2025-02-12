@@ -143,13 +143,9 @@ class Page
                 $secureImg = str_replace('img src="', '', $image);
                 $secureImg = str_replace('"', '', $secureImg);
                 
-                //$this->logger->info("Image URL = " . $secureImg);
-
-                $secureImg = $this->helperData->replaceCmsImageUrlWithPixelbin($secureImg);
+                $secureImg = $this->helperData->replaceGraphqlCmsImageUrlWithPixelbin($secureImg);
 
                 $secureImg = '&lt;img src="'. $secureImg .'"';
-
-                $this->logger->info("Image URL = " . $secureImg);
 
                 $html = str_replace($image, $secureImg, $html);
             }

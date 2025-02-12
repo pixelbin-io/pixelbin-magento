@@ -682,4 +682,107 @@ class Data extends AbstractHelper
     {
         return $this->scopeConfig->getValue(self::XML_PATH_WEB_IMAGE_EXTENSIONS, 'store') ?: [];
     }
+
+    /**
+     * Replace GraphQl product image url with pixelbin url
+     *
+     * @param string $imageUrl
+     * @return array|string|string[]
+     * @throws NoSuchEntityException
+     */
+    public function replaceGraphqlProductImageUrlWithPixelbin($imageUrl)
+    {
+        if ($imageUrl != null) {
+            if ($this->isDefaultImageEnabled()) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+                    strpos($imageUrl, 'pixel_bin') !== 0) {
+                    return $this->getDefaultImage();
+                }
+            }
+
+            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+
+            $imagePathArray = explode('media/', $imagePath);
+
+            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
+                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
+            } else {
+                $pixelbinImage = $imagePath;
+            }
+
+            $storeId = $this->getStoreId();
+
+            if ($this->isImageTransformationEnabled($storeId)) {
+                $globalTransformation = $this->getGlobalCustomTransformation($storeId);
+                $productTransformation = $this->getProductCustomTransformation($storeId);
+
+                if ($globalTransformation && !$productTransformation) {
+                    $transformation = '/'.$globalTransformation.'/';
+                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                }
+
+                if (!$globalTransformation && $productTransformation) {
+                    $transformation = '/'.$productTransformation.'/';
+                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                }
+
+                if ($globalTransformation && $productTransformation) {
+                    if ($globalTransformation === $productTransformation) {
+                        $transformation = '/'.$globalTransformation.'/';
+                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                    } else {
+                        $transformation = '/'.$productTransformation.'/';
+                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                    }
+                }
+            }
+
+            if ($pixelbinImage) {
+                $imageUrl = $pixelbinImage;
+            }
+        }
+        return $imageUrl;
+    }
+
+    /**
+     * Replace GraphQl Cms Image Url With Pixelbin
+     *
+     * @param string $imageUrl
+     * @return array|mixed|string|string[]|null
+     * @throws NoSuchEntityException
+     */
+    public function replaceGraphqlCmsImageUrlWithPixelbin($imageUrl)
+    {
+        if ($imageUrl != null) {
+
+            if ($this->isDefaultImageEnabled()) {
+                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+                    strpos($imageUrl, 'pixel_bin') !== 0) {
+                    return $this->getDefaultImage();
+                }
+            }
+
+            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+
+            $imagePathArray = explode('media/', $imagePath);
+
+            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
+                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
+            } else {
+                $pixelbinImage = $imagePath;
+            }
+
+            $storeId = $this->getStoreId();
+            if ($this->isImageTransformationEnabled($storeId)) {
+                $globalTransformation = $this->getGlobalCustomTransformation($storeId);
+                $transformation = '/'.$globalTransformation.'/';
+                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+            }
+            
+            if ($pixelbinImage) {
+                $imageUrl = $pixelbinImage;
+            }
+        }
+        return $imageUrl;
+    }
 }
