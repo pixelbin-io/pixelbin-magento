@@ -10,7 +10,4 @@ type Query {
         id: Int @doc(description: "The ID of the CMS page.") @deprecated(reason: "Use `identifier` instead.")
         identifier: String @doc(description: "The identifier of the CMS page.")
     ): CmsPage @resolver(class: "Pixelbinio\\Pixelbin\\Model\\Resolver\\Page") @doc(description: "Return details about a CMS page.") @cache(cacheIdentity: "Magento\\CmsGraphQl\\Model\\Resolver\\Page\\Identity")
-    cmsBlocks (
-        identifiers: [String] @doc(description: "An array of CMS block IDs.")
-    ): CmsBlocks @resolver(class: "Magento\\CmsGraphQl\\Model\\Resolver\\Blocks") @doc(description: "Return information about CMS blocks.") @cache(cacheIdentity: "Magento\\CmsGraphQl\\Model\\Resolver\\Block\\Identity")
 }
