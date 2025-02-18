@@ -286,19 +286,22 @@ class Data extends AbstractHelper
      */
     public function logData(string $message, array $context = [], string $type = "")
     {
-        switch ($type) {
-            case "error":
-                $this->logger->error($message, $context);
-                break;
-            case "critical":
-                $this->logger->critical($message, $context);
-                break;
-            case "alert":
-                $this->logger->alert($message, $context);
-                break;
-            default:
-                $this->logger->info($message, $context);
-                break;
+        $log_enabled = $this->scopeConfig->getValue('pixelbin/developer/enabled_log');
+        if($log_enabled){
+            switch ($type) {
+                case "error":
+                    $this->logger->error($message, $context);
+                    break;
+                case "critical":
+                    $this->logger->critical($message, $context);
+                    break;
+                case "alert":
+                    $this->logger->alert($message, $context);
+                    break;
+                default:
+                    $this->logger->info($message, $context);
+                    break;
+            }
         }
     }
 

@@ -138,6 +138,15 @@
                     </depends>
                 </field>
             </group>
+
+            <group id="developer" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Developer Settings</label>
+                <field id="enabled_log" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Log</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[The log file can be found at var/log/pixelbin.log for further analysis.]]></comment>
+                </field>
+            </group>
         </section>
     </system>
 </config>

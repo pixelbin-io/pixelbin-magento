@@ -23,6 +23,10 @@
             <argument name="imageExtensions" xsi:type="array">
                 <item name="svg" xsi:type="string">svg</item>
                 <item name="webp" xsi:type="string">webp</item>
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="png" xsi:type="string">png</item>
+                <item name="gif" xsi:type="string">gif</item>
             </argument>
         </arguments>
     </type>
