@@ -60,7 +60,7 @@
                         <frontend_model>Pixelbinio\Pixelbin\Block\System\Config\SyncButton</frontend_model>
                     </field>
                 </group>
-                <field id="use_pixelbin_default_image" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <!-- <field id="use_pixelbin_default_image" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Use Default Image</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
@@ -69,7 +69,7 @@
                     <backend_model>Magento\Config\Model\Config\Backend\File</backend_model>
                     <base_url type="media" scope_info="1">pixel_bin</base_url>
                     <upload_dir config="system" scope_info="1">pixel_bin</upload_dir>
-                </field>
+                </field> -->
             </group>
             <group id="image_transformations" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Default Image Transformations</label>
@@ -82,13 +82,6 @@
                 </field>
                 <field id="product_custom_transformation" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Products Custom Transformation</label>
-                </field>
-            </group>
-            <group id="product_gallery" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Product Gallery</label>
-                <field id="is_enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Enable Product Gallery</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
             <group id="lazyload" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
