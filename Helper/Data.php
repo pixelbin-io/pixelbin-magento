@@ -37,8 +37,8 @@ class Data extends AbstractHelper
     public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
     public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
-    public const XML_PATH_SETUP_USE_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/use_pixelbin_default_image';
-    public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
+    //public const XML_PATH_SETUP_USE_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/use_pixelbin_default_image';
+    //public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
     public const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
     public const XML_PATH_GLOBAL_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/global_custom_transformation';
     //@codingStandardsIgnoreStart
@@ -322,10 +322,10 @@ class Data extends AbstractHelper
      * @return string
      * @throws NoSuchEntityException
      */
-    public function isDefaultImageEnabled()
-    {
-        return $this->getConfigValue(self::XML_PATH_SETUP_USE_DEFAULT_IMAGE);
-    }
+    // public function isDefaultImageEnabled()
+    // {
+    //     return $this->getConfigValue(self::XML_PATH_SETUP_USE_DEFAULT_IMAGE);
+    // }
 
     /**
      * Get default image
@@ -333,10 +333,10 @@ class Data extends AbstractHelper
      * @return string
      * @throws NoSuchEntityException
      */
-    public function getDefaultImage()
-    {
-        return $this->getMediaUrl() . 'pixel_bin/' . $this->getConfigValue(self::XML_PATH_SETUP_DEFAULT_IMAGE);
-    }
+    // public function getDefaultImage()
+    // {
+    //     return $this->getMediaUrl() . 'pixel_bin/' . $this->getConfigValue(self::XML_PATH_SETUP_DEFAULT_IMAGE);
+    // }
 
     /**
      * Replace product image url with pixelbin url
@@ -348,12 +348,12 @@ class Data extends AbstractHelper
     public function replaceProductImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
-            if ($this->isDefaultImageEnabled()) {
-                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-                    strpos($imageUrl, 'pixel_bin') !== 0) {
-                    return $this->getDefaultImage();
-                }
-            }
+            // if ($this->isDefaultImageEnabled()) {
+            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+            //         strpos($imageUrl, 'pixel_bin') !== 0) {
+            //         return $this->getDefaultImage();
+            //     }
+            // }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
@@ -412,12 +412,12 @@ class Data extends AbstractHelper
     {
         if ($imageUrl != null) {
 
-            if ($this->isDefaultImageEnabled()) {
-                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-                    strpos($imageUrl, 'pixel_bin') !== 0) {
-                    return $this->getDefaultImage();
-                }
-            }
+            // if ($this->isDefaultImageEnabled()) {
+            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+            //         strpos($imageUrl, 'pixel_bin') !== 0) {
+            //         return $this->getDefaultImage();
+            //     }
+            // }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
@@ -696,12 +696,12 @@ class Data extends AbstractHelper
     public function replaceGraphqlProductImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
-            if ($this->isDefaultImageEnabled()) {
-                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-                    strpos($imageUrl, 'pixel_bin') !== 0) {
-                    return $this->getDefaultImage();
-                }
-            }
+            // if ($this->isDefaultImageEnabled()) {
+            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+            //         strpos($imageUrl, 'pixel_bin') !== 0) {
+            //         return $this->getDefaultImage();
+            //     }
+            // }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
@@ -758,12 +758,12 @@ class Data extends AbstractHelper
     {
         if ($imageUrl != null) {
 
-            if ($this->isDefaultImageEnabled()) {
-                if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-                    strpos($imageUrl, 'pixel_bin') !== 0) {
-                    return $this->getDefaultImage();
-                }
-            }
+            // if ($this->isDefaultImageEnabled()) {
+            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
+            //         strpos($imageUrl, 'pixel_bin') !== 0) {
+            //         return $this->getDefaultImage();
+            //     }
+            // }
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 

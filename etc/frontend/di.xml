@@ -30,9 +30,9 @@
         <plugin name="minicart_after_get_itemdata_plugin" type="Pixelbinio\Pixelbin\Plugin\Minicart\AfterGetItemData" sortOrder="1"/>
     </type>
 
-    <type name="Magento\Catalog\Model\View\Asset\Placeholder">
+    <!-- <type name="Magento\Catalog\Model\View\Asset\Placeholder">
         <plugin name="placeholder_image_change" type="Pixelbinio\Pixelbin\Plugin\AfterPlaceholderLoad" sortOrder="110"/>
-    </type>
+    </type> -->
 
     <type name="Magento\Cms\Block\Block">
         <plugin name="pixelbin_plugin_block_cms_block_block" type="Pixelbinio\Pixelbin\Plugin\Cms\Block\Block"/>
