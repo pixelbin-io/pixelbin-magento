@@ -47,7 +47,8 @@ class ImageFactory
         if ($this->helperData->isModuleEnabled()) {
             return $imagePath;
         } else {
-            return $this->helperData->getDefaultImage();
+            //return $this->helperData->getDefaultImage();
+            return \Pixelbinio\Pixelbin\Helper\Data::PIXELBIN_DEFAULT_IMAGE_URL;
         }
     }
 }
