@@ -79,7 +79,12 @@ class Sync extends Action
                         continue;
                     }
                     $pathInfo = $this->uploadFileToPixelbin->getPathInfo($file["filename"]);
-                    if (in_array($pathInfo["extension"], HelperData::EXCLUDE_EXTENSION)) {
+                    $fileExtension = $pathInfo["extension"] ?? "";
+                    if (empty($fileExtension)) {
+                        $this->helperData->logData("File extension is not found => " . $file["filename"]);
+                        continue;
+                    }
+                    if (in_array($fileExtension, HelperData::EXCLUDE_EXTENSION)) {
                         $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
                         continue;
                     }

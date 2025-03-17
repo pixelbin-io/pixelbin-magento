@@ -13,7 +13,6 @@
 
 namespace Pixelbinio\Pixelbin\Observer;
 
-use Magento\Framework\Event\Observer;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
