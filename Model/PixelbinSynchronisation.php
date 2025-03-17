@@ -48,7 +48,7 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
     }
 
     /**
-     * Get Truncate table
+     * Truncate table
      *
      * @return $this
      * @throws LocalizedException
