@@ -3,13 +3,19 @@
  * @var \Pixelbinio\Pixelbin\Block\System\Config\SyncButton $block
  */
 ?>
-
+<?php
+$pendingSyncCollection = $block->getPendingSyncCollection()->getSize();
+?>
 <div class="pp-buttons-container">
     <button
         id="<?= /** @escapeNotVerified */ $block->getId() ?>"
         type="button"
         onclick="window.location='<?= /** @escapeNotVerified */ $block->getAjaxCheckUrl() ?>'"
-        class="action-default scalable primary ui-button ui-corner-all ui-widget">
+        class="action-default scalable primary ui-button ui-corner-all ui-widget"
+        <?php if ($pendingSyncCollection>0): ?>
+        disabled="disabled"
+        <?php endif; ?>
+    >
         <span>
             <span>
                 <span><?= /** @escapeNotVerified */ $escaper->escapeHtml($block->getButtonLabel()); ?></span>
@@ -24,7 +30,7 @@
     <p><?= /** @escapeNotVerified */
         __("Total Media file synced %1", $block->getSuccessSyncCollection()->getSize()) ?></p>
     <p><?= /** @escapeNotVerified */
-        __("Total Media file pending to sync %1", $block->getPendingSyncCollection()->getSize()) ?></p>
+        __("Total Media file pending to sync %1", $pendingSyncCollection) ?></p>
     <p><?= /** @escapeNotVerified */
         __("Total Media file failed %1", $block->getFiledSyncCollection()->getSize()) ?></p>
 <?php endif; ?>

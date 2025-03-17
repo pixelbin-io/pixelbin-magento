@@ -30,4 +30,10 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Config\Model\Config">
+        <plugin name="pixelbin_before_config_save_plugin"
+                type="Pixelbinio\Pixelbin\Plugin\Config\BeforeConfigSavePlugin"
+                sortOrder="10"/>
+    </type>
 </config>

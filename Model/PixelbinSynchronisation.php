@@ -13,11 +13,18 @@
 
 namespace Pixelbinio\Pixelbin\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
 use Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation as PixelbinSynchronisationResourceModel;
+use Magento\Framework\App\ResourceConnection;
 
 class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel implements PixelbinSynchronisationInterface
 {
+    /**
+     * @var ResourceConnection
+     */
+    protected $resourceConnection;
+
     /**
      * PixelbinSynchronisation construct
      *
@@ -26,6 +33,38 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
     public function _construct()
     {
         $this->_init(PixelbinSynchronisationResourceModel::class);
+    }
+
+    public function __construct(
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        ResourceConnection $resourceConnection,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->resourceConnection = $resourceConnection;
+        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+    }
+
+    /**
+     * Get Truncate table
+     *
+     * @return $this
+     * @throws LocalizedException
+     */
+    public function truncateTable($tableName)
+    {
+        try {
+            $connection = $this->resourceConnection->getConnection();
+            $fullTableName = $this->resourceConnection->getTableName($tableName);
+            $connection->truncateTable($fullTableName);
+        } catch (\Exception $e) {
+            throw new LocalizedException(
+                __($e->getMessage())
+            );
+        }
+        return $this;
     }
 
     /**

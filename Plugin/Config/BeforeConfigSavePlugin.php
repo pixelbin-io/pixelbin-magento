@@ -1,0 +1,61 @@
+<?php
+
+namespace Pixelbinio\Pixelbin\Plugin\Config;
+
+use Magento\Config\Model\Config;
+use Magento\Framework\Exception\LocalizedException;
+use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
+use Pixelbinio\Pixelbin\Api\Data\PixelbinImageSyncLogsInterface;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Model\PixelbinSynchronisation;
+
+class BeforeConfigSavePlugin
+{
+    /**
+     * @var HelperData
+     */
+    protected $helperData;
+
+    /**
+     * @var PixelbinSynchronisation
+     */
+    protected $pixelbinSynchronisation;
+
+    /**
+     * @param HelperData $helperData
+     * @param PixelbinSynchronisation $pixelbinSynchronisation
+     */
+    public function __construct(
+        HelperData $helperData,
+        PixelbinSynchronisation $pixelbinSynchronisation
+    ) {
+        $this->helperData = $helperData;
+        $this->pixelbinSynchronisation = $pixelbinSynchronisation;
+    }
+
+    /**
+     * Plugin before save config
+     *
+     * @param Config $subject
+     * @throws LocalizedException
+     */
+    public function beforeSave(Config $subject)
+    {
+        $section = $subject->getSection();
+        if ($section === 'pixelbin') {
+            $configData = $subject->getData('groups');
+            if (isset($configData['app_configuration']['fields']['cloud_name']['value'])) {
+                $newCloudName = $configData['app_configuration']['fields']['cloud_name']['value'];
+                $oldCloudName = $subject->getConfigDataValue('pixelbin/app_configuration/cloud_name');
+                if ($newCloudName != $oldCloudName) {
+                    $this->helperData->logData("Before Save: Config changed: pixelbin/app_configuration/cloud_name | Old: {$newCloudName} | New: {$oldCloudName}");
+                    $pixelbinSynchronisationTableName = PixelbinSynchronisationInterface::TABLE_NAME;
+                    $this->pixelbinSynchronisation->truncateTable($pixelbinSynchronisationTableName);
+
+                    $pixelbinImageSyncLogsTableName = PixelbinImageSyncLogsInterface::TABLE_NAME;
+                    $this->pixelbinSynchronisation->truncateTable($pixelbinImageSyncLogsTableName);
+                }
+            }
+        }
+    }
+}
