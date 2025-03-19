@@ -22,6 +22,8 @@ class BeforeConfigSavePlugin
     protected $pixelbinSynchronisation;
 
     /**
+     * BeforeConfigSavePlugin construct
+     *
      * @param HelperData $helperData
      * @param PixelbinSynchronisation $pixelbinSynchronisation
      */
