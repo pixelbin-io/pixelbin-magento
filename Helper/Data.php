@@ -37,14 +37,12 @@ class Data extends AbstractHelper
     public const XML_PATH_APP_CLOUD_NAME = 'pixelbin/app_configuration/cloud_name';
     public const XML_PATH_APP_ZONE = 'pixelbin/app_configuration/zone';
     public const XML_PATH_APP_API_SECRET = 'pixelbin/app_configuration/api_secret';
-    //public const XML_PATH_SETUP_USE_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/use_pixelbin_default_image';
-    //public const XML_PATH_SETUP_DEFAULT_IMAGE = 'pixelbin/pixelbin_setup/default_image';
     public const XML_PATH_AUTO_OPTIMISATION = 'pixelbin/image_transformations/auto_optimisation';
     public const XML_PATH_GLOBAL_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/global_custom_transformation';
     //@codingStandardsIgnoreStart
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     //@codingStandardsIgnoreEnd
-    public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_setup/pixelbin_image_sync/enable_manual_sync_cron';
+    public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_image_sync/enable_manual_sync_cron';
     const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
     const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
     public const API_URL = "https://api.pixelbin.io";
@@ -781,7 +779,7 @@ class Data extends AbstractHelper
                 $transformation = '/'.$globalTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
-            
+
             if ($pixelbinImage) {
                 $imageUrl = $pixelbinImage;
             }
