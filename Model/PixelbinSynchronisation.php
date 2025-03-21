@@ -17,6 +17,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
 use Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation as PixelbinSynchronisationResourceModel;
 use Magento\Framework\App\ResourceConnection;
+use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
 
 class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel implements PixelbinSynchronisationInterface
 {
@@ -59,6 +60,29 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
             $connection = $this->resourceConnection->getConnection();
             $fullTableName = $this->resourceConnection->getTableName($tableName);
             $connection->truncateTable($fullTableName);
+        } catch (\Exception $e) {
+            throw new LocalizedException(
+                __($e->getMessage())
+            );
+        }
+        return $this;
+    }
+
+    /**
+     * @param $tableName
+     * @return $this
+     * @throws LocalizedException
+     */
+    public function updateAllSyncToPending($tableName)
+    {
+        try {
+            $connection = $this->resourceConnection->getConnection();
+            $connection->update(
+                $tableName,
+                [
+                    PixelbinSynchronisationInterface::KEY_SYNC_STATUS => SyncStatus::STATUS_PENDING_TO_START
+                ]
+            );
         } catch (\Exception $e) {
             throw new LocalizedException(
                 __($e->getMessage())
