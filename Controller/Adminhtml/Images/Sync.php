@@ -89,10 +89,6 @@ class Sync extends Action
                         continue;
                     }
                     $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
-                    $syncCollection = $this->uploadFileToPixelbin->getSyncCollection($fileName);
-                    if ($syncCollection->getSize() > 0) {
-                        continue;
-                    }
                     $file["full_path"] = $fileName;
                     $eachFileData[] = $file;
                     $saveData = [

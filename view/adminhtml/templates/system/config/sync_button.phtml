@@ -34,3 +34,9 @@ $pendingSyncCollection = $block->getPendingSyncCollection()->getSize();
     <p><?= /** @escapeNotVerified */
         __("Total Media file failed %1", $block->getFiledSyncCollection()->getSize()) ?></p>
 <?php endif; ?>
+<script>
+    const btnId = "<?= /** @escapeNotVerified */ $block->getId() ?>";
+    document.getElementById(btnId).addEventListener("click", function() {
+        this.disabled = true;
+    });
+</script>

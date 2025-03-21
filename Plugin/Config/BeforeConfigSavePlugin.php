@@ -52,7 +52,7 @@ class BeforeConfigSavePlugin
                 if ($newCloudName != $oldCloudName) {
                     $this->helperData->logData("Before Save: Config changed: pixelbin/app_configuration/cloud_name | Old: {$newCloudName} | New: {$oldCloudName}");
                     $pixelbinSynchronisationTableName = PixelbinSynchronisationInterface::TABLE_NAME;
-                    $this->pixelbinSynchronisation->truncateTable($pixelbinSynchronisationTableName);
+                    $this->pixelbinSynchronisation->updateAllSyncToPending($pixelbinSynchronisationTableName);
 
                     $pixelbinImageSyncLogsTableName = PixelbinImageSyncLogsInterface::TABLE_NAME;
                     $this->pixelbinSynchronisation->truncateTable($pixelbinImageSyncLogsTableName);
