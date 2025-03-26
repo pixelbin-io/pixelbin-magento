@@ -23,9 +23,11 @@ var config = {
             deps: ['jquery']
         }
     },
-    mixins: {
-        'Magento_Ui/js/form/element/image-uploader': {
-            'Pixelbinio_Pixelbin/js/form/element/image-uploader-mixin': true
+    config: {
+        mixins: {
+            'Magento_Ui/js/form/element/image-uploader': {
+                'Pixelbinio_Pixelbin/js/form/element/image-uploader-mixin': true
+            }
         }
     }
 };

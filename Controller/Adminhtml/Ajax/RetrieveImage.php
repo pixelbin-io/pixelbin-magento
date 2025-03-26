@@ -14,7 +14,9 @@
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
 
 use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
+use Magento\Framework\Filesystem\Io\File as FileIo;
 use Pixelbinio\Pixelbin\Model\Framework\File\Uploader;
 use Magento\Backend\App\Action\Context;
 use Magento\Catalog\Model\Product\Media\Config as ProductMediaConfig;
@@ -122,6 +124,11 @@ class RetrieveImage extends \Magento\Backend\App\Action
     protected File $fileDriver;
 
     /**
+     * @var FileIo
+     */
+    protected $fileIo;
+
+    /**
      * @method __construct
      * @param Context $context
      * @param ResultRawFactory $resultRawFactory
@@ -136,6 +143,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
      * @param StoreManagerInterface $storeManager
      * @param HelperData $helperData
      * @param File $fileDriver
+     * @param FileIo $fileIo
      */
     public function __construct(
         Context $context,
@@ -150,7 +158,8 @@ class RetrieveImage extends \Magento\Backend\App\Action
         NotProtectedExtension $extensionValidator,
         StoreManagerInterface $storeManager,
         HelperData $helperData,
-        File $fileDriver
+        File $fileDriver,
+        FileIo $fileIo
     ) {
         parent::__construct($context);
         $this->resultRawFactory = $resultRawFactory;
@@ -165,6 +174,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
         $this->storeManager = $storeManager;
         $this->helperData = $helperData;
         $this->fileDriver = $fileDriver;
+        $this->fileIo = $fileIo;
     }
 
     /**
@@ -233,6 +243,8 @@ class RetrieveImage extends \Magento\Backend\App\Action
     protected function getLocalTmpFileName($remoteFileUrl)
     {
         $localFileName = Uploader::getCorrectFileName(basename($remoteFileUrl));
+        $fileData = $this->fileIo->getPathInfo($localFileName);
+        $localFileName = $fileData["filename"].".png";
         switch ($this->getRequest()->getParam('type')) {
             case 'pagebuilder_contenttype':
             case 'design_config_fileUploader':
@@ -279,8 +291,11 @@ class RetrieveImage extends \Magento\Backend\App\Action
     }
 
     /**
+     * Append result save remove image
+     *
      * @param string $localUniqFilePath
      * @return mixed
+     * @throws NoSuchEntityException
      */
     protected function appendResultSaveRemoteImage($localUniqFilePath, $baseTmpMediaPath)
     {
