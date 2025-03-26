@@ -20,6 +20,8 @@ use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
+use Magento\Framework\App\ResourceConnection;
+use Pixelbinio\Pixelbin\Model\PixelbinSynchronisation;
 
 class Sync extends Action
 {
@@ -39,22 +41,38 @@ class Sync extends Action
     protected $uploadFileToPixelbin;
 
     /**
+     * @var PixelbinSynchronisation
+     */
+    protected $pixelbinSynchronisation;
+
+    /**
+     * @var ResourceConnection
+     */
+    protected $resourceConnection;
+
+    /**
      * Sync construct
      *
      * @param Context $context
      * @param HelperData $helperData
      * @param StorageModel $storageModel
      * @param UploadFileToPixelbin $uploadFileToPixelbin
+     * @param PixelbinSynchronisation $pixelbinSynchronisation
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
         Context $context,
         HelperData $helperData,
         StorageModel $storageModel,
-        UploadFileToPixelbin $uploadFileToPixelbin
+        UploadFileToPixelbin $uploadFileToPixelbin,
+        PixelbinSynchronisation $pixelbinSynchronisation,
+        ResourceConnection $resourceConnection
     ) {
         $this->helperData = $helperData;
         $this->storageModel = $storageModel;
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
+        $this->pixelbinSynchronisation = $pixelbinSynchronisation;
+        $this->resourceConnection = $resourceConnection;
         parent::__construct($context);
     }
 
@@ -66,8 +84,12 @@ class Sync extends Action
     public function execute()
     {
         try {
+            $pixelbinSynchronisationTableName = PixelbinSynchronisationInterface::TABLE_NAME;
+            $this->pixelbinSynchronisation->truncateTable($pixelbinSynchronisationTableName);
+
             $sourceModel = $this->storageModel->getStorageModel();
             $offset = 0;
+            $allMediaFiles = [];
             while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
                 $eachFileData = [];
                 foreach ($files as $file) {
@@ -91,14 +113,19 @@ class Sync extends Action
                     $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
                     $file["full_path"] = $fileName;
                     $eachFileData[] = $file;
-                    $saveData = [
+                    $allMediaFiles[] = [
                         PixelbinSynchronisationInterface::KEY_IMAGE_PATH => $file["full_path"],
                         PixelbinSynchronisationInterface::KEY_FILE_DATA => json_encode($eachFileData),
                         PixelbinSynchronisationInterface::KEY_SYNC_STATUS => SyncStatus::STATUS_PENDING,
                     ];
-                    $this->uploadFileToPixelbin->saveSynchronisationLogs($saveData);
                 }
                 $offset += count($files);
+            }
+            if (!empty($allMediaFiles)) {
+                $connection = $this->resourceConnection->getConnection();
+                $connection->beginTransaction();
+                $connection->insertMultiple($pixelbinSynchronisationTableName, $allMediaFiles);
+                $connection->commit();
             }
             $this->messageManager->addSuccessMessage(
                 __("Sync Collection added in queue")

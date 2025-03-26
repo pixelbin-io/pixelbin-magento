@@ -60,6 +60,7 @@ class Data extends AbstractHelper
         "json",
         "txt",
         "csv",
+        "DS_Store",
     ];
 
     //= Lazyload
