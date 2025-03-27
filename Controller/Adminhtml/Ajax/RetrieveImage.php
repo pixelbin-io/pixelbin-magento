@@ -244,7 +244,9 @@ class RetrieveImage extends \Magento\Backend\App\Action
     {
         $localFileName = Uploader::getCorrectFileName(basename($remoteFileUrl));
         $fileData = $this->fileIo->getPathInfo($localFileName);
-        $localFileName = $fileData["filename"].".png";
+        if ($fileData["extension"] == "mp4") {
+            $localFileName = $fileData["filename"].".png";
+        }
         switch ($this->getRequest()->getParam('type')) {
             case 'pagebuilder_contenttype':
             case 'design_config_fileUploader':
