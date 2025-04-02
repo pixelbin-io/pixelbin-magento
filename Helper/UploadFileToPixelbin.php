@@ -159,14 +159,12 @@ class UploadFileToPixelbin extends AbstractHelper
         try {
             $pixelbin = $this->getPixelbinObj();
             $result = $pixelbin->assets->fileUpload(
-                $this->driverFile->fileOpen($file["absolute_path"], "r"),
-                $file["path_folder"],
-                $file["file_name"],
-                AccessEnum::PUBLIC_READ,
-                $file["tags"] ?? [],
-                null,
-                true,
-                false
+                file: $this->driverFile->fileOpen($file["absolute_path"], "r"),
+                path: $file["path_folder"],
+                access: AccessEnum::PUBLIC_READ,
+                tags:$file["tags"] ?? [],
+                overwrite: true,
+                filenameOverride: true
             );
             $requestData = [
                 "path" => $file["path_folder"],
@@ -177,6 +175,7 @@ class UploadFileToPixelbin extends AbstractHelper
                 "overwrite" => true,
                 "filenameOverride" => true,
             ];
+            $this->helperData->logData("request for pixelbin => ".json_encode($requestData));
             $syncLog = [
                 PixelbinImageSyncLogsInterface::KEY_REQUEST => json_encode($requestData),
                 PixelbinImageSyncLogsInterface::KEY_RESPONSE => json_encode($result),
