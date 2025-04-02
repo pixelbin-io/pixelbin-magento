@@ -4,7 +4,10 @@
  */
 ?>
 <?php
-$pendingSyncCollection = $block->getPendingSyncCollection()->getSize();
+$totalSyncCollectionCount = $block->getTotalSyncCollection()->getSize();
+$successSyncCollectionCount = $block->getSuccessSyncCollection()->getSize();
+$pendingSyncCollectionCount = $block->getPendingSyncCollection()->getSize();
+$filedSyncCollectionCount = $block->getFiledSyncCollection()->getSize();
 ?>
 <div class="pp-buttons-container">
     <button
@@ -12,7 +15,7 @@ $pendingSyncCollection = $block->getPendingSyncCollection()->getSize();
         type="button"
         onclick="window.location='<?= /** @escapeNotVerified */ $block->getAjaxCheckUrl() ?>'"
         class="action-default scalable primary ui-button ui-corner-all ui-widget"
-        <?php if ($pendingSyncCollection>0): ?>
+        <?php if ($pendingSyncCollectionCount>0): ?>
         disabled="disabled"
         <?php endif; ?>
     >
@@ -23,16 +26,20 @@ $pendingSyncCollection = $block->getPendingSyncCollection()->getSize();
         </span>
     </button>
 </div>
-<?php $syncCollection = $block->getTotalSyncCollection(); ?>
-<?php if ($syncCollection->getSize() > 0): ?>
+<?php
+if ($successSyncCollectionCount > 0 && $pendingSyncCollectionCount == 0) {
+    $pendingSyncCollectionCount = ($totalSyncCollectionCount-$successSyncCollectionCount)-$filedSyncCollectionCount;
+}
+?>
+<?php if ($totalSyncCollectionCount > 0): ?>
     <p><?= /** @escapeNotVerified */
-        __("Total Media file %1", $syncCollection->getSize()) ?></p>
+        __("Total Media file %1", $totalSyncCollectionCount) ?></p>
     <p><?= /** @escapeNotVerified */
-        __("Total Media file synced %1", $block->getSuccessSyncCollection()->getSize()) ?></p>
+        __("Total Media file synced %1", $successSyncCollectionCount) ?></p>
     <p><?= /** @escapeNotVerified */
-        __("Total Media file pending to sync %1", $pendingSyncCollection) ?></p>
+        __("Total Media file pending to sync %1", $pendingSyncCollectionCount) ?></p>
     <p><?= /** @escapeNotVerified */
-        __("Total Media file failed %1", $block->getFiledSyncCollection()->getSize()) ?></p>
+        __("Total Media file failed %1", $filedSyncCollectionCount) ?></p>
 <?php endif; ?>
 <script>
     const btnId = "<?= /** @escapeNotVerified */ $block->getId() ?>";
