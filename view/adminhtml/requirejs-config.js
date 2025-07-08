@@ -7,6 +7,7 @@ var config = {
             cldspinsetDialog: 'Pixelbinio_Pixelbin/js/pixelbin-spinset-dialog',
             productGallery: 'Pixelbinio_Pixelbin/js/product-gallery',
             updateCmsImages: 'Pixelbinio_Pixelbin/js/cms/preview-update',
+            'Magento_Backend/js/media-uploader': 'Pixelbinio_Pixelbin/js/media-uploader'
         }
     },
     paths: {
@@ -27,7 +28,7 @@ var config = {
         mixins: {
             'Magento_Ui/js/form/element/image-uploader': {
                 'Pixelbinio_Pixelbin/js/form/element/image-uploader-mixin': true
-            }
+            },
         }
     }
 };
