@@ -77,7 +77,7 @@ class Filter
     public function aroundMediaDirective(
         \Magento\Widget\Model\Template\Filter $widgetFilter,
         callable $proceed,
-        $construction
+                                              $construction
     ) {
         if (!$this->helperData->isModuleEnabled()) {
             return $proceed($construction);
@@ -105,12 +105,14 @@ class Filter
             $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
             if ($globalTransformation) {
                 $transformation = '/'.$globalTransformation.'/';
+                $transformation = str_replace('(', '%28', $transformation);
+                $transformation = str_replace(')', '%29', $transformation);
                 $generated = preg_replace('/\/original\//', "$transformation", $generated);
             }
         }
         //@codingStandardsIgnoreStart
         if (@getimagesize($generated)) {
-        //@codingStandardsIgnoreEnd
+            //@codingStandardsIgnoreEnd
             return $generated;
         }
 
