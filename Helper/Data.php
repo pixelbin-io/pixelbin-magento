@@ -60,6 +60,11 @@ class Data extends AbstractHelper
         "json",
         "txt",
         "csv",
+        "zip",
+        "tar",
+        "tar.gz",
+        "gz",
+        "sql",
         "DS_Store",
     ];
 
