@@ -395,12 +395,12 @@ class Data extends AbstractHelper
                     }
                 }
             }
-
-            //@codingStandardsIgnoreStart
-            if (@getimagesize($pixelbinImage)) {
-            //@codingStandardsIgnoreEnd
-                $imageUrl = $pixelbinImage;
-            }
+            return $imageUrl = $pixelbinImage;
+//            //@codingStandardsIgnoreStart
+//            if (@getimagesize($pixelbinImage)) {
+//            //@codingStandardsIgnoreEnd
+//                $imageUrl = $pixelbinImage;
+//            }
         }
         return $imageUrl;
     }
@@ -439,11 +439,12 @@ class Data extends AbstractHelper
                 $transformation = '/'.$globalTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
-            //@codingStandardsIgnoreStart
-            if (@getimagesize($pixelbinImage)) {
-            //@codingStandardsIgnoreEnd
-                $imageUrl = $pixelbinImage;
-            }
+            return $imageUrl = $pixelbinImage;
+//            //@codingStandardsIgnoreStart
+//            if (@getimagesize($pixelbinImage)) {
+//            //@codingStandardsIgnoreEnd
+//                $imageUrl = $pixelbinImage;
+//            }
         }
         return $imageUrl;
     }
