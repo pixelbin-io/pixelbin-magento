@@ -110,12 +110,13 @@ class Filter
                 $generated = preg_replace('/\/original\//', "$transformation", $generated);
             }
         }
-        //@codingStandardsIgnoreStart
-        if (@getimagesize($generated)) {
-            //@codingStandardsIgnoreEnd
-            return $generated;
-        }
+        return $generated;
+//        //@codingStandardsIgnoreStart
+//        if (@getimagesize($generated)) {
+//            //@codingStandardsIgnoreEnd
+//            return $generated;
+//        }
 
-        return $this->helperData->getMediaUrl().$image;
+//        return $this->helperData->getMediaUrl().$image;
     }
 }
