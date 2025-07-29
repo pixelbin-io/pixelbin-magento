@@ -28,7 +28,7 @@ class Filter
     /**
      * @var ImageFactory
      */
-    protected $_imageFactory;
+    protected $imageFactory;
 
     /**
      * @var HelperData
@@ -43,7 +43,9 @@ class Filter
     /**
      * @var Registry
      */
-    protected $_coreRegistry;
+    protected $coreRegistry;
+
+    protected $request;
 
     /**
      * @method __construct
@@ -58,12 +60,14 @@ class Filter
         ImageFactory $imageFactory,
         HelperData $helperData,
         WidgetFilter $widgetFilter,
-        Registry $coreRegistry
+        Registry $coreRegistry,
+        \Magento\Framework\App\Request\Http $request
     ) {
-        $this->_imageFactory = $imageFactory;
+        $this->imageFactory = $imageFactory;
         $this->helperData = $helperData;
         $this->widgetFilter = $widgetFilter;
-        $this->_coreRegistry = $coreRegistry;
+        $this->coreRegistry = $coreRegistry;
+        $this->request = $request;
     }
 
     /**
@@ -92,12 +96,19 @@ class Filter
         $url = (preg_match('/^&quot;.+&quot;$/', $params['url'])) ? preg_replace('/(^&quot;)|(&quot;$)/', '', $params['url']) : $params['url'];
         //@codingStandardsIgnoreEnd
 
-        $image = $this->_imageFactory->build(
+        $image = $this->imageFactory->build(
             $url,
             function () use ($proceed, $construction) {
                 return $proceed($construction);
             }
         );
+
+        $moduleName = $this->request->getModuleName();
+        $controller = $this->request->getControllerName();
+        $action     = $this->request->getActionName();
+        $route      = $this->request->getRouteName();
+
+        $path = $moduleName.'_'.$controller.'_'.$action;
 
         $generated = $this->helperData->getAppZone().$image;
         $storeId = $this->helperData->getStoreId();
@@ -105,14 +116,20 @@ class Filter
             $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
             if ($globalTransformation) {
                 $transformation = '/'.$globalTransformation.'/';
-                $transformation = str_replace('(', '%28', $transformation);
-                $transformation = str_replace(')', '%29', $transformation);
-                $generatedT = preg_replace('/\/original\//', "$transformation", $generated);
+                if ($path == 'catalog_product_view') {
+                    $transformation = str_replace('(', '%28', $transformation);
+                    $transformation = str_replace(')', '%29', $transformation);
+                    $generatedTf = preg_replace('/\/original\//', "$transformation", $generated);
+                } else {
+                    $generated = preg_replace('/\/original\//', "$transformation", $generated);
+                }
             }
         }
-        
+
         if ($this->helperData->validatePixelbinUrl($generated)) {
-            $generated = $generatedT;
+            if ($path == 'catalog_product_view') {
+                return $generatedTf;
+            }
             return $generated;
         }
 

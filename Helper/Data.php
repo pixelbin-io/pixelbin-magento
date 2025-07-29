@@ -439,11 +439,11 @@ class Data extends AbstractHelper
                 $transformation = '/'.$globalTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
-            return $imageUrl = $pixelbinImage;
+            //return $imageUrl = $pixelbinImage;
 
-            // if ($this->validatePixelbinUrl($pixelbinImage)) {
-            //     $imageUrl = $pixelbinImage;
-            // }
+            if ($this->validatePixelbinUrl($pixelbinImage)) {
+                $imageUrl = $pixelbinImage;
+            }
         }
         return $imageUrl;
     }
@@ -801,6 +801,7 @@ class Data extends AbstractHelper
         $filePath = '';
         if ($modifyUrl1['host'] == $modifyUrl2['host']) {
             $obj = Url::url_to_obj($pixelbinUrl);
+
             if (is_array($obj)) {
                 if (array_key_exists('filePath', $obj)) {
                     $filePath = $obj['filePath'];
@@ -810,6 +811,22 @@ class Data extends AbstractHelper
         if (!$filePath) {
             return false;
         }
+
+        if ($modifyUrl1['host'] == $modifyUrl2['host']) {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $pixelbinUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            $content = curl_exec($ch);
+            if (json_validate($content)) {
+                $data = json_decode($content);
+                $status = $data->status;
+                if ($status != 200) {
+                    return false;
+                }
+            }
+        }
+
         return true;
     }
 }
