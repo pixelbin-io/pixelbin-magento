@@ -29,6 +29,7 @@ use Magento\Framework\Exception\NotFoundException as NotFoundExceptionAlias;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\App\ResourceConnection;
 use Pixelbinio\Pixelbin\Logger\Logger;
+use Pixelbin\Utils\Url;
 
 class Data extends AbstractHelper
 {
@@ -395,12 +396,11 @@ class Data extends AbstractHelper
                     }
                 }
             }
-            return $imageUrl = $pixelbinImage;
-//            //@codingStandardsIgnoreStart
-//            if (@getimagesize($pixelbinImage)) {
-//            //@codingStandardsIgnoreEnd
-//                $imageUrl = $pixelbinImage;
-//            }
+            //return $imageUrl = $pixelbinImage;
+            
+            if ($this->validatePixelbinUrl($pixelbinImage)) {
+                $imageUrl = $pixelbinImage;
+            }
         }
         return $imageUrl;
     }
@@ -440,11 +440,10 @@ class Data extends AbstractHelper
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
             return $imageUrl = $pixelbinImage;
-//            //@codingStandardsIgnoreStart
-//            if (@getimagesize($pixelbinImage)) {
-//            //@codingStandardsIgnoreEnd
-//                $imageUrl = $pixelbinImage;
-//            }
+
+            // if ($this->validatePixelbinUrl($pixelbinImage)) {
+            //     $imageUrl = $pixelbinImage;
+            // }
         }
         return $imageUrl;
     }
@@ -792,5 +791,25 @@ class Data extends AbstractHelper
             }
         }
         return $imageUrl;
+    }
+
+    public function validatePixelbinUrl($pixelbinUrl)
+    {
+        $modifyUrl1 = parse_url(self::ZONE_DEFAULT_URL);
+        $modifyUrl2 = parse_url($pixelbinUrl);
+        
+        $filePath = '';
+        if ($modifyUrl1['host'] == $modifyUrl2['host']) {
+            $obj = Url::url_to_obj($pixelbinUrl);
+            if (is_array($obj)) {
+                if (array_key_exists('filePath', $obj)) {
+                    $filePath = $obj['filePath'];
+                }
+            }
+        }
+        if (!$filePath) {
+            return false;
+        }
+        return true;
     }
 }

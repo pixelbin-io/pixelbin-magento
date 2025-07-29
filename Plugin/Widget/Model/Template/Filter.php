@@ -107,16 +107,15 @@ class Filter
                 $transformation = '/'.$globalTransformation.'/';
                 $transformation = str_replace('(', '%28', $transformation);
                 $transformation = str_replace(')', '%29', $transformation);
-                $generated = preg_replace('/\/original\//', "$transformation", $generated);
+                $generatedT = preg_replace('/\/original\//', "$transformation", $generated);
             }
         }
-        return $generated;
-//        //@codingStandardsIgnoreStart
-//        if (@getimagesize($generated)) {
-//            //@codingStandardsIgnoreEnd
-//            return $generated;
-//        }
+        
+        if ($this->helperData->validatePixelbinUrl($generated)) {
+            $generated = $generatedT;
+            return $generated;
+        }
 
-//        return $this->helperData->getMediaUrl().$image;
+        return $this->helperData->getMediaUrl().$image;
     }
 }
