@@ -109,6 +109,7 @@ class Filter
         $route      = $this->request->getRouteName();
 
         $path = $moduleName.'_'.$controller.'_'.$action;
+        $generatedTf = '';
 
         $generated = $this->helperData->getAppZone().$image;
         $storeId = $this->helperData->getStoreId();

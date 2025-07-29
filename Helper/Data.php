@@ -360,6 +360,14 @@ class Data extends AbstractHelper
             //     }
             // }
 
+  
+            $path = parse_url($imageUrl, PHP_URL_PATH);
+            $lastPart = basename($path);
+            $extension = explode('.', $lastPart);
+            $extension = strtolower($extension[1]);
+
+            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'avif', 'bmp', 'heic', 'heif'];
+
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
             $imagePathArray = explode('media/', $imagePath);
@@ -372,7 +380,7 @@ class Data extends AbstractHelper
 
             $storeId = $this->getStoreId();
 
-            if ($this->isImageTransformationEnabled($storeId)) {
+            if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
                 $globalTransformation = $this->getGlobalCustomTransformation($storeId);
                 $productTransformation = $this->getProductCustomTransformation($storeId);
 
@@ -396,7 +404,6 @@ class Data extends AbstractHelper
                     }
                 }
             }
-            //return $imageUrl = $pixelbinImage;
             
             if ($this->validatePixelbinUrl($pixelbinImage)) {
                 $imageUrl = $pixelbinImage;
@@ -423,6 +430,13 @@ class Data extends AbstractHelper
             //     }
             // }
 
+            $path = parse_url($imageUrl, PHP_URL_PATH);
+            $lastPart = basename($path);
+            $extension = explode('.', $lastPart);
+            $extension = strtolower($extension[1]);
+
+            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'avif', 'bmp', 'heic', 'heif'];
+
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
             $imagePathArray = explode('media/', $imagePath);
@@ -434,12 +448,11 @@ class Data extends AbstractHelper
             }
 
             $storeId = $this->getStoreId();
-            if ($this->isImageTransformationEnabled($storeId)) {
+            if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
                 $globalTransformation = $this->getGlobalCustomTransformation($storeId);
                 $transformation = '/'.$globalTransformation.'/';
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
-            //return $imageUrl = $pixelbinImage;
 
             if ($this->validatePixelbinUrl($pixelbinImage)) {
                 $imageUrl = $pixelbinImage;
@@ -808,6 +821,7 @@ class Data extends AbstractHelper
                 }
             }
         }
+
         if (!$filePath) {
             return false;
         }
