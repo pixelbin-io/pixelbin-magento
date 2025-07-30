@@ -103,17 +103,25 @@ class Filter
             }
         );
 
+        $path = parse_url($image, PHP_URL_PATH);
+        $lastPart = basename($path);
+        $extension = explode('.', $lastPart);
+        $extension = strtolower($extension[1]);
+
+        $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'avif', 'bmp', 'heic', 'heif'];
+
         $moduleName = $this->request->getModuleName();
         $controller = $this->request->getControllerName();
         $action     = $this->request->getActionName();
         $route      = $this->request->getRouteName();
 
         $path = $moduleName.'_'.$controller.'_'.$action;
-        $generatedTf = '';
 
         $generated = $this->helperData->getAppZone().$image;
+        $generatedTf = $this->helperData->getAppZone().$image;
+        
         $storeId = $this->helperData->getStoreId();
-        if ($this->helperData->isImageTransformationEnabled($storeId)) {
+        if ($this->helperData->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
             $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
             if ($globalTransformation) {
                 $transformation = '/'.$globalTransformation.'/';
