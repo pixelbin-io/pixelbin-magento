@@ -828,6 +828,7 @@ class Data extends AbstractHelper
                     }
                 }
             } catch (\Exception $e) {
+                $this->logData("image url request => ".$pixelbinUrl);
                 $this->logData('Pixelbin image API Error Exception => : ' . $e->getMessage());
                 return false;
             }
