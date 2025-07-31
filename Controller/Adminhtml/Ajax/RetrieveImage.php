@@ -17,6 +17,7 @@ use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
 use Magento\Framework\Filesystem\Io\File as FileIo;
+use Pixelbin\Utils\Url;
 use Pixelbinio\Pixelbin\Model\Framework\File\Uploader;
 use Magento\Backend\App\Action\Context;
 use Magento\Catalog\Model\Product\Media\Config as ProductMediaConfig;
@@ -191,19 +192,28 @@ class RetrieveImage extends \Magento\Backend\App\Action
                 $extension = $allData["asset"]["format"];
                 $localUniqFilePath = $this->remoteFileUrl = $localUniqFilePath.".".strtolower($extension);
             }
-            $this->validateRemoteFile($this->remoteFileUrl);
-            $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
-            $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
-            $assetParsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($localUniqFilePath);
-            $this->parsedRemoteFileUrl["type"] = $assetParsedRemoteFileUrl['type'];
-            $this->parsedRemoteFileUrl["thumbnail_url"] = $assetParsedRemoteFileUrl['thumbnail_url'];
-            $baseTmpMediaPath = $this->getBaseTmpMediaPath();
-            $localUniqFilePath = $this->appendNewFileName($baseTmpMediaPath . $this->getLocalTmpFileName($localUniqFilePath));
-            $this->validateFileExtensions($localUniqFilePath);
-            $this->retrieveRemoteImage($this->remoteFileUrl, $localUniqFilePath);
-            $localFileFullPath = $this->appendAbsoluteFileSystemPath($localUniqFilePath);
-            $this->imageAdapter->validateUploadFile($localFileFullPath);
-            $result = $this->appendResultSaveRemoteImage($localUniqFilePath, $baseTmpMediaPath);
+            $imageData = $this->helperData->validatePixelbinUrl($localUniqFilePath, true);
+            if (is_array($imageData)) {
+                $result = [
+                    'error' => $imageData["message"] ?? __("Something went wrong while retrieving image."),
+                    'errorcode' => "400",
+                    'trace' => ""
+                ];
+            } else {
+                $this->validateRemoteFile($this->remoteFileUrl);
+                $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
+                $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
+                $assetParsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($localUniqFilePath);
+                $this->parsedRemoteFileUrl["type"] = $assetParsedRemoteFileUrl['type'];
+                $this->parsedRemoteFileUrl["thumbnail_url"] = $assetParsedRemoteFileUrl['thumbnail_url'];
+                $baseTmpMediaPath = $this->getBaseTmpMediaPath();
+                $localUniqFilePath = $this->appendNewFileName($baseTmpMediaPath . $this->getLocalTmpFileName($localUniqFilePath));
+                $this->validateFileExtensions($localUniqFilePath);
+                $this->retrieveRemoteImage($this->remoteFileUrl, $localUniqFilePath);
+                $localFileFullPath = $this->appendAbsoluteFileSystemPath($localUniqFilePath);
+                $this->imageAdapter->validateUploadFile($localFileFullPath);
+                $result = $this->appendResultSaveRemoteImage($localUniqFilePath, $baseTmpMediaPath);
+            }
         } catch (\Exception $e) {
             $result = [
                 'error' => $e->getMessage(),
