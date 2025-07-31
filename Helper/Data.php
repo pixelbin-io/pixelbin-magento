@@ -16,20 +16,13 @@ namespace Pixelbinio\Pixelbin\Helper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\HTTP\Client\Curl;
-use Magento\Framework\Filesystem\DirectoryList;
 use Magento\Framework\HTTP\Adapter\CurlFactory;
 use Magento\Framework\Json\Helper\Data as JsonHelperData;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\NotFoundException as NotFoundExceptionAlias;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\App\ResourceConnection;
 use Pixelbinio\Pixelbin\Logger\Logger;
-use Pixelbin\Utils\Url;
 
 class Data extends AbstractHelper
 {
@@ -360,7 +353,7 @@ class Data extends AbstractHelper
             //     }
             // }
 
-  
+
             $path = parse_url($imageUrl, PHP_URL_PATH);
             $lastPart = basename($path);
             $extension = explode('.', $lastPart);
@@ -404,7 +397,7 @@ class Data extends AbstractHelper
                     }
                 }
             }
-            
+
             if ($this->validatePixelbinUrl($pixelbinImage)) {
                 $imageUrl = $pixelbinImage;
             }
@@ -806,41 +799,51 @@ class Data extends AbstractHelper
         return $imageUrl;
     }
 
-    public function validatePixelbinUrl($pixelbinUrl)
+    /**
+     * Validate pixelbin url
+     *
+     * @param string $pixelbinUrl
+     * @param bool $flag
+     * @return bool
+     */
+    public function validatePixelbinUrl($pixelbinUrl, $flag = false)
     {
         $modifyUrl1 = parse_url(self::ZONE_DEFAULT_URL);
         $modifyUrl2 = parse_url($pixelbinUrl);
-        
-        $filePath = '';
         if ($modifyUrl1['host'] == $modifyUrl2['host']) {
-            $obj = Url::url_to_obj($pixelbinUrl);
-
-            if (is_array($obj)) {
-                if (array_key_exists('filePath', $obj)) {
-                    $filePath = $obj['filePath'];
+            try {
+                $this->curl->setTimeout(10);
+                $this->curl->get($pixelbinUrl);
+                $statusCode = $this->curl->getStatus();
+                $body = $this->curl->getBody();
+                $this->logData("image url response => ".$body);
+                if ($this->isJson($body)) {
+                    $data = json_decode($body, true);
+                    if ($flag) {
+                        return $data;
+                    }
+                    $status = $data["status"] ?? "";
+                    if ($status != 200) {
+                        return false;
+                    }
                 }
+            } catch (\Exception $e) {
+                $this->logData('Pixelbin image API Error Exception => : ' . $e->getMessage());
+                return false;
             }
         }
-
-        if (!$filePath) {
-            return false;
-        }
-
-        if ($modifyUrl1['host'] == $modifyUrl2['host']) {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $pixelbinUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            $content = curl_exec($ch);
-            if (json_validate($content)) {
-                $data = json_decode($content);
-                $status = $data->status;
-                if ($status != 200) {
-                    return false;
-                }
-            }
-        }
-
         return true;
+    }
+
+    /**
+     * Is json valid
+     *
+     * @param string $string
+     * @return bool
+     */
+    public function isJson(string $string): bool
+    {
+        json_decode($string);
+        return (json_last_error() === JSON_ERROR_NONE);
     }
 }
