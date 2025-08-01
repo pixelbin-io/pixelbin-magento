@@ -22,7 +22,10 @@ use Magento\Framework\HTTP\Client\Curl;
 use Magento\Framework\HTTP\Adapter\CurlFactory;
 use Magento\Framework\Json\Helper\Data as JsonHelperData;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
 use Pixelbinio\Pixelbin\Logger\Logger;
+use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
+use Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation\CollectionFactory as PixelbinSyncCollectionFactory;
 
 class Data extends AbstractHelper
 {
@@ -61,6 +64,13 @@ class Data extends AbstractHelper
         "sql",
         "DS_Store",
     ];
+    public const ALLOWED_EXTENSION_SYNC = [
+        "png",
+        "jpg",
+        "jpeg",
+        "webp",
+        "svg"
+    ];
 
     //= Lazyload
     public const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/lazyload_enabled';
@@ -82,6 +92,11 @@ class Data extends AbstractHelper
      * @var null
      */
     protected $_appZoneLink = null;
+
+    /**
+     * @var null
+     */
+    protected $_syncStatus = null;
 
     /**
      * @var Curl
@@ -114,6 +129,11 @@ class Data extends AbstractHelper
     protected $encryptor;
 
     /**
+     * @var PixelbinSyncCollectionFactory
+     */
+    protected $pixelbinSyncCollectionFactory;
+
+    /**
      * Data construct
      *
      * @param Context $context
@@ -123,6 +143,7 @@ class Data extends AbstractHelper
      * @param Logger $logger
      * @param StoreManagerInterface $storeManager
      * @param EncryptorInterface $encryptor
+     * @param PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory
      */
     public function __construct(
         Context               $context,
@@ -131,7 +152,8 @@ class Data extends AbstractHelper
         JsonHelperData        $jsonHelper,
         Logger                $logger,
         StoreManagerInterface $storeManager,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory
     ) {
         parent::__construct($context);
         $this->curl = $curl;
@@ -140,6 +162,7 @@ class Data extends AbstractHelper
         $this->logger = $logger;
         $this->storeManager = $storeManager;
         $this->encryptor = $encryptor;
+        $this->pixelbinSyncCollectionFactory = $pixelbinSyncCollectionFactory;
     }
 
     /**
@@ -398,7 +421,7 @@ class Data extends AbstractHelper
                 }
             }
 
-            if ($this->validatePixelbinUrl($pixelbinImage)) {
+            if ($this->checkSyncStatus()) {
                 $imageUrl = $pixelbinImage;
             }
         }
@@ -447,7 +470,7 @@ class Data extends AbstractHelper
                 $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
 
-            if ($this->validatePixelbinUrl($pixelbinImage)) {
+            if ($this->checkSyncStatus()) {
                 $imageUrl = $pixelbinImage;
             }
         }
@@ -816,6 +839,7 @@ class Data extends AbstractHelper
                 $this->curl->get($pixelbinUrl);
                 $statusCode = $this->curl->getStatus();
                 $body = $this->curl->getBody();
+                $this->logData("image url request => ".$pixelbinUrl);
                 $this->logData("image url response => ".$body);
                 if ($this->isJson($body)) {
                     $data = json_decode($body, true);
@@ -846,5 +870,32 @@ class Data extends AbstractHelper
     {
         json_decode($string);
         return (json_last_error() === JSON_ERROR_NONE);
+    }
+
+    /**
+     * Check sync status
+     *
+     * @return bool|null
+     */
+    public function checkSyncStatus()
+    {
+        if ($this->_syncStatus === null) {
+            $this->_syncStatus = false;
+            $totalCollection = $this->pixelbinSyncCollectionFactory->create()->getSize();
+            $pendingToSync = $this->pixelbinSyncCollectionFactory->create()
+                ->addFieldToFilter(
+                    PixelbinSynchronisationInterface::KEY_SYNC_STATUS,
+                    SyncStatus::STATUS_PENDING
+                )->getSize();
+            $pendingToStart = $this->pixelbinSyncCollectionFactory->create()
+                ->addFieldToFilter(
+                    PixelbinSynchronisationInterface::KEY_SYNC_STATUS,
+                    SyncStatus::STATUS_PENDING_TO_START
+                )->getSize();
+            if ($totalCollection > 0 && $pendingToSync == 0 && $pendingToStart == 0) {
+                $this->_syncStatus = true;
+            }
+        }
+        return $this->_syncStatus;
     }
 }

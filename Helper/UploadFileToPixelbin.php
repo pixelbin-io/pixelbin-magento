@@ -282,7 +282,7 @@ class UploadFileToPixelbin extends AbstractHelper
                     continue;
                 }
                 $pathInfo = $this->getPathInfo($file["filename"]);
-                if (in_array($pathInfo["extension"], Data::EXCLUDE_EXTENSION)) {
+                if (!in_array($pathInfo["extension"], Data::ALLOWED_EXTENSION_SYNC)) {
                     $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
                     $excludeExtensionCounts = count($excludeExtensionCounts) + 1;
                     continue;
