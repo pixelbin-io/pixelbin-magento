@@ -119,7 +119,7 @@ class Filter
 
         $generated = $this->helperData->getAppZone().$image;
         $generatedTf = $this->helperData->getAppZone().$image;
-        
+
         $storeId = $this->helperData->getStoreId();
         if ($this->helperData->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
             $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
@@ -135,7 +135,7 @@ class Filter
             }
         }
 
-        if ($this->helperData->validatePixelbinUrl($generated)) {
+        if ($this->helperData->checkSyncStatus()) {
             if ($path == 'catalog_product_view') {
                 return $generatedTf;
             }

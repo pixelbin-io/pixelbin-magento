@@ -106,7 +106,7 @@ class Sync extends Action
                         $this->helperData->logData("File extension is not found => " . $file["filename"]);
                         continue;
                     }
-                    if (in_array($fileExtension, HelperData::EXCLUDE_EXTENSION)) {
+                    if (!in_array($fileExtension, HelperData::ALLOWED_EXTENSION_SYNC)) {
                         $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
                         continue;
                     }
