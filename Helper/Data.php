@@ -466,8 +466,10 @@ class Data extends AbstractHelper
             $storeId = $this->getStoreId();
             if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
                 $globalTransformation = $this->getGlobalCustomTransformation($storeId);
-                $transformation = '/'.$globalTransformation.'/';
-                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                if (!empty($globalTransformation)) {
+                    $transformation = '/'.$globalTransformation.'/';
+                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                }
             }
 
             if ($this->checkSyncStatus()) {
