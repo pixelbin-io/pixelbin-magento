@@ -26,9 +26,10 @@ class ProductSaveAfter extends AbstractObserver
      */
     public function execute(Observer $observer)
     {
+        /** @var Product $product */
+        $product = $observer->getEvent()->getProduct();
+
         if ($this->helperData->isModuleEnabled()) {
-            /** @var Product $product */
-            $product = $observer->getEvent()->getProduct();
             $images = $product->getMediaGalleryImages();
             foreach ($images as $image) {
                 $this->uploadFileToPixelbin->catalogUploadFileSync($image->getData());
