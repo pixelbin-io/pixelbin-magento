@@ -34,5 +34,19 @@ class ProductSaveAfter extends AbstractObserver
                 $this->uploadFileToPixelbin->catalogUploadFileSync($image->getData());
             }
         }
+
+        $imageTypes = ['product_base_image', 'product_small_image', 'product_thumbnail_image'];
+        foreach ($imageTypes as $imageType) {
+            try {
+                $this->imageHelper->init($product, $imageType)
+                    ->constrainOnly(true)
+                    ->keepAspectRatio(true)
+                    ->keepFrame(false)
+                    ->resize(300)
+                    ->getUrl();
+            } catch (\Exception $ex) {
+                $this->helperData->logData("Exception while generating image cache ".$ex->getMessage());
+            }
+        }
     }
 }
