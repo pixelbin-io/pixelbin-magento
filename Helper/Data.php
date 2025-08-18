@@ -69,7 +69,8 @@ class Data extends AbstractHelper
         "jpg",
         "jpeg",
         "webp",
-        "svg"
+        "svg",
+        "gif"
     ];
 
     //= Lazyload
