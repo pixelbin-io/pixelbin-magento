@@ -49,6 +49,8 @@ class Data extends AbstractHelper
         ".thumbswysiwyg",
         "catalog/tmp/",
         "catalog/product/cache/",
+        "tmp",
+        "_MACOSX",
     ];
     public const EXCLUDE_EXTENSION = [
         "css",
@@ -70,7 +72,19 @@ class Data extends AbstractHelper
         "jpeg",
         "webp",
         "svg",
-        "gif"
+        "gif",
+        "tiff",
+        "avif",
+        "heic",
+        "heif",
+        "raw",
+        "cr2",
+        "nef",
+        "rw2",
+        "dng",
+        "orf",
+        "ai",
+        "eps",
     ];
 
     //= Lazyload
@@ -88,6 +102,8 @@ class Data extends AbstractHelper
     //@codingStandardsIgnoreStart
     public const PIXELBIN_DEFAULT_IMAGE_URL = "https://cdn.pixelbin.io/v2/dummy-cloudname/original/magento_icons_and_images/pixelbin_logo.png";
     //@codingStandardsIgnoreEnd
+
+    public const TRANSFORMATION_REGEX = '/^(?:[a-zA-Z]+\.[a-zA-Z]+\(\s*(?:(?:[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))(?:\s*,\s*[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))(?:\s*,\s*[a-zA-Z]+\.[a-zA-Z]+\(\s*(?:(?:[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))(?:\s*,\s*[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))*$/';
 
     /**
      * @var null

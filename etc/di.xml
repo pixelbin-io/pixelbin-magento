@@ -68,11 +68,37 @@
                     <item name="svg" xsi:type="string">image/svg</item>
                     <item name="svg-xml" xsi:type="string">image/svg+xml</item>
                     <item name="webp" xsi:type="string">image/webp</item>
+                    <item name="tiff" xsi:type="string">image/tiff</item>
+                    <item name="avif" xsi:type="string">image/avif</item>
+                    <item name="heic" xsi:type="string">image/heic</item>
+                    <item name="heif" xsi:type="string">image/heif</item>
+                    <item name="raw" xsi:type="string">image/raw</item>
+                    <item name="cr2" xsi:type="string">image/cr2</item>
+                    <item name="nef" xsi:type="string">image/nef</item>
+                    <item name="rw2" xsi:type="string">image/rw2</item>
+                    <item name="dng" xsi:type="string">image/dng</item>
+                    <item name="orf" xsi:type="string">image/orf</item>
+                    <item name="pdf" xsi:type="string">image/pdf</item>
+                    <item name="ai" xsi:type="string">image/ai</item>
+                    <item name="eps" xsi:type="string">image/eps</item>
                 </item>
                 <item name="image_allowed" xsi:type="array">
                     <item name="svg" xsi:type="string">image/svg</item>
                     <item name="svg-xml" xsi:type="string">image/svg+xml</item>
                     <item name="webp" xsi:type="string">image/webp</item>
+                    <item name="tiff" xsi:type="string">image/tiff</item>
+                    <item name="avif" xsi:type="string">image/avif</item>
+                    <item name="heic" xsi:type="string">image/heic</item>
+                    <item name="heif" xsi:type="string">image/heif</item>
+                    <item name="raw" xsi:type="string">image/raw</item>
+                    <item name="cr2" xsi:type="string">image/cr2</item>
+                    <item name="nef" xsi:type="string">image/nef</item>
+                    <item name="rw2" xsi:type="string">image/rw2</item>
+                    <item name="dng" xsi:type="string">image/dng</item>
+                    <item name="orf" xsi:type="string">image/orf</item>
+                    <item name="pdf" xsi:type="string">image/pdf</item>
+                    <item name="ai" xsi:type="string">image/ai</item>
+                    <item name="eps" xsi:type="string">image/eps</item>
                 </item>
             </argument>
         </arguments>
@@ -82,11 +108,37 @@
             <argument name="allowedExtensions" xsi:type="array">
                 <item name="svg" xsi:type="string">svg</item>
                 <item name="webp" xsi:type="string">webp</item>
+                <item name="tiff" xsi:type="string">image/tiff</item>
+                <item name="avif" xsi:type="string">image/avif</item>
+                <item name="heic" xsi:type="string">image/heic</item>
+                <item name="heif" xsi:type="string">image/heif</item>
+                <item name="raw" xsi:type="string">image/raw</item>
+                <item name="cr2" xsi:type="string">image/cr2</item>
+                <item name="nef" xsi:type="string">image/nef</item>
+                <item name="rw2" xsi:type="string">image/rw2</item>
+                <item name="dng" xsi:type="string">image/dng</item>
+                <item name="orf" xsi:type="string">image/orf</item>
+                <item name="pdf" xsi:type="string">image/pdf</item>
+                <item name="ai" xsi:type="string">image/ai</item>
+                <item name="eps" xsi:type="string">image/eps</item>
             </argument>
             <argument name="allowedMimeTypes" xsi:type="array">
                 <item name="svg" xsi:type="string">image/svg</item>
                 <item name="svg-xml" xsi:type="string">image/svg+xml</item>
                 <item name="webp" xsi:type="string">image/webp</item>
+                <item name="tiff" xsi:type="string">image/tiff</item>
+                <item name="avif" xsi:type="string">image/avif</item>
+                <item name="heic" xsi:type="string">image/heic</item>
+                <item name="heif" xsi:type="string">image/heif</item>
+                <item name="raw" xsi:type="string">image/raw</item>
+                <item name="cr2" xsi:type="string">image/cr2</item>
+                <item name="nef" xsi:type="string">image/nef</item>
+                <item name="rw2" xsi:type="string">image/rw2</item>
+                <item name="dng" xsi:type="string">image/dng</item>
+                <item name="orf" xsi:type="string">image/orf</item>
+                <item name="pdf" xsi:type="string">image/pdf</item>
+                <item name="ai" xsi:type="string">image/ai</item>
+                <item name="eps" xsi:type="string">image/eps</item>
             </argument>
         </arguments>
     </virtualType>
@@ -95,6 +147,19 @@
             <argument name="fileExtensions" xsi:type="array">
                 <item name="svg" xsi:type="string">svg</item>
                 <item name="webp" xsi:type="string">webp</item>
+                <item name="tiff" xsi:type="string">tiff</item>
+                <item name="avif" xsi:type="string">avif</item>
+                <item name="heic" xsi:type="string">heic</item>
+                <item name="heif" xsi:type="string">heif</item>
+                <item name="raw" xsi:type="string">raw</item>
+                <item name="cr2" xsi:type="string">cr2</item>
+                <item name="nef" xsi:type="string">nef</item>
+                <item name="rw2" xsi:type="string">rw2</item>
+                <item name="dng" xsi:type="string">dng</item>
+                <item name="orf" xsi:type="string">orf</item>
+                <item name="pdf" xsi:type="string">pdf</item>
+                <item name="ai" xsi:type="string">ai</item>
+                <item name="eps" xsi:type="string">eps</item>
             </argument>
         </arguments>
     </type>

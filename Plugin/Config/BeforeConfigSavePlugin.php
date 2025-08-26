@@ -46,6 +46,20 @@ class BeforeConfigSavePlugin
         $section = $subject->getSection();
         if ($section === 'pixelbin') {
             $configData = $subject->getData('groups');
+            $globalCustomTransformation = $configData["image_transformations"]["fields"]["global_custom_transformation"]["value"];
+            $productCustomTransformation = $configData["image_transformations"]["fields"]["product_custom_transformation"]["value"];
+            if (!empty($globalCustomTransformation) && !preg_match(HelperData::TRANSFORMATION_REGEX, $globalCustomTransformation)) {
+                throw new LocalizedException(
+                    __("Global transformation is not valid.")
+                );
+            }
+
+            if (!empty($productCustomTransformation) && !preg_match(HelperData::TRANSFORMATION_REGEX, $productCustomTransformation)) {
+                throw new LocalizedException(
+                    __("Product transformation is not valid.")
+                );
+            }
+
             if (isset($configData['app_configuration']['fields']['cloud_name']['value'])) {
                 $newCloudName = $configData['app_configuration']['fields']['cloud_name']['value'];
                 $oldCloudName = $subject->getConfigDataValue('pixelbin/app_configuration/cloud_name');
