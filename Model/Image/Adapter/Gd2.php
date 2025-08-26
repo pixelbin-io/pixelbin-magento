@@ -116,10 +116,10 @@ class Gd2 extends AbstractAdapter
             throw new \OverflowException('Memory limit has been reached.');
         }
         $this->imageDestroy();
-        $this->_imageHandler = call_user_func(
-            $this->_getCallback('create', null, sprintf('Unsupported image format. File: %s', $this->_fileName)),
-            $this->_fileName
-        );
+//        $this->_imageHandler = call_user_func(
+//            $this->_getCallback('create', null, sprintf('Unsupported image format. File: %s', $this->_fileName)),
+//            $this->_fileName
+//        );
     }
 
     /**
@@ -152,6 +152,15 @@ class Gd2 extends AbstractAdapter
             return file_exists($filePath);
         }
 
+        $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        if (empty($extension)) {
+            $mimeType = mime_content_type($filePath);
+            $extension = str_replace('image/', '', $mimeType);
+        }
+
+        if (in_array($extension, HelperData::ALLOWED_EXTENSION_SYNC)) {
+            return true;
+        }
         return parent::validateUploadFile($filePath);
     }
 

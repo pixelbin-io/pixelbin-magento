@@ -62,14 +62,18 @@
             <group id="image_transformations" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Default Image Transformations</label>
                 <field id="auto_optimisation" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Automatic Image Format Optimisation</label>
+                    <label>Enable custom transformation</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="global_custom_transformation" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Global Custom Transformation</label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field</frontend_model>
+                    <validate>validate-transformation</validate>
                 </field>
                 <field id="product_custom_transformation" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Products Custom Transformation</label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field</frontend_model>
+                    <validate>validate-transformation</validate>
                 </field>
             </group>
             <group id="lazyload" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
