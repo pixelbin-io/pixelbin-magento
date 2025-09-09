@@ -62,7 +62,7 @@
             <group id="image_transformations" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Default Image Transformations</label>
                 <field id="auto_optimisation" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
-                    <label>Enable custom transformation</label>
+                    <label>Enable Custom Transformation</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="global_custom_transformation" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">

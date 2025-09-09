@@ -108,18 +108,37 @@ class Gd2 extends AbstractAdapter
         if (!$filename || filesize($filename) === 0 || !$this->validateURLScheme($filename)) {
             throw new \InvalidArgumentException('Wrong file');
         }
+
         $this->_fileName = $filename;
         $this->_reset();
         $this->getMimeType();
         $this->_getFileAttributes();
+
         if ($this->_isMemoryLimitReached()) {
             throw new \OverflowException('Memory limit has been reached.');
         }
+
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        // Extensions not supported by GD
+        $unsupported = [
+            'tiff','avif','heic','heif','raw','cr2','nef','rw2','dng','orf','ai','eps'
+        ];
+
+        if (in_array($ext, $unsupported, true)) {
+            $this->_imageHandler = null;
+            return;
+        }
+
         $this->imageDestroy();
-//        $this->_imageHandler = call_user_func(
-//            $this->_getCallback('create', null, sprintf('Unsupported image format. File: %s', $this->_fileName)),
-//            $this->_fileName
-//        );
+        $this->_imageHandler = call_user_func(
+            $this->_getCallback(
+                'create',
+                null,
+                sprintf('Unsupported image format. File: %s', $this->_fileName)
+            ),
+            $this->_fileName
+        );
     }
 
     /**
