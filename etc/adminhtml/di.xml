@@ -53,5 +53,4 @@
     <preference for="Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload" type="Pixelbinio\Pixelbin\Controller\Adminhtml\ContentType\Image\Upload"/>
     <preference for="Magento\Framework\File\Uploader" type="Pixelbinio\Pixelbin\Model\File\Uploader"/>
     <preference for="Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload" type="Pixelbinio\Pixelbin\Controller\Adminhtml\Product\Gallery\Upload"/>
-    <preference for="Magento\MediaGallery\Model\Asset" type="Pixelbinio\Pixelbin\Model\Asset"/>
 </config>
