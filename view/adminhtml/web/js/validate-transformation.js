@@ -11,7 +11,7 @@ require([
             if (value.trim() === '') {
                 return true; // allow empty
             }
-            var regex = /^(?:[a-zA-Z]+\.[a-zA-Z]+\(\s*(?:(?:[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))(?:\s*,\s*[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))(?:\s*,\s*[a-zA-Z]+\.[a-zA-Z]+\(\s*(?:(?:[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))(?:\s*,\s*[a-zA-Z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))*$/;
+            var regex = /^(?:[A-Za-z]+\.[A-Za-z]+\(\s*(?:[A-Za-z]+:(?:\d{1,3}|"[^"]*")(?:\s*,\s*[A-Za-z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))(?:\s*~\s*[A-Za-z]+\.[A-Za-z]+\(\s*(?:[A-Za-z]+:(?:\d{1,3}|"[^"]*")(?:\s*,\s*[A-Za-z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))*$/;
             return regex.test(value);
         },
         $t("Please enter a valid transformation")
