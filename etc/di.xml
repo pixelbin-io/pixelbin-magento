@@ -81,6 +81,7 @@
                     <item name="pdf" xsi:type="string">image/pdf</item>
                     <item name="ai" xsi:type="string">image/ai</item>
                     <item name="eps" xsi:type="string">image/eps</item>
+                    <item name="x-eps" xsi:type="string">image/x-eps</item>
                 </item>
                 <item name="image_allowed" xsi:type="array">
                     <item name="svg" xsi:type="string">image/svg</item>
@@ -99,6 +100,7 @@
                     <item name="pdf" xsi:type="string">image/pdf</item>
                     <item name="ai" xsi:type="string">image/ai</item>
                     <item name="eps" xsi:type="string">image/eps</item>
+                    <item name="x-eps" xsi:type="string">image/x-eps</item>
                 </item>
             </argument>
         </arguments>
@@ -121,6 +123,7 @@
                 <item name="pdf" xsi:type="string">image/pdf</item>
                 <item name="ai" xsi:type="string">image/ai</item>
                 <item name="eps" xsi:type="string">image/eps</item>
+                <item name="x-eps" xsi:type="string">image/x-eps</item>
             </argument>
             <argument name="allowedMimeTypes" xsi:type="array">
                 <item name="svg" xsi:type="string">image/svg</item>
@@ -139,6 +142,7 @@
                 <item name="pdf" xsi:type="string">image/pdf</item>
                 <item name="ai" xsi:type="string">image/ai</item>
                 <item name="eps" xsi:type="string">image/eps</item>
+                <item name="x-eps" xsi:type="string">image/x-eps</item>
             </argument>
         </arguments>
     </virtualType>
@@ -160,6 +164,7 @@
                 <item name="pdf" xsi:type="string">pdf</item>
                 <item name="ai" xsi:type="string">ai</item>
                 <item name="eps" xsi:type="string">eps</item>
+                <item name="x-eps" xsi:type="string">x-eps</item>
             </argument>
         </arguments>
     </type>
