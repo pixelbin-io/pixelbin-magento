@@ -49,6 +49,7 @@
                     <pdf>pdf</pdf>
                     <ai>ai</ai>
                     <eps>eps</eps>
+                    <x-eps>x-eps</x-eps>
                 </web_image>
             </extensions>
         </pixelbin>

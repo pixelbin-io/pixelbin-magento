@@ -49,6 +49,10 @@ class StoragePlugin
             return $source;
         }
 
+        if ($this->helperData->isWebImage($source)) {
+            return $source;
+        }
+
         return $proceed($source, $keepRatio);
     }
 
@@ -63,6 +67,10 @@ class StoragePlugin
     public function aroundGetThumbnailPath(Storage $storage, callable $proceed, $filePath, $checkFile = false)
     {
         if ($this->helperData->isVectorImage($filePath)) {
+            return $filePath;
+        }
+
+        if ($this->helperData->isWebImage($filePath)) {
             return $filePath;
         }
 

@@ -40,6 +40,7 @@
                 <item name="pdf" xsi:type="string">pdf</item>
                 <item name="ai" xsi:type="string">ai</item>
                 <item name="eps" xsi:type="string">eps</item>
+                <item name="x-eps" xsi:type="string">x-eps</item>
             </argument>
         </arguments>
     </type>
@@ -49,4 +50,8 @@
                 type="Pixelbinio\Pixelbin\Plugin\Config\BeforeConfigSavePlugin"
                 sortOrder="10"/>
     </type>
+    <preference for="Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload" type="Pixelbinio\Pixelbin\Controller\Adminhtml\ContentType\Image\Upload"/>
+    <preference for="Magento\Framework\File\Uploader" type="Pixelbinio\Pixelbin\Model\File\Uploader"/>
+    <preference for="Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload" type="Pixelbinio\Pixelbin\Controller\Adminhtml\Product\Gallery\Upload"/>
+    <preference for="Magento\MediaGallery\Model\Asset" type="Pixelbinio\Pixelbin\Model\Asset"/>
 </config>

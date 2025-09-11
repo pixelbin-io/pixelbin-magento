@@ -27,6 +27,7 @@ define(function () {
                     this.allowedExtensions += ' pdf';
                     this.allowedExtensions += ' ai';
                     this.allowedExtensions += ' eps';
+                    this.allowedExtensions += ' x-eps';
                 }
             }
         });
