@@ -278,6 +278,9 @@ class Gd2 extends AbstractAdapter
             }
         }
 
+        if ($this->_imageHandler === null) {
+            $this->_imageHandler = false;
+        }
         // Enable interlace
         imageinterlace($this->_imageHandler, true);
 
