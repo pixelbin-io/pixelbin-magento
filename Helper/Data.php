@@ -74,18 +74,9 @@ class Data extends AbstractHelper
         "svg",
         "gif",
         "tiff",
+        "tif",
         "avif",
-        "heic",
-        "heif",
-        "raw",
-        "cr2",
-        "nef",
-        "rw2",
-        "dng",
-        "orf",
-        "ai",
-        "eps",
-        "x-eps"
+        "raw"
     ];
 
     //= Lazyload
@@ -400,7 +391,7 @@ class Data extends AbstractHelper
             $extension = explode('.', $lastPart);
             $extension = strtolower($extension[1]);
 
-            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'avif', 'bmp', 'heic', 'heif'];
+            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tif', 'tiff', 'avif', 'bmp'];
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
@@ -469,7 +460,7 @@ class Data extends AbstractHelper
             $extension = explode('.', $lastPart);
             $extension = strtolower($extension[1]);
 
-            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'avif', 'bmp', 'heic', 'heif'];
+            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'tif', 'avif', 'bmp'];
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 

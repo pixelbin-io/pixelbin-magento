@@ -28,19 +28,9 @@
                 <item name="png" xsi:type="string">png</item>
                 <item name="gif" xsi:type="string">gif</item>
                 <item name="tiff" xsi:type="string">tiff</item>
+                <item name="tif" xsi:type="string">tif</item>
                 <item name="avif" xsi:type="string">avif</item>
-                <item name="heic" xsi:type="string">heic</item>
-                <item name="heif" xsi:type="string">heif</item>
                 <item name="raw" xsi:type="string">raw</item>
-                <item name="cr2" xsi:type="string">cr2</item>
-                <item name="nef" xsi:type="string">nef</item>
-                <item name="rw2" xsi:type="string">rw2</item>
-                <item name="dng" xsi:type="string">dng</item>
-                <item name="orf" xsi:type="string">orf</item>
-                <item name="pdf" xsi:type="string">pdf</item>
-                <item name="ai" xsi:type="string">ai</item>
-                <item name="eps" xsi:type="string">eps</item>
-                <item name="x-eps" xsi:type="string">x-eps</item>
             </argument>
         </arguments>
     </type>
