@@ -46,19 +46,9 @@ class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Uploa
         'svg-xml' => 'image/svg+xml',
         'webp' => 'image/webp',
         'tiff' => 'image/tiff',
+        'tif' => 'image/tif',
         'avif' => 'image/avif',
-        'heic' => 'image/heic',
-        'heif' => 'image/heif',
-        'raw' => 'image/raw',
-        'cr2' => 'image/cr2',
-        'nef' => 'image/nef',
-        'rw2' => 'image/rw2',
-        'dng' => 'image/dng',
-        'orf' => 'image/orf',
-        'pdf' => 'image/pdf',
-        'ai' => 'image/ai',
-        'eps' => 'image/eps',
-        'x-eps' => 'image/x-eps'
+        'raw' => 'image/raw'
     ];
 
     /**

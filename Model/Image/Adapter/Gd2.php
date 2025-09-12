@@ -122,7 +122,7 @@ class Gd2 extends AbstractAdapter
 
         // Extensions not supported by GD
         $unsupported = [
-            'tiff','avif','heic','heif','raw','cr2','nef','rw2','dng','orf','ai','eps','x-eps'
+            'tiff', 'tif', 'avif','raw'
         ];
 
         if (in_array($ext, $unsupported, true)) {
