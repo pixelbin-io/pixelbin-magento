@@ -39,15 +39,11 @@
                     <tiff>tiff</tiff>
                     <tif>tif</tif>
                     <avif>avif</avif>
-                    <heic>heic</heic>
-                    <heif>heif</heif>
                     <raw>raw</raw>
                     <cr2>cr2</cr2>
-                    <nef>nef</nef>
                     <rw2>rw2</rw2>
                     <dng>dng</dng>
                     <orf>orf</orf>
-                    <pdf>pdf</pdf>
                     <ai>ai</ai>
                     <eps>eps</eps>
                     <x-eps>x-eps</x-eps>
