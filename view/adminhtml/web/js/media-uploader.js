@@ -90,7 +90,7 @@ define([
 
                     if (!allowedResize)  {
                         fileUploader.aggregateError(currentFile.name,
-                            $.mage.__('Disallowed file type. extra herer'));
+                            $.mage.__('Disallowed file type.'));
                         fileUploader.onLoadingStop();
                         return false;
                     }
