@@ -108,7 +108,7 @@ class Filter
         $extension = explode('.', $lastPart);
         $extension = strtolower($extension[1]);
 
-        $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'tif', 'avif', 'bmp'];
+        $allowed_formats = HelperData::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
 
         $moduleName = $this->request->getModuleName();
         $controller = $this->request->getControllerName();
