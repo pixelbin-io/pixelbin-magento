@@ -40,13 +40,13 @@
                     <tif>tif</tif>
                     <avif>avif</avif>
                     <raw>raw</raw>
-                    <cr2>cr2</cr2>
-                    <rw2>rw2</rw2>
-                    <dng>dng</dng>
-                    <orf>orf</orf>
-                    <ai>ai</ai>
-                    <eps>eps</eps>
-                    <x-eps>x-eps</x-eps>
+                    <cr2></cr2>
+                    <rw2></rw2>
+                    <dng></dng>
+                    <orf></orf>
+                    <ai></ai>
+                    <eps></eps>
+                    <x-eps></x-eps>
                 </web_image>
             </extensions>
         </pixelbin>

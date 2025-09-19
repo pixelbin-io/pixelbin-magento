@@ -79,6 +79,8 @@ class Data extends AbstractHelper
         "raw"
     ];
 
+    public const ALLOWED_EXTENSION_FOR_TRANSFORMATION = ['png', 'jpeg', 'jpg', 'webp', 'tif', 'tiff', 'avif', 'raw'];
+
     //= Lazyload
     public const XML_PATH_LAZYLOAD_ENABLED = 'pixelbin/lazyload/lazyload_enabled';
     public const XML_PATH_LAZYLOAD_AUTO_REPLACE_CMS_BLOCKS = 'pixelbin/lazyload/is_enable_for_cms_block';
@@ -391,7 +393,7 @@ class Data extends AbstractHelper
             $extension = explode('.', $lastPart);
             $extension = strtolower($extension[1]);
 
-            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tif', 'tiff', 'avif', 'bmp'];
+            $allowed_formats = self::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
@@ -460,7 +462,7 @@ class Data extends AbstractHelper
             $extension = explode('.', $lastPart);
             $extension = strtolower($extension[1]);
 
-            $allowed_formats = ['png', 'jpeg', 'jpg', 'webp', 'tiff', 'tif', 'avif', 'bmp'];
+            $allowed_formats = self::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
 
             $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
 
