@@ -97,7 +97,7 @@ class Data extends AbstractHelper
     public const PIXELBIN_DEFAULT_IMAGE_URL = "https://cdn.pixelbin.io/v2/dummy-cloudname/original/magento_icons_and_images/pixelbin_logo.png";
     //@codingStandardsIgnoreEnd
 
-    public const TRANSFORMATION_REGEX = '/^(?:[A-Za-z]+\.[A-Za-z]+\(\s*(?:[A-Za-z]+:(?:\d{1,3}|"[^"]*")(?:\s*,\s*[A-Za-z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))(?:\s*~\s*[A-Za-z]+\.[A-Za-z]+\(\s*(?:[A-Za-z]+:(?:\d{1,3}|"[^"]*")(?:\s*,\s*[A-Za-z]+:(?:\d{1,3}|"[^"]*"))*)?\s*\))*$/';
+    public const TRANSFORMATION_REGEX = '/^[a-zA-Z]\w*\.[a-zA-Z]\w*\((?:\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?)(?:,\s*\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?))*)?\)(?:~[a-zA-Z]\w*\.[a-zA-Z]\w*\((?:\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?)(?:,\s*\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?))*)?\))*$/';
 
     /**
      * @var null
