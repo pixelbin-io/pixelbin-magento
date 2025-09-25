@@ -14,7 +14,7 @@ require([
             var regex = /^[a-zA-Z]\w*\.[a-zA-Z]\w*\((?:\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?)(?:,\s*\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?))*)?\)(?:~[a-zA-Z]\w*\.[a-zA-Z]\w*\((?:\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?)(?:,\s*\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?))*)?\))*$/;
             return regex.test(value);
         },
-        $t("Please enter a valid transformation")
+        $t('Please enter a valid transformation. <a href="https://www.pixelbin.io/docs/url-structure/#transformation-pattern" target="_blank">Click Here</a>')
     );
 
     $(function () {
