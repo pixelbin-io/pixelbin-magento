@@ -100,11 +100,13 @@ class Gd2 extends AbstractAdapter
      */
     public function open($filename)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if ($filename === null || !file_exists($filename)) {
             throw new FileSystemException(
                 new Phrase('File "%1" does not exist.', [$filename])
             );
         }
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!$filename || filesize($filename) === 0 || !$this->validateURLScheme($filename)) {
             throw new \InvalidArgumentException('Wrong file');
         }
@@ -118,6 +120,7 @@ class Gd2 extends AbstractAdapter
             throw new \OverflowException('Memory limit has been reached.');
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
         // Extensions not supported by GD
@@ -131,6 +134,7 @@ class Gd2 extends AbstractAdapter
         }
 
         $this->imageDestroy();
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->_imageHandler = call_user_func(
             $this->_getCallback(
                 'create',
@@ -150,6 +154,7 @@ class Gd2 extends AbstractAdapter
     private function validateURLScheme(string $filename) : bool
     {
         $allowed_schemes = ['ftp', 'ftps', 'http', 'https'];
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $url = parse_url($filename);
         if ($url && isset($url['scheme']) && !in_array($url['scheme'], $allowed_schemes)) {
             return false;
@@ -159,6 +164,8 @@ class Gd2 extends AbstractAdapter
     }
 
     /**
+     * Validate updated file
+     *
      * @param string $filePath
      * @return bool
      */
@@ -168,9 +175,11 @@ class Gd2 extends AbstractAdapter
          * FIX: Skip validation for vector images
          */
         if ($this->helper->isVectorImage($filePath)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             return file_exists($filePath);
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         if (empty($extension)) {
             $mimeType = mime_content_type($filePath);
@@ -207,6 +216,7 @@ class Gd2 extends AbstractAdapter
      */
     protected function _getImageNeedMemorySize($file)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $imageInfo = getimagesize($file);
         if (!isset($imageInfo[0]) || !isset($imageInfo[1])) {
             return 0;
@@ -267,11 +277,14 @@ class Gd2 extends AbstractAdapter
             $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
             if ($isAlpha) {
                 if ($isTrueColor) {
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction
                     $newImage = imagecreatetruecolor($this->_imageSrcWidth, $this->_imageSrcHeight);
                 } else {
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction
                     $newImage = imagecreate($this->_imageSrcWidth, $this->_imageSrcHeight);
                 }
                 $this->fillBackgroundColor($newImage);
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagecopy($newImage, $this->_imageHandler, 0, 0, 0, 0, $this->_imageSrcWidth, $this->_imageSrcHeight);
                 $this->imageDestroy();
                 $this->_imageHandler = $newImage;
@@ -281,10 +294,9 @@ class Gd2 extends AbstractAdapter
         if ($this->_imageHandler === null) {
             $this->_imageHandler = false;
         }
-        // Enable interlace
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imageinterlace($this->_imageHandler, true);
 
-        // Set image quality value
         switch ($this->_fileType) {
             case IMAGETYPE_PNG:
                 $quality = 9;   // For PNG files compression level must be from 0 (no compression) to 9.
@@ -304,6 +316,7 @@ class Gd2 extends AbstractAdapter
             $functionParameters[] = $quality;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         call_user_func_array($this->_getCallback('output'), $functionParameters);
     }
 
@@ -316,7 +329,9 @@ class Gd2 extends AbstractAdapter
      */
     public function getImage()
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         ob_start();
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         call_user_func($this->_getCallback('output'), $this->_imageHandler);
         return ob_get_clean();
     }
@@ -381,8 +396,10 @@ class Gd2 extends AbstractAdapter
             }
         }
         list($red, $green, $blue) = $this->_backgroundColor ?: [0, 0, 0];
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $color = imagecolorallocate($imageResourceTo, $red, $green, $blue);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!imagefill($imageResourceTo, 0, 0, $color)) {
             throw new \InvalidArgumentException("Failed to fill image background with color {$red} {$green} {$blue}.");
         }
@@ -398,19 +415,23 @@ class Gd2 extends AbstractAdapter
      */
     private function applyAlphaTransparency(&$imageResourceTo): void
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!imagealphablending($imageResourceTo, false)) {
             throw new \InvalidArgumentException('Failed to set alpha blending for PNG image.');
         }
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $transparentAlphaColor = imagecolorallocatealpha($imageResourceTo, 0, 0, 0, 127);
 
         if (false === $transparentAlphaColor) {
             throw new \InvalidArgumentException('Failed to allocate alpha transparency for PNG image.');
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!imagefill($imageResourceTo, 0, 0, $transparentAlphaColor)) {
             throw new \InvalidArgumentException('Failed to fill PNG image with alpha transparency.');
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!imagesavealpha($imageResourceTo, true)) {
             throw new \InvalidArgumentException('Failed to save alpha transparency into PNG image.');
         }
@@ -429,16 +450,21 @@ class Gd2 extends AbstractAdapter
         // fill image with indexed non-alpha transparency
         $transparentColor = false;
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if ($transparentIndex >= 0 && $transparentIndex <= imagecolorstotal($this->_imageHandler)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             list($red, $green, $blue) = array_values(imagecolorsforindex($this->_imageHandler, $transparentIndex));
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $transparentColor = imagecolorallocate($imageResourceTo, (int) $red, (int) $green, (int) $blue);
         }
         if (false === $transparentColor) {
             throw new \InvalidArgumentException('Failed to allocate transparent color for image.');
         }
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!imagefill($imageResourceTo, 0, 0, $transparentColor)) {
             throw new \InvalidArgumentException('Failed to fill image with transparency.');
         }
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagecolortransparent($imageResourceTo, $transparentColor);
     }
 
@@ -450,6 +476,7 @@ class Gd2 extends AbstractAdapter
      */
     public function checkAlpha($fileName)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         return (ord(file_get_contents((string)$fileName, false, null, 25, 1)) & 6 & 4) == 4;
     }
 
@@ -471,7 +498,7 @@ class Gd2 extends AbstractAdapter
         $isTrueColor = false;
         // assume that transparency is supported by gif/png only
         if (IMAGETYPE_GIF === $fileType || IMAGETYPE_PNG === $fileType) {
-            // check for specific transparent color
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $transparentIndex = imagecolortransparent($imageResource);
             if ($transparentIndex >= 0) {
                 return $transparentIndex;
@@ -508,8 +535,10 @@ class Gd2 extends AbstractAdapter
         $isTrueColor = false;
         $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
         if ($isTrueColor) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $newImage = imagecreatetruecolor($dims['frame']['width'], $dims['frame']['height']);
         } else {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $newImage = imagecreate($dims['frame']['width'], $dims['frame']['height']);
         }
 
@@ -521,7 +550,7 @@ class Gd2 extends AbstractAdapter
         $this->fillBackgroundColor($newImage);
 
         if ($this->_imageHandler) {
-            // resample source image and copy it into new frame
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             imagecopyresampled(
                 $newImage,
                 $this->_imageHandler,
@@ -549,6 +578,7 @@ class Gd2 extends AbstractAdapter
      */
     public function rotate($angle)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $rotatedImage = imagerotate($this->_imageHandler, $angle, $this->imageBackgroundColor);
         $this->imageDestroy();
         $this->_imageHandler = $rotatedImage;
@@ -571,6 +601,7 @@ class Gd2 extends AbstractAdapter
     {
         list($watermarkSrcWidth, $watermarkSrcHeight, $watermarkFileType,) = $this->_getImageOptions($imagePath);
         $this->_getFileAttributes();
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $watermark = call_user_func(
             $this->_getCallback('create', $watermarkFileType, 'Unsupported watermark image format.'),
             $imagePath
@@ -580,12 +611,13 @@ class Gd2 extends AbstractAdapter
 
         $watermark = $this->createWatermarkBasedOnPosition($watermark, $positionX, $positionY, $merged, $tile);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagedestroy($watermark);
         $this->refreshImageDimensions();
     }
 
     /**
-     * Create watermark based on it's image position.
+     * Create watermark based on its image position.
      *
      * @param resource $watermark
      * @param int $positionX
@@ -616,6 +648,7 @@ class Gd2 extends AbstractAdapter
          * blending mode is allowed for truecolor images only.
          * @see imagealphablending()
          */
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (!imageistruecolor($this->_imageHandler)) {
             $newImage = $this->createTruecolorImageCopy();
             $this->imageDestroy();
@@ -627,7 +660,9 @@ class Gd2 extends AbstractAdapter
         } elseif ($this->getWatermarkPosition() == self::POSITION_STRETCH) {
             $watermark = $this->createWaterMark($watermark, $this->_imageSrcWidth, $this->_imageSrcHeight);
         } elseif ($this->getWatermarkPosition() == self::POSITION_CENTER) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $positionX = (int) ($this->_imageSrcWidth / 2 - imagesx($watermark) / 2);
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $positionY = (int) ($this->_imageSrcHeight / 2 - imagesy($watermark) / 2);
             $this->imagecopymergeWithAlphaFix(
                 $this->_imageHandler,
@@ -636,11 +671,14 @@ class Gd2 extends AbstractAdapter
                 $positionY,
                 0,
                 0,
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesx($watermark),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesy($watermark),
                 $this->getWatermarkImageOpacity()
             );
         } elseif ($this->getWatermarkPosition() == self::POSITION_TOP_RIGHT) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $positionX = $this->_imageSrcWidth - imagesx($watermark);
             $this->imagecopymergeWithAlphaFix(
                 $this->_imageHandler,
@@ -649,7 +687,9 @@ class Gd2 extends AbstractAdapter
                 $positionY,
                 0,
                 0,
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesx($watermark),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesy($watermark),
                 $this->getWatermarkImageOpacity()
             );
@@ -661,12 +701,16 @@ class Gd2 extends AbstractAdapter
                 $positionY,
                 0,
                 0,
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesx($watermark),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesy($watermark),
                 $this->getWatermarkImageOpacity()
             );
         } elseif ($this->getWatermarkPosition() == self::POSITION_BOTTOM_RIGHT) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $positionX = $this->_imageSrcWidth - imagesx($watermark);
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $positionY = $this->_imageSrcHeight - imagesy($watermark);
             $this->imagecopymergeWithAlphaFix(
                 $this->_imageHandler,
@@ -675,11 +719,14 @@ class Gd2 extends AbstractAdapter
                 $positionY,
                 0,
                 0,
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesx($watermark),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesy($watermark),
                 $this->getWatermarkImageOpacity()
             );
         } elseif ($this->getWatermarkPosition() == self::POSITION_BOTTOM_LEFT) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $positionY = $this->_imageSrcHeight - imagesy($watermark);
             $this->imagecopymergeWithAlphaFix(
                 $this->_imageHandler,
@@ -688,7 +735,9 @@ class Gd2 extends AbstractAdapter
                 $positionY,
                 0,
                 0,
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesx($watermark),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesy($watermark),
                 $this->getWatermarkImageOpacity()
             );
@@ -702,14 +751,18 @@ class Gd2 extends AbstractAdapter
                 $positionY,
                 0,
                 0,
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesx($watermark),
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 imagesy($watermark),
                 $this->getWatermarkImageOpacity()
             );
         } else {
             $offsetX = $positionX;
             $offsetY = $positionY;
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             while ($offsetY <= $this->_imageSrcHeight + imagesy($watermark)) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 while ($offsetX <= $this->_imageSrcWidth + imagesx($watermark)) {
                     $this->imagecopymergeWithAlphaFix(
                         $this->_imageHandler,
@@ -718,13 +771,17 @@ class Gd2 extends AbstractAdapter
                         $offsetY,
                         0,
                         0,
+                        // phpcs:ignore Magento2.Functions.DiscouragedFunction
                         imagesx($watermark),
+                        // phpcs:ignore Magento2.Functions.DiscouragedFunction
                         imagesy($watermark),
                         $this->getWatermarkImageOpacity()
                     );
+                    // phpcs:ignore Magento2.Functions.DiscouragedFunction
                     $offsetX += imagesx($watermark);
                 }
                 $offsetX = $positionX;
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $offsetY += imagesy($watermark);
             }
         }
@@ -742,12 +799,19 @@ class Gd2 extends AbstractAdapter
      */
     private function createWaterMark($watermark, string $width, string $height)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $newWatermark = imagecreatetruecolor($width, $height);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagealphablending($newWatermark, false);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $col = imagecolorallocate($newWatermark, 255, 255, 255);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagecolortransparent($newWatermark, $col);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagefilledrectangle($newWatermark, 0, 0, $width, $height, $col);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagesavealpha($newWatermark, true);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagecopyresampled(
             $newWatermark,
             $watermark,
@@ -757,7 +821,9 @@ class Gd2 extends AbstractAdapter
             0,
             $width,
             $height,
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             imagesx($watermark),
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             imagesy($watermark)
         );
 
@@ -782,12 +848,14 @@ class Gd2 extends AbstractAdapter
         $newWidth = $this->_imageSrcWidth - $left - $right;
         $newHeight = $this->_imageSrcHeight - $top - $bottom;
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $canvas = imagecreatetruecolor($newWidth, $newHeight);
 
         if ($this->_fileType == IMAGETYPE_PNG) {
             $this->_saveAlpha($canvas);
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagecopyresampled(
             $canvas,
             $this->_imageHandler,
@@ -810,7 +878,7 @@ class Gd2 extends AbstractAdapter
      * Checks required dependencies
      *
      * @return void
-     * @throws \RuntimeException If some of dependencies are missing
+     * @throws \RuntimeException If some of the dependencies are missing
      */
     public function checkDependencies()
     {
@@ -828,7 +896,9 @@ class Gd2 extends AbstractAdapter
      */
     public function refreshImageDimensions()
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->_imageSrcWidth = imagesx($this->_imageHandler);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->_imageSrcHeight = imagesy($this->_imageHandler);
     }
 
@@ -848,6 +918,7 @@ class Gd2 extends AbstractAdapter
     private function imageDestroy()
     {
         if (is_resource($this->_imageHandler)) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             imagedestroy($this->_imageHandler);
         }
     }
@@ -860,9 +931,13 @@ class Gd2 extends AbstractAdapter
      */
     private function _saveAlpha($imageHandler)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $background = imagecolorallocate($imageHandler, 0, 0, 0);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagecolortransparent($imageHandler, $background);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagealphablending($imageHandler, false);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagesavealpha($imageHandler, true);
     }
 
@@ -875,7 +950,9 @@ class Gd2 extends AbstractAdapter
      */
     public function getColorAt($x, $y)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $colorIndex = imagecolorat($this->_imageHandler, $x, $y);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         return imagecolorsforindex($this->_imageHandler, $colorIndex);
     }
 
@@ -911,12 +988,16 @@ class Gd2 extends AbstractAdapter
      */
     protected function _createImageFromText($text)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $width = imagefontwidth($this->_fontSize) * strlen((string)$text);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $height = imagefontheight($this->_fontSize);
 
         $this->_createEmptyImage($width, $height);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $black = imagecolorallocate($this->_imageHandler, 0, 0, 0);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagestring($this->_imageHandler, $this->_fontSize, 0, 0, $text, $black);
     }
 
@@ -932,13 +1013,16 @@ class Gd2 extends AbstractAdapter
      */
     protected function _createImageFromTtfText($text, $font)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $boundingBox = imagettfbbox($this->_fontSize, 0, $font, $text);
         $width = abs($boundingBox[4] - $boundingBox[0]);
         $height = abs($boundingBox[5] - $boundingBox[1]);
 
         $this->_createEmptyImage($width, $height);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $black = imagecolorallocate($this->_imageHandler, 0, 0, 0);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $result = imagettftext(
             $this->_imageHandler,
             $this->_fontSize,
@@ -964,12 +1048,17 @@ class Gd2 extends AbstractAdapter
     protected function _createEmptyImage($width, $height)
     {
         $this->_fileType = IMAGETYPE_PNG;
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $image = imagecreatetruecolor($width, $height);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $colorWhite = imagecolorallocatealpha($image, 255, 255, 255, 127);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagealphablending($image, true);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagesavealpha($image, true);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagefill($image, 0, 0, $colorWhite);
         $this->imageDestroy();
         $this->_imageHandler = $image;
@@ -1003,9 +1092,11 @@ class Gd2 extends AbstractAdapter
         $pct
     ) {
         if ($pct >= 100) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             if (false === imagealphablending($dst_im, true)) {
                 return false;
             }
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             return imagecopy($dst_im, $src_im, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
         }
 
@@ -1013,43 +1104,56 @@ class Gd2 extends AbstractAdapter
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $sizeX = imagesx($src_im);
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $sizeY = imagesy($src_im);
         if (false === $sizeX || false === $sizeY) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $tmpImg = imagecreatetruecolor($src_w, $src_h);
         if (false === $tmpImg) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (false === imagealphablending($tmpImg, false)) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (false === imagesavealpha($tmpImg, true)) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (false === imagecopy($tmpImg, $src_im, 0, 0, 0, 0, $sizeX, $sizeY)) {
             return false;
         }
 
         $transparency = (int) (127 - (($pct * 127) / 100));
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (false === imagefilter($tmpImg, IMG_FILTER_COLORIZE, 0, 0, 0, $transparency)) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (false === imagealphablending($dst_im, true)) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         if (false === imagesavealpha($dst_im, true)) {
             return false;
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $result = imagecopy($dst_im, $tmpImg, $dst_x, $dst_y, $src_x, $src_y, $src_w, $src_h);
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagedestroy($tmpImg);
 
         return $result;
@@ -1064,12 +1168,14 @@ class Gd2 extends AbstractAdapter
     {
         $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $newImage = imagecreatetruecolor($this->_imageSrcWidth, $this->_imageSrcHeight);
 
         if ($isAlpha) {
             $this->_saveAlpha($newImage);
         }
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         imagecopy($newImage, $this->_imageHandler, 0, 0, 0, 0, $this->_imageSrcWidth, $this->_imageSrcHeight);
 
         return $newImage;

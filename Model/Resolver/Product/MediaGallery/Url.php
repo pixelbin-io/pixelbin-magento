@@ -44,6 +44,7 @@ class Url implements ResolverInterface
     /**
      * @param ImageFactory $productImageFactory
      * @param PlaceholderProvider $placeholderProvider
+     * @param HelperData $helperData
      */
     public function __construct(
         ImageFactory $productImageFactory,

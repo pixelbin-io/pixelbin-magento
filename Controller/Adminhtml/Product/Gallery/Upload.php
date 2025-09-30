@@ -22,7 +22,7 @@ use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload
 {
-        /**
+    /**
      * Authorization level of a basic admin session
      *
      * @see _isAllowed()

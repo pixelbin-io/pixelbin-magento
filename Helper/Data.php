@@ -40,8 +40,8 @@ class Data extends AbstractHelper
     public const XML_PATH_PRODUCT_CUSTOM_TRANSFORMATION = 'pixelbin/image_transformations/product_custom_transformation';
     //@codingStandardsIgnoreEnd
     public const XML_PATH_MANUAL_CRON_ENABLED = 'pixelbin/pixelbin_image_sync/enable_manual_sync_cron';
-    const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
-    const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
+    public const XML_PATH_VECTOR_EXTENSIONS = 'pixelbin/extensions/vector';
+    public const XML_PATH_WEB_IMAGE_EXTENSIONS = 'pixelbin/extensions/web_image';
     public const API_URL = "https://api.pixelbin.io";
     public const ZONE_DEFAULT_URL = "https://cdn.pixelbin.io/v2/";
     public const EXCLUDE_FOLDERS = [
@@ -97,6 +97,7 @@ class Data extends AbstractHelper
     public const PIXELBIN_DEFAULT_IMAGE_URL = "https://cdn.pixelbin.io/v2/dummy-cloudname/original/magento_icons_and_images/pixelbin_logo.png";
     //@codingStandardsIgnoreEnd
 
+    // @codingStandardsIgnoreLine
     public const TRANSFORMATION_REGEX = '/^[a-zA-Z]\w*\.[a-zA-Z]\w*\((?:\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?)(?:,\s*\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?))*)?\)(?:~[a-zA-Z]\w*\.[a-zA-Z]\w*\((?:\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?)(?:,\s*\w+:([a-zA-Z0-9_\.\-]+|\[\[[^\]]+\]\]|true|false|-?\d+(?:\.\d+)?))*)?\))*$/';
 
     /**
@@ -319,7 +320,7 @@ class Data extends AbstractHelper
     public function logData(string $message, array $context = [], string $type = "")
     {
         $log_enabled = $this->scopeConfig->getValue('pixelbin/developer/enabled_log');
-        if($log_enabled){
+        if ($log_enabled) {
             switch ($type) {
                 case "error":
                     $this->logger->error($message, $context);
@@ -380,15 +381,9 @@ class Data extends AbstractHelper
     public function replaceProductImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
-            // if ($this->isDefaultImageEnabled()) {
-            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-            //         strpos($imageUrl, 'pixel_bin') !== 0) {
-            //         return $this->getDefaultImage();
-            //     }
-            // }
-
-
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $path = parse_url($imageUrl, PHP_URL_PATH);
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $lastPart = basename($path);
             $extension = explode('.', $lastPart);
             $extension = strtolower($extension[1]);
@@ -449,15 +444,9 @@ class Data extends AbstractHelper
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
     {
         if ($imageUrl != null) {
-
-            // if ($this->isDefaultImageEnabled()) {
-            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-            //         strpos($imageUrl, 'pixel_bin') !== 0) {
-            //         return $this->getDefaultImage();
-            //     }
-            // }
-
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $path = parse_url($imageUrl, PHP_URL_PATH);
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $lastPart = basename($path);
             $extension = explode('.', $lastPart);
             $extension = strtolower($extension[1]);
@@ -577,9 +566,10 @@ class Data extends AbstractHelper
 
     /**
      * Parse Pixelbin URL
+     *
      * @method parsePixelbinUrl
-     * @param  string             $url
-     * @param  string|null        $publicId
+     * @param  string $url
+     * @param  string|null $publicId
      * @return array
      */
     public function parsePixelbinUrl($url, $publicId = null)
@@ -587,13 +577,15 @@ class Data extends AbstractHelper
         $parsedUrlParts = $this->mbParseUrl($url);
         $url = preg_replace('/\?.*/', '', $url);
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
+        $extension = pathinfo($url, PATHINFO_EXTENSION);
         $parsed = [
             "orig_url" => $url,
             "scheme" => isset($parsedUrlParts["scheme"]) ? $parsedUrlParts["scheme"] : null,
             "host" => isset($parsedUrlParts["host"]) ? $parsedUrlParts["host"] : null,
             "path" => isset($parsedUrlParts["path"]) ? $parsedUrlParts["path"] : null,
             "query" => isset($parsedUrlParts["query"]) ? $parsedUrlParts["query"] : null,
-            "extension" => \pathinfo($url, PATHINFO_EXTENSION),
+            "extension" => $extension,
             "type" => null,
             "cloudName" => null,
             "version" => null,
@@ -643,15 +635,18 @@ class Data extends AbstractHelper
 
         if ($parsed["transformations_string"]) {
             $parsed["transformations"] = explode(',', \str_replace('/', ',', $parsed["transformations_string"]));
+            // @codingStandardsIgnoreLine
             $parsed["transformationless_url"] = preg_replace('/\/' . \preg_quote($parsed["transformations_string"], '/') . '\//', '/', $url, 1);
         }
 
         $parsed["versionless_url"] = preg_replace('/\/v[0-9]{1,10}\//', '/', $url, 1);
+        // @codingStandardsIgnoreLine
         $parsed["versionless_transformationless_url"] = preg_replace('/\/v[0-9]{1,10}\//', '/', $parsed["transformationless_url"], 1);
 
         if ($parsed["type"] === "video") {
             $parsed["thumbnail_url"] = preg_replace('/\.[^.]+$/', '', $url);
             $parsed["thumbnail_url"] = preg_replace('/\/v[0-9]{1,10}\//', '/', $parsed["thumbnail_url"]);
+            // @codingStandardsIgnoreLine
             $parsed["thumbnail_url"] = preg_replace('/\/(' . \preg_quote((string) $parsed["publicId"], '/') . ')$/', '/so_auto/$1.jpg', $parsed["thumbnail_url"]);
         }
         return $parsed;
@@ -660,7 +655,9 @@ class Data extends AbstractHelper
     /**
      * UTF-8 aware parse_url() replacement.
      *
-     * @return array
+     * @param string $url
+     * @param string|int $component
+     * @return array|int|string
      */
     public function mbParseUrl($url, $component = -1)
     {
@@ -671,15 +668,19 @@ class Data extends AbstractHelper
             },
             $url
         );
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $parts = parse_url($enc_url, $component);
         if ($parts === false) {
             throw new \InvalidArgumentException('Malformed URL: ' . $url);
         }
         if (is_array($parts)) {
             foreach ($parts as $name => $value) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $parts[$name] = rawurldecode($value);
             }
         } else {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $parts = rawurldecode($parts);
         }
         return $parts;
@@ -687,6 +688,7 @@ class Data extends AbstractHelper
 
     /**
      * Supported video formats
+     *
      * @return array
      */
     public function getSupportedVideoFormats()
@@ -862,7 +864,9 @@ class Data extends AbstractHelper
      */
     public function validatePixelbinUrl($pixelbinUrl, $flag = false)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $modifyUrl1 = parse_url(self::ZONE_DEFAULT_URL);
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $modifyUrl2 = parse_url($pixelbinUrl);
         if ($modifyUrl1['host'] == $modifyUrl2['host']) {
             try {

@@ -26,17 +26,26 @@ class Dimensions
     private $height;
 
     /**
-     * @param $width
-     * @param $height
+     * @param int $width
+     * @param int $height
      */
     private function __construct($width, $height)
     {
-        $this->width = is_null($width) ? null : (int) round($width);
-        $this->height = is_null($height) ? null : (int) round($height);
+        if ($width === null) {
+            $this->width = null;
+        } else {
+            $this->width = (int) round($width);
+        }
+
+        if ($width === null) {
+            $this->height = null;
+        } else {
+            $this->height = (int) round($height);
+        }
     }
 
     /**
-     * get width value
+     * Get width value
      *
      * @return int|null
      */
@@ -46,7 +55,7 @@ class Dimensions
     }
 
     /**
-     * get height value
+     * Get height value
      *
      * @return int|null
      */
@@ -56,10 +65,11 @@ class Dimensions
     }
 
     /**
-     * get square dimensions
+     * Get square dimensions
      *
-     * @param $length
+     * @param int $length
      * @return Dimensions
+     * //@codingStandardsIgnoreStart
      */
     public static function square($length)
     {
@@ -67,10 +77,11 @@ class Dimensions
     }
 
     /**
-     * get square missing dimensions
+     * Get square missing dimensions
      *
      * @param Dimensions $dimensions
      * @return Dimensions
+     * //@codingStandardsIgnoreStart
      */
     public static function squareMissingDimension(Dimensions $dimensions)
     {
@@ -84,11 +95,12 @@ class Dimensions
     }
 
     /**
-     * from width and height
+     * From width and height
      *
-     * @param $width
-     * @param $height
+     * @param int|float $width
+     * @param int|float $height
      * @return Dimensions
+     * //@codingStandardsIgnoreStart
      */
     public static function fromWidthAndHeight($width, $height)
     {
@@ -96,9 +108,10 @@ class Dimensions
     }
 
     /**
-     * get null for Dimensions
+     * Get null for dimensions
      *
      * @return Dimensions
+     * //@codingStandardsIgnoreStart
      */
     public static function null()
     {

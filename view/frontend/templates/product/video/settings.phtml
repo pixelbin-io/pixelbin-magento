@@ -16,5 +16,5 @@
     }
 </style>
 <script id="cld_video_settings" type="application/json">
-    <?= json_encode($block->getVideoSettings()) ?>
+    <?= $escaper->escapeHtml(json_encode($block->getVideoSettings())) ?>
 </script>

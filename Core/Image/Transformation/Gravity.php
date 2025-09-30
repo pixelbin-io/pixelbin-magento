@@ -29,6 +29,8 @@ class Gravity
     }
 
     /**
+     * To string
+     *
      * @return mixed
      */
     public function __toString()
@@ -37,18 +39,22 @@ class Gravity
     }
 
     /**
+     * From string
+     *
      * @param string $value
      * @return Gravity
      */
-    public static function fromString($value)
+    public function fromString($value): Gravity
     {
         return new Gravity($value);
     }
 
     /**
+     * Check Null
+     *
      * @return Gravity
      */
-    public static function null()
+    public function null()
     {
         return new Gravity(null);
     }

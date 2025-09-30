@@ -35,6 +35,7 @@ class Freeform
      *
      * @param  string $value
      * @return Freeform
+     * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {

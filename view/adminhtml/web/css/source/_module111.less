@@ -1,61 +1,62 @@
+/* phpcs:disable */
 .pixelbin-configuration-tab .admin__page-nav-title strong:before {
     background-image: url("Pixelbinio_Pixelbin::images/pixelbin_cloud_glyph_regular.svg");
-    background-size: contain;
-    background-repeat: no-repeat;
     background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
     display: inline-block;
-    content: "";
-    width: 22px;
     height: 18px;
     margin-right: 5px;
     vertical-align: text-bottom;
+    width: 22px;
 }
 
 .image.image-placeholder.add-from-pixelbin-button .product-image-wrapper:before {
     background-image: url("Pixelbinio_Pixelbin::images/pixelbin_dropzone.svg");
+    background-position: center;
     background-repeat: no-repeat;
     background-size: 104px;
-    background-position: center;
+    content: '';
     display: block;
-    content: "";
-    width: 100%;
     height: 98px;
+    left: 0;
+    opacity: '0.8';
     position: absolute;
     top: 0;
-    left: 0;
-    opacity: 0.8;
+    width: 100%;
 }
 
 .pixelbin-button-with-logo {
-    position: relative;
     padding: 6px 14px 6px 50px;
+    position: relative;
 
     &:before {
         background-image: url("Pixelbinio_Pixelbin::images/pixelbin_cloud_glyph_white.svg");
+        background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
-        background-position: center;
+        content: '';
         display: block;
-        vertical-align: middle;
-        content: "";
+        height: 30px;
+        left: 14px;
         position: absolute;
         top: 0;
-        left: 14px;
+        vertical-align: middle;
         width: 30px;
-        height: 30px;
     }
 
     &.small-ver {
         padding: 0 8px 0 44px;
 
         > span {
-            line-height: 25px;
             font-size: 1.2rem;
+            line-height: 25px;
         }
 
         &:before {
-            left: 8px;
             height: 25px;
+            left: 8px;
         }
     }
 
@@ -68,7 +69,7 @@
     }
 }
 
-.adminhtml-system_config-edit .colorpicker_hue div {
+.adminhtml-system_config-edit .colorpicker-hue div {
     background-image: url("Pixelbinio_Pixelbin::images/colorpicker_indic.gif");
 }
 
@@ -85,35 +86,35 @@
         #cldspinset-preview {
             border: 1px solid #e3e3e3;
             height: 0;
+            max-width: 500px;
             padding-bottom: 100%;
             position: relative;
             width: 100%;
-            max-width: 500px;
 
             #cldspinset-preview-img {
-                transition: all 0.8s ease;
-                margin: 0;
-                position: absolute;
-                top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%);
+                margin: 0;
                 max-height: 90%;
                 max-width: 90%;
+                position: absolute;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                transition: all 0.8s ease;
 
                 + #cldspinset-indic {
                     background-image: url("Pixelbinio_Pixelbin::images/spinset_indic.svg");
+                    background-position: center;
                     background-repeat: no-repeat;
                     background-size: contain;
-                    background-position: center;
+                    content: '';
                     display: block;
-                    content: "";
-                    z-index: 99;
+                    height: 30px;
                     margin: 0;
                     position: absolute;
-                    bottom: 0;
                     right: 0;
-                    height: 30px;
+                    bottom: 0;
                     width: 30px;
+                    z-index: 99;
                 }
 
                 &.placeholder {
@@ -132,18 +133,18 @@
 .product-image-wrapper.cldspinset-overlay {
     &:after {
         background-image: url("Pixelbinio_Pixelbin::images/spinset_indic.svg");
+        background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
-        background-position: center;
+        content: '';
         display: block;
-        content: "";
-        z-index: 99;
+        height: 22px;
         margin: 0;
         position: absolute;
-        bottom: 0;
         right: 0;
-        height: 22px;
+        bottom: 0;
         width: 22px;
+        z-index: 99;
     }
 }
 
@@ -152,37 +153,36 @@
     position: relative;
 
     #gallery_top_add_from_pixelbin_dd {
-        display: none;
-        position: absolute;
-        z-index: 9;
-        top: 100%;
-        width: 105%;
-        right: 0;
-        margin-right: -5px;
         background: transparent;
         box-sizing: border-box;
+        display: none;
+        margin-right: -5px;
         padding: 3px;
+        position: absolute;
+        top: 100%;
+        width: 105%;
+        z-index: 9;
 
         #gallery_top_add_from_pixelbin_dd_inner {
-            display: block;
             background: #bebdbc;
-            box-sizing: border-box;
-            width: 100%;
             border: 1px solid #007bdb;
             border-radius: 1px;
+            box-sizing: border-box;
             box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
             color: #41362f;
+            display: block;
+            width: 100%;
 
             > button.action-secondary {
                 background-color: #fff;
-                width: 100%;
                 border: none;
                 border-top: 0;
-                text-shadow: none;
                 color: #41362f;
+                font-size: 1.4rem;
                 font-weight: 400;
                 line-height: 1.36;
-                font-size: 1.4rem;
+                text-shadow: none;
+                width: 100%;
 
                 &:hover {
                     background-color: #cacaca;
@@ -200,16 +200,20 @@
         }
     }
 }
-.page-actions button.pixelbin-button-with-logo{
+
+.page-actions button.pixelbin-button-with-logo {
     margin: 0 0 0 10px !important;
-    span{
+
+    span {
         padding-left: 35px;
     }
 }
+
 .filecnt {
     &[data-mime-type="image/svg"] {
         img {
             width: 100%;
-        };
+        }
     }
 }
+/* phpcs:enable */

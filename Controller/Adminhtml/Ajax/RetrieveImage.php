@@ -13,6 +13,7 @@
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
 
+use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\ValidatorException;
@@ -179,7 +180,9 @@ class RetrieveImage extends \Magento\Backend\App\Action
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Raw
+     * Retriever image execute
+     *
+     * @return Raw
      * @throws FileSystemException
      */
     public function execute()
@@ -207,7 +210,9 @@ class RetrieveImage extends \Magento\Backend\App\Action
                 $this->parsedRemoteFileUrl["type"] = $assetParsedRemoteFileUrl['type'];
                 $this->parsedRemoteFileUrl["thumbnail_url"] = $assetParsedRemoteFileUrl['thumbnail_url'];
                 $baseTmpMediaPath = $this->getBaseTmpMediaPath();
-                $localUniqFilePath = $this->appendNewFileName($baseTmpMediaPath . $this->getLocalTmpFileName($localUniqFilePath));
+                $localUniqFilePath = $this->appendNewFileName(
+                    $baseTmpMediaPath . $this->getLocalTmpFileName($localUniqFilePath)
+                );
                 $this->validateFileExtensions($localUniqFilePath);
                 $this->retrieveRemoteImage($this->remoteFileUrl, $localUniqFilePath);
                 $localFileFullPath = $this->appendAbsoluteFileSystemPath($localUniqFilePath);
@@ -225,13 +230,19 @@ class RetrieveImage extends \Magento\Backend\App\Action
                 $fileWriter->delete($localFileFullPath);
             }
         }
-        /** @var \Magento\Framework\Controller\Result\Raw $response */
+        /** @var Raw $response */
         $response = $this->resultRawFactory->create();
         $response->setHeader('Content-type', 'text/plain');
         $response->setContents(json_encode($result));
         return $response;
     }
 
+    /**
+     * Get Base temp media path
+     *
+     * @return string
+     * @throws LocalizedException
+     */
     protected function getBaseTmpMediaPath()
     {
         $baseTmpMediaPath = false;
@@ -255,8 +266,15 @@ class RetrieveImage extends \Magento\Backend\App\Action
         return $baseTmpMediaPath;
     }
 
+    /**
+     * Get Local tmp file name
+     *
+     * @param string $remoteFileUrl
+     * @return string
+     */
     protected function getLocalTmpFileName($remoteFileUrl)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $localFileName = Uploader::getCorrectFileName(basename($remoteFileUrl));
         $fileData = $this->fileIo->getPathInfo($localFileName);
         if ($fileData["extension"] == "mp4") {
@@ -301,6 +319,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
      */
     private function validateFileExtensions($filePath)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
         if (!$this->extensionValidator->isValid($extension)) {
             throw new ValidatorException(__('Disallowed file type.'));
@@ -311,6 +330,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
      * Append result save remove image
      *
      * @param string $localUniqFilePath
+     * @param string $baseTmpMediaPath
      * @return mixed
      * @throws NoSuchEntityException
      */
@@ -320,9 +340,13 @@ class RetrieveImage extends \Magento\Backend\App\Action
         if (substr($tmpFileName, 0, strlen($baseTmpMediaPath)) == $baseTmpMediaPath) {
             $tmpFileName = substr($tmpFileName, strlen($baseTmpMediaPath));
         }
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $result['name'] = basename($localUniqFilePath);
         $result['type'] = $this->imageAdapter->getMimeType();
         $result['error'] = 0;
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $result['size'] = filesize($this->appendAbsoluteFileSystemPath($localUniqFilePath));
         $result['url'] = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $localUniqFilePath;
         $result['tmp_name'] = $this->appendAbsoluteFileSystemPath($localUniqFilePath);
@@ -364,6 +388,8 @@ class RetrieveImage extends \Magento\Backend\App\Action
     }
 
     /**
+     * Append new file name
+     *
      * @param string $localFilePath
      * @return string
      */
@@ -371,13 +397,18 @@ class RetrieveImage extends \Magento\Backend\App\Action
     {
         $destinationFile = $this->appendAbsoluteFileSystemPath($localFilePath);
         $fileName = Uploader::getNewFileName($destinationFile);
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $fileInfo = pathinfo($localFilePath);
         return $fileInfo['dirname'] . DIRECTORY_SEPARATOR . $fileName;
     }
 
     /**
+     * Append absolute file system path
+     *
      * @param string $localTmpFile
      * @return string
+     * @throws ValidatorException
      */
     protected function appendAbsoluteFileSystemPath($localTmpFile)
     {
@@ -388,7 +419,10 @@ class RetrieveImage extends \Magento\Backend\App\Action
     }
 
     /**
+     * Get Placeholder url
+     *
      * @return string
+     * @throws NoSuchEntityException
      */
     private function getPlaceholderUrl()
     {
@@ -399,10 +433,11 @@ class RetrieveImage extends \Magento\Backend\App\Action
         ];
         foreach ($configPaths as $configPath) {
             if (($path = $this->storeManager->getStore()->getConfig($configPath))) {
-                return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/placeholder/' . $path;
-                break;
+                return $this->storeManager->getStore()
+                        ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/placeholder/' . $path;
             }
         }
-        return $this->_view->getLayout()->createBlock("Magento\Theme\Block\Html\Header\Logo")->getViewFileUrl('Pixelbinio_Pixelbin::images/pixelbin_logo_light.png');
+        return $this->_view->getLayout()->createBlock(\Magento\Theme\Block\Html\Header\Logo::class)
+            ->getViewFileUrl('Pixelbinio_Pixelbin::images/pixelbin_logo_light.png');
     }
 }

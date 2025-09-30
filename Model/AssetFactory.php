@@ -71,8 +71,8 @@ class AssetFactory extends AssetInterfaceFactory
 
             $svg = simplexml_load_file($absolutePath);
             if (!empty($svg['width']) && !empty($svg['height'])) {
-                $width = intval($svg['width']);
-                $height = intval($svg['height']);
+                $width = (int)$svg['width'];
+                $height = (int)$svg['height'];
             }
 
             $data['width'] = $width;

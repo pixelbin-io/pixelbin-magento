@@ -19,7 +19,7 @@ use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 
 class Uploader
 {
-    const ALLOWED_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
+    public const ALLOWED_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
 
     /**
      * @var UploadFileToPixelbin
@@ -79,13 +79,14 @@ class Uploader
      */
     protected function isAllowedImageExtension($filepath)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         return in_array(pathinfo($filepath, PATHINFO_EXTENSION), self::ALLOWED_EXTENSIONS);
     }
 
     /**
      * Value for media file path
      *
-     * @param $filepath
+     * @param string $filepath
      * @return bool
      * @throws \Magento\Framework\Exception\FileSystemException
      */
@@ -97,7 +98,7 @@ class Uploader
     /**
      * Value for media temp file path
      *
-     * @param $filepath
+     * @param string $filepath
      * @return bool
      * @throws \Magento\Framework\Exception\FileSystemException
      */
@@ -120,7 +121,7 @@ class Uploader
     /**
      * Value for media relative path
      *
-     * @param $filepath
+     * @param string $filepath
      * @return array|mixed|string|string[]
      * @throws \Magento\Framework\Exception\FileSystemException
      */

@@ -14,6 +14,9 @@
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Raw;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Backend\App\Action;
@@ -38,12 +41,24 @@ class UpdateAdminImage extends Action
      */
     protected $urlInterface;
 
+    /**
+     * @var ResultRawFactory
+     */
     protected $resultFactory;
 
+    /**
+     * @var FileSysten
+     */
     protected $filesystem;
 
+    /**
+     * @var string
+     */
     private $_authorised;
 
+    /**
+     * @var Transformation
+     */
     protected $transformation;
 
     /**
@@ -78,6 +93,11 @@ class UpdateAdminImage extends Action
         $this->helperData = $helperData;
     }
 
+    /**
+     * Update Admin Image Execute
+     *
+     * @return ResponseInterface|Raw|ResultInterface
+     */
     public function execute()
     {
         $result = [];

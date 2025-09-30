@@ -15,7 +15,7 @@ namespace Pixelbinio\Pixelbin\Core\Image\Transformation;
 
 class FetchFormat
 {
-    const FETCH_FORMAT_AUTO = 'auto';
+    public const FETCH_FORMAT_AUTO = 'auto';
 
     /**
      * @var value
@@ -34,6 +34,7 @@ class FetchFormat
      * Auto fetch format value
      *
      * @return FetchFormat
+     * @codingStandardsIgnoreStart
      */
     public static function auto()
     {
@@ -45,6 +46,7 @@ class FetchFormat
      *
      * @param string $value
      * @return FetchFormat
+     * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {
