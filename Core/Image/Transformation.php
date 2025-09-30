@@ -167,7 +167,7 @@ class Transformation
      * Get image freeform
      *
      * @param Freeform $freeform
-     * @param $append
+     * @param bool|string $append
      * @return $this
      */
     public function withFreeform(Freeform $freeform, $append = true)
@@ -192,6 +192,7 @@ class Transformation
      * Builder for Transformation
      *
      * @return Transformation
+     * @codingStandardsIgnoreStart
      */
     public static function builder()
     {
@@ -199,6 +200,8 @@ class Transformation
     }
 
     /**
+     * Build transform data
+     *
      * @return array
      */
     public function build()

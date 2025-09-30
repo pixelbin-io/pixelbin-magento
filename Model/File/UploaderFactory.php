@@ -16,7 +16,7 @@ namespace Pixelbinio\Pixelbin\Model\File;
 class UploaderFactory extends \Magento\Framework\File\UploaderFactory
 {
     /**
-     * Object manager
+     * Object manager class
      *
      * @var \Magento\Framework\ObjectManagerInterface
      */

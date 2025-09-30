@@ -13,6 +13,7 @@
 
 namespace Pixelbinio\Pixelbin\Ui\Component\Control;
 
+use Magento\Cms\Helper\Wysiwyg\Images;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Pixelbinio\Pixelbin\Block\Adminhtml\Cms\Wysiwyg\Images\Content;
 use Magento\Framework\AuthorizationInterface;
@@ -37,8 +38,11 @@ class AddFromPixelbin implements ButtonProviderInterface
     protected $cmsWysiwygImages;
 
     /**
+     * AddFromPixelbin Construct
+     *
      * @param Content $images
      * @param AuthorizationInterface $authorization
+     * @param Images $cmsWysiwygImages
      */
     public function __construct(
         Content $images,
@@ -49,13 +53,13 @@ class AddFromPixelbin implements ButtonProviderInterface
         $this->authorization =  $authorization;
         $this->cmsWysiwygImages = $cmsWysiwygImages;
     }
+
     /**
      * @inheritdoc
      */
     public function getButtonData(): array
     {
         $pixelbinMLwidgetOprions = json_decode($this->images->getPixelbinMediaLibraryWidgetOptions(), true);
-
 
         $buttonData = [
             'label' => __('Add From Pixelbin'),

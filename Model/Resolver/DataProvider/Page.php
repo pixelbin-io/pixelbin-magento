@@ -49,6 +49,8 @@ class Page
      * @param PageRepositoryInterface $pageRepository
      * @param FilterEmulate $widgetFilter
      * @param GetPageByIdentifierInterface $getPageByIdentifier
+     * @param HelperData $helperData
+     * @param Logger $logger
      */
     public function __construct(
         PageRepositoryInterface $pageRepository,
@@ -124,13 +126,20 @@ class Page
         return $pageData;
     }
 
+    /**
+     * Replace image url
+     *
+     * @param string $html
+     * @return array|mixed|string|string[]
+     * @throws NoSuchEntityException
+     */
     public function replaceImageUrl($html)
     {
         if (!$this->helperData->isModuleEnabled()) {
             return $html;
         }
         if (stripos($html, "&lt;img ") !== false) {
-            
+
             $dom = new \domDocument();
             $useErrors = libxml_use_internal_errors(true);
             $dom->loadHTML($html);
@@ -142,7 +151,7 @@ class Page
             foreach ($images[0] as $image) {
                 $secureImg = str_replace('img src="', '', $image);
                 $secureImg = str_replace('"', '', $secureImg);
-                
+
                 $secureImg = $this->helperData->replaceGraphqlCmsImageUrlWithPixelbin($secureImg);
 
                 $secureImg = '&lt;img src="'. $secureImg .'"';

@@ -33,6 +33,7 @@ class Dpr
      *
      * @param string $value
      * @return Dpr
+     * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {

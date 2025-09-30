@@ -22,17 +22,17 @@ use Pixelbin\Utils\Url;
 class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagementInterface
 {
     /**
-     * @var
+     * @var Bool
      */
     private $initialized;
 
     /**
-     * @var
+     * @var string
      */
     private $id;
 
     /**
-     * @var
+     * @var string
      */
     private $maxResults;
 
@@ -85,6 +85,8 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
+     * Initialize
+     *
      * @return $this|array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -93,6 +95,7 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
         if (!$this->initialized) {
             $this->initialized = true;
             if (($id = $this->_request->getParam("id"))) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $this->setId(\rawurldecode($id));
             }
             if (($maxResults = $this->_request->getParam("max_results"))) {
@@ -107,7 +110,9 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
-     * @param $id
+     * Set Id
+     *
+     * @param int $id
      * @return $this
      */
     public function setId($id)
@@ -117,6 +122,8 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
+     * Get Id
+     *
      * @return mixed
      */
     public function getId()
@@ -126,8 +133,8 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
 
     /**
      * Setting the max results
-     * 
-     * @param $maxResults
+     *
+     * @param int $maxResults
      * @return $this
      */
     public function setMaxResults($maxResults)
@@ -137,6 +144,8 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
+     * Get Max Result
+     *
      * @return mixed
      */
     public function getMaxResults()
@@ -171,7 +180,7 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getImage()
     {
@@ -180,7 +189,7 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getVideo()
     {
@@ -189,7 +198,7 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getResourcesByTag()
     {

@@ -41,7 +41,6 @@ class Uploader
         $this->helperData = $helperData;
     }
 
-
     /**
      * Add web images to the list ollowed extension for media storage
      *

@@ -117,6 +117,7 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
             $escaper = new \Laminas\Escaper\Escaper();
             return $escaper->escapeHtmlAttr((string) $string);
         }
-        return htmlspecialchars((string)$string, ENT_COMPAT, 'UTF-8', false);
+        $escaper = new \Laminas\Escaper\Escaper();
+        return $escaper->escapeHtml((string)$string);
     }
 }

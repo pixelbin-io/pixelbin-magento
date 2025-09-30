@@ -13,6 +13,7 @@
 
 namespace Pixelbinio\Pixelbin\Block\Adminhtml\Cms\Wysiwyg\Images;
 
+use Magento\Framework\Exception\LocalizedException;
 use Pixelbinio\Pixelbin\Helper\MediaLibraryHelper;
 use Magento\Backend\Block\Widget\Context;
 use Magento\Framework\Json\EncoderInterface;
@@ -27,7 +28,6 @@ use Magento\Framework\App\ProductMetadataInterface;
 class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
 {
     /**
-     * MediaLibraryHelper
      * @var array|null
      */
     protected $mediaLibraryHelper;
@@ -71,14 +71,16 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
         }
         try {
             if (version_compare($this->productMetadata->getVersion(), '2.3.5', '<=')) {
+                // @codingStandardsIgnoreLine
                 $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
             } else {
+                // @codingStandardsIgnoreLine
                 $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
             }
-            //Try to add session param on Magento versions prior to 2.3.5
         } catch (\Exception $e) {
-            //Catch deprecation error on Magento 2.3.5 and above
-            throw new \Exception($e->getMessage());
+            throw new LocalizedException(
+                __($e->getMessage())
+            );
         }
 
         return $this->_jsonEncoder->encode(

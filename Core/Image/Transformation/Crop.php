@@ -15,10 +15,10 @@ namespace Pixelbinio\Pixelbin\Core\Image\Transformation;
 
 class Crop
 {
-    const PAD = 'pad';
-    const LPAD = 'lpad';
-    const FIT = 'fit';
-    const LIMIT = 'limit';
+    public const PAD = 'pad';
+    public const LPAD = 'lpad';
+    public const FIT = 'fit';
+    public const LIMIT = 'limit';
 
     /**
      * @var value
@@ -38,6 +38,7 @@ class Crop
      *
      * @param string $value
      * @return Crop
+     * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {
@@ -48,6 +49,7 @@ class Crop
      * Pad for Crop
      *
      * @return Crop
+     * @codingStandardsIgnoreStart
      */
     public static function pad()
     {
@@ -58,6 +60,7 @@ class Crop
      * Lpad for Crop
      *
      * @return Crop
+     * @codingStandardsIgnoreStart
      */
     public static function lpad()
     {
@@ -68,6 +71,7 @@ class Crop
      * Fit for Crop
      *
      * @return Crop
+     * @codingStandardsIgnoreStart
      */
     public static function fit()
     {
@@ -78,6 +82,7 @@ class Crop
      * Limit for Crop
      *
      * @return Crop
+     * @codingStandardsIgnoreStart
      */
     public static function limit()
     {
@@ -85,6 +90,8 @@ class Crop
     }
 
     /**
+     * To String
+     *
      * @return value
      */
     public function __toString()

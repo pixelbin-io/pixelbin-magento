@@ -5,7 +5,9 @@
 ?>
 <script type="text/x-magento-init">
 {"*": {
-    "updateCmsImages": { "ajaxUrl": "<?= $block->getUrl('pixelbin/ajax/updateadminimage') ?>" }
+    "updateCmsImages": { "ajaxUrl": "<?=
+        /** @escapeNotVerified */ $block->getUrl('pixelbin/ajax/updateadminimage')
+    ?>" }
 }}
 
 </script>

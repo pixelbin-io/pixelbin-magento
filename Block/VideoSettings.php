@@ -18,6 +18,11 @@ use Pixelbinio\Pixelbin\Helper\Data as Helper;
 
 class VideoSettings extends template
 {
+    /**
+     * @param Template\Context $context
+     * @param Helper $helper
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         Helper $helper,
@@ -28,6 +33,8 @@ class VideoSettings extends template
     }
 
     /**
+     * Get video setting
+     *
      * @return array
      */
     public function getVideoSettings()

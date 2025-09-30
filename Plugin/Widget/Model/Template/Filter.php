@@ -13,6 +13,7 @@
 
 namespace Pixelbinio\Pixelbin\Plugin\Widget\Model\Template;
 
+use Magento\Framework\App\Request\Http;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Core\Image\ImageFactory;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
@@ -45,15 +46,19 @@ class Filter
      */
     protected $coreRegistry;
 
+    /**
+     * @var \Magento\Framework\App\Request\Http
+     */
     protected $request;
 
     /**
      * @method __construct
-     * @param  StoreManagerInterface  $storeManager
-     * @param  ImageFactory           $imageFactory
-     * @param  HelperData             $helperData
-     * @param  WidgetFilter           $widgetFilter
-     * @param  Registry               $coreRegistry
+     * @param StoreManagerInterface $storeManager
+     * @param ImageFactory $imageFactory
+     * @param HelperData $helperData
+     * @param WidgetFilter $widgetFilter
+     * @param Registry $coreRegistry
+     * @param Http $request
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -81,7 +86,7 @@ class Filter
     public function aroundMediaDirective(
         \Magento\Widget\Model\Template\Filter $widgetFilter,
         callable $proceed,
-                                              $construction
+        $construction
     ) {
         if (!$this->helperData->isModuleEnabled()) {
             return $proceed($construction);
@@ -103,7 +108,10 @@ class Filter
             }
         );
 
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $path = parse_url($image, PHP_URL_PATH);
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $lastPart = basename($path);
         $extension = explode('.', $lastPart);
         $extension = strtolower($extension[1]);

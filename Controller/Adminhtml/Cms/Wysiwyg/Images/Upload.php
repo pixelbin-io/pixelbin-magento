@@ -171,7 +171,6 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         SaveAssetsInterface $mediaAssetSave,
         Logger $logger,
         UploadFileToPixelbin $uploadFileToPixelbin
-
     ) {
         parent::__construct($context, $coreRegistry, $resultJsonFactory, $directoryResolver);
         $this->directoryList = $directoryList;
@@ -222,10 +221,11 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
 
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
 
-
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $localFileName = Uploader::getCorrectFileName(basename($allData["asset"]["name"]));
-            //$extraPathName = explode($localFileName, $imagePathArray[1]);
-            $extraPathName = pathinfo($allData["asset"]["name"], PATHINFO_EXTENSION);;
+
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
+            $extraPathName = pathinfo($allData["asset"]["name"], PATHINFO_EXTENSION);
 
             $localFilePath = $this->appendNewFileName($path . $extraPathName . $localFileName);
             $this->validateRemoteFileExtensions($localFilePath);
@@ -331,6 +331,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      */
     private function validateRemoteFileExtensions($filePath)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
         $allowedExtensions = (array) $this->getStorage()->getAllowedExtensions($this->getRequest()->getParam('type'));
         if (!$this->extensionValidator->isValid($extension) || !in_array($extension, $allowedExtensions)) {
@@ -339,15 +340,20 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     }
 
     /**
+     * Append result save remove image
+     *
      * @param string $filePath
      * @return mixed
      */
     protected function appendResultSaveRemoteImage($filePath)
     {
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $fileInfo = pathinfo($filePath);
         $result['name'] = $fileInfo['basename'];
         $result['type'] = $this->imageAdapter->getMimeType();
         $result['error'] = 0;
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $result['size'] = filesize($filePath);
         $result['url'] = $this->getRequest()->getParam('remote_image');
         $result['file'] = $filePath;
@@ -384,6 +390,8 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     protected function appendNewFileName($localFilePath)
     {
         $fileName = Uploader::getNewFileName($localFilePath);
+
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $fileInfo = pathinfo($localFilePath);
         return $fileInfo['dirname'] . DIRECTORY_SEPARATOR . $fileName;
     }
@@ -391,7 +399,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     /**
      * Append an absolute file system path
      *
-     * @param $localTmpFile
+     * @param string $localTmpFile
      * @return string
      * @throws \Magento\Framework\Exception\ValidatorException
      */

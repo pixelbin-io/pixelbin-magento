@@ -103,12 +103,14 @@ class NewVideo extends \Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVid
         $result = __('Supported: Vimeo');
         $messages = "";
         if ($this->mediaHelper->getYouTubeApiKey() === null) {
+            // @codingStandardsIgnoreLine
             $messages .= __('<br>*To add YouTube video, please <a href="%1">enter YouTube API Key</a> first.', $this->getConfigApiKeyUrl());
         } else {
             $result .= __(', YouTube');
         }
 
         if (!$this->helperData->isModuleEnabled()) {
+            // @codingStandardsIgnoreLine
             $messages .= __('<br>*To add Pixelbin video, please <a href="%1">configure your module from configuration</a> first.', $this->getPixelbinConfigUrl());
         } else {
             $result .= __(', Pixelbin');
@@ -133,6 +135,8 @@ class NewVideo extends \Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVid
     }
 
     /**
+     * Get placeholder url
+     *
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -146,8 +150,8 @@ class NewVideo extends \Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVid
         ];
         foreach ($configPaths as $configPath) {
             if (($path = $storeManager->getStore()->getConfig($configPath))) {
-                return $storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/placeholder/' . $path;
-                break;
+                return $storeManager->getStore()
+                        ->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . 'catalog/product/placeholder/' . $path;
             }
         }
         return $this->getViewFileUrl('Pixelbinio_Pixelbin::images/pixelbin_cloud_glyph_blue.png');

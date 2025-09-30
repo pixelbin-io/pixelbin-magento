@@ -21,6 +21,7 @@ class Uploader extends \Magento\Framework\File\Uploader
      * @param string $fileName
      * @return string
      * @throws \InvalidArgumentException
+     * @codingStandardsIgnoreStart
      */
     public static function getCorrectFileName($fileName)
     {

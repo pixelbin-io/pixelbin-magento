@@ -36,6 +36,14 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
         $this->_init(PixelbinSynchronisationResourceModel::class);
     }
 
+    /**
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param ResourceConnection $resourceConnection
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -51,6 +59,7 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
     /**
      * Truncate table
      *
+     * @param string $tableName
      * @return $this
      * @throws LocalizedException
      */
@@ -69,7 +78,9 @@ class PixelbinSynchronisation extends \Magento\Framework\Model\AbstractModel imp
     }
 
     /**
-     * @param $tableName
+     * Update all sync to pending
+     *
+     * @param string $tableName
      * @return $this
      * @throws LocalizedException
      */

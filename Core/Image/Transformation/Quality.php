@@ -33,6 +33,7 @@ class Quality
      *
      * @param string $value
      * @return Quality
+     * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {

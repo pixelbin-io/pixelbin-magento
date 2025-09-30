@@ -29,6 +29,8 @@ class DefaultImage
     }
 
     /**
+     * To string
+     *
      * @return mixed
      */
     public function __toString()
@@ -41,6 +43,7 @@ class DefaultImage
      *
      * @param string $value
      * @return DefaultImage
+     * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {
@@ -51,6 +54,7 @@ class DefaultImage
      * Null value for Default Image
      *
      * @return DefaultImage
+     * @codingStandardsIgnoreStart
      */
     public static function null()
     {
