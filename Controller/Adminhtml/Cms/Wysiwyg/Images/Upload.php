@@ -136,7 +136,6 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      * @param Context $context
      * @param Registry $coreRegistry
      * @param JsonFactory $resultJsonFactory
-     * @param DirectoryResolver|null $directoryResolver
      * @param DirectoryList $directoryList
      * @param Config $mediaConfig
      * @param Filesystem $fileSystem
@@ -151,6 +150,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      * @param SaveAssetsInterface $mediaAssetSave
      * @param Logger $logger
      * @param UploadFileToPixelbin $uploadFileToPixelbin
+     * @param DirectoryResolver|null $directoryResolver
      */
     public function __construct(
         Context $context,
