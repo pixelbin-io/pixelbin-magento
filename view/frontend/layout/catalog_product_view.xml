@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block class="Pixelbinio\Pixelbin\Block\VideoSettings" name="pixelbin.video.settings" before="product.info.media.video" template="Pixelbinio_Pixelbin::product/video/settings.phtml" />
+        </referenceContainer>
+    </body>
+</page>

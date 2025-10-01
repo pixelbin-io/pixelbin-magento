@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="pixelbin_synchronisation" resource="default" engine="innodb" comment="Pixelbin Synchronisation">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="10" identity="true"
+                comment="Entity Id"/>
+        <column xsi:type="varchar" length="255" name="image_path" comment="Image Path"/>
+        <column xsi:type="text" name="file_data" nullable="true" comment="File Data"/>
+        <column xsi:type="varchar" length="255" name="sync_status" comment="Sync Status"/>
+        <column xsi:type="varchar" length="255" name="error_message" comment="Error Message"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+    <table name="pixelbin_image_sync_logs" resource="default" engine="innodb" comment="Pixelbin Synchronisation">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" padding="10" identity="true"
+                comment="Entity Id"/>
+        <column xsi:type="text" name="request" comment="Request"/>
+        <column xsi:type="text" name="response" comment="Response"/>
+        <column xsi:type="varchar" length="255" name="sync_type" nullable="true" comment="Sync Type"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

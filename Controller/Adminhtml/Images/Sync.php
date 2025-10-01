@@ -1,0 +1,142 @@
+<?php
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+
+namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Images;
+
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\MediaStorage\Model\File\Storage as StorageModel;
+use Pixelbinio\Pixelbin\Api\Data\PixelbinSynchronisationInterface;
+use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
+use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
+use Magento\Framework\App\ResourceConnection;
+use Pixelbinio\Pixelbin\Model\PixelbinSynchronisation;
+
+class Sync extends Action
+{
+    /**
+     * @var HelperData
+     */
+    protected $helperData;
+
+    /**
+     * @var StorageModel
+     */
+    protected $storageModel;
+
+    /**
+     * @var UploadFileToPixelbin
+     */
+    protected $uploadFileToPixelbin;
+
+    /**
+     * @var PixelbinSynchronisation
+     */
+    protected $pixelbinSynchronisation;
+
+    /**
+     * @var ResourceConnection
+     */
+    protected $resourceConnection;
+
+    /**
+     * Sync construct
+     *
+     * @param Context $context
+     * @param HelperData $helperData
+     * @param StorageModel $storageModel
+     * @param UploadFileToPixelbin $uploadFileToPixelbin
+     * @param PixelbinSynchronisation $pixelbinSynchronisation
+     * @param ResourceConnection $resourceConnection
+     */
+    public function __construct(
+        Context $context,
+        HelperData $helperData,
+        StorageModel $storageModel,
+        UploadFileToPixelbin $uploadFileToPixelbin,
+        PixelbinSynchronisation $pixelbinSynchronisation,
+        ResourceConnection $resourceConnection
+    ) {
+        $this->helperData = $helperData;
+        $this->storageModel = $storageModel;
+        $this->uploadFileToPixelbin = $uploadFileToPixelbin;
+        $this->pixelbinSynchronisation = $pixelbinSynchronisation;
+        $this->resourceConnection = $resourceConnection;
+        parent::__construct($context);
+    }
+
+    /**
+     * Sync execute method
+     *
+     * @return void
+     */
+    public function execute()
+    {
+        try {
+            $pixelbinSynchronisationTableName = PixelbinSynchronisationInterface::TABLE_NAME;
+            $this->pixelbinSynchronisation->truncateTable($pixelbinSynchronisationTableName);
+
+            $sourceModel = $this->storageModel->getStorageModel();
+            $offset = 0;
+            $allMediaFiles = [];
+            while (($files = $sourceModel->exportFiles($offset, 1)) !== false) {
+                $eachFileData = [];
+                foreach ($files as $file) {
+                    unset($file["content"]);
+                    $folderMatchCount = 0;
+                    str_replace(HelperData::EXCLUDE_FOLDERS, '', (string)$file["directory"], $folderMatchCount);
+                    if ($folderMatchCount > 0) {
+                        $this->helperData->logData("EXCLUDE_FOLDERS directory found => " . $file["directory"]);
+                        continue;
+                    }
+                    $pathInfo = $this->uploadFileToPixelbin->getPathInfo($file["filename"]);
+                    $fileExtension = $pathInfo["extension"] ?? "";
+                    if (empty($fileExtension)) {
+                        $this->helperData->logData("File extension is not found => " . $file["filename"]);
+                        continue;
+                    }
+                    if (!in_array($fileExtension, HelperData::ALLOWED_EXTENSION_SYNC)) {
+                        $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
+                        continue;
+                    }
+                    $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
+                    $file["full_path"] = $fileName;
+                    $eachFileData[] = $file;
+                    $allMediaFiles[] = [
+                        PixelbinSynchronisationInterface::KEY_IMAGE_PATH => $file["full_path"],
+                        PixelbinSynchronisationInterface::KEY_FILE_DATA => json_encode($eachFileData),
+                        PixelbinSynchronisationInterface::KEY_SYNC_STATUS => SyncStatus::STATUS_PENDING,
+                    ];
+                }
+                $offset += count($files);
+            }
+            if (!empty($allMediaFiles)) {
+                $connection = $this->resourceConnection->getConnection();
+                $connection->beginTransaction();
+                $connection->insertMultiple($pixelbinSynchronisationTableName, $allMediaFiles);
+                $connection->commit();
+            }
+            $this->messageManager->addSuccessMessage(
+                __("Sync Collection added in queue")
+            );
+        } catch (\Exception $ex) {
+            $this->messageManager->addErrorMessage(
+                __($ex->getMessage())
+            );
+            $this->helperData->logData("error exception while manual sync.", [], "error");
+            $this->helperData->logData($ex->getMessage(), [], "error");
+        }
+        $this->_redirect($this->_redirect->getRefererUrl());
+    }
+}

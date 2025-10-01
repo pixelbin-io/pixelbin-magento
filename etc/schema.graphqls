@@ -1,0 +1,13 @@
+interface MediaGalleryInterface @doc(description: "Contains basic information about a product image or video.") @typeResolver(class: "Magento\\CatalogGraphQl\\Model\\MediaGalleryTypeResolver") {
+    url: String @doc(description: "The URL of the product image or video.") @resolver(class: "Pixelbinio\\Pixelbin\\Model\\Resolver\\Product\\MediaGallery\\Url")
+    label: String @doc(description: "The label of the product image or video.")
+    position: Int @doc(description: "The media item's position after it has been sorted.")
+    disabled: Boolean @doc(description: "Indicates whether the image is hidden from view.")
+}
+
+type Query {
+    cmsPage (
+        id: Int @doc(description: "The ID of the CMS page.") @deprecated(reason: "Use `identifier` instead.")
+        identifier: String @doc(description: "The identifier of the CMS page.")
+    ): CmsPage @resolver(class: "Pixelbinio\\Pixelbin\\Model\\Resolver\\Page") @doc(description: "Return details about a CMS page.") @cache(cacheIdentity: "Magento\\CmsGraphQl\\Model\\Resolver\\Page\\Identity")
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!-- pixelbin/resources/image -->
+    <route method="GET" url="/V1/pixelbin/resources/image">
+        <service class="Pixelbinio\Pixelbin\Api\ResourcesManagementInterface" method="getImage"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!--/ pixelbin/resources/image -->
+
+    <!-- pixelbin/resources/video -->
+    <route method="GET" url="/V1/pixelbin/resources/video">
+        <service class="Pixelbinio\Pixelbin\Api\ResourcesManagementInterface" method="getVideo"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!--/ pixelbin/resources/video -->
+
+    <!-- pixelbin/resources/video -->
+    <route method="GET" url="/V1/pixelbin/resources/tag">
+        <service class="Pixelbinio\Pixelbin\Api\ResourcesManagementInterface" method="getResourcesByTag"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!--/ pixelbin/resources/video -->
+</routes>

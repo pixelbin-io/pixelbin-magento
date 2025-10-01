@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!--  For console command  -->
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="pixelbin_upload_all" xsi:type="object">Pixelbinio\Pixelbin\Console\UploadImageToPixelBin</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!--  For images logs grid  -->
+     <virtualType name="Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">pixelbin_synchronisation</argument>
+            <argument name="resourceModel" xsi:type="string">Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="pixelbin_images_data_list_data_source" xsi:type="string">
+                    Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Custom logger for this extension it will generate pixelbin.log file in /var/log/ -->
+    <type name="Pixelbinio\Pixelbin\Logger\Handler">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+        </arguments>
+    </type>
+    <type name="Pixelbinio\Pixelbin\Logger\Logger">
+        <arguments>
+            <argument name="name" xsi:type="string">PixelbinLogger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="system" xsi:type="object">Pixelbinio\Pixelbin\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\MediaStorage\Model\File\Uploader">
+        <plugin name="pixelbin_file_uploader_plugin" type="Pixelbinio\Pixelbin\Model\MediaStorage\File\Uploader"/>
+    </type>
+    <type name="Magento\Framework\File\Uploader">
+        <plugin name="pixelbin_framework_file_uploader_plugin" type="Pixelbinio\Pixelbin\Model\MediaStorage\Framework\Uploader"/>
+    </type>
+    <preference for="Pixelbinio\Pixelbin\Api\ResourcesManagementInterface" type="Pixelbinio\Pixelbin\Model\Repository\ResourcesManagement"/>
+    <type name="Magento\Cms\Model\Wysiwyg\Images\Storage">
+        <arguments>
+            <argument name="extensions" xsi:type="array">
+                <item name="allowed" xsi:type="array">
+                    <item name="svg" xsi:type="string">image/svg</item>
+                    <item name="svg-xml" xsi:type="string">image/svg+xml</item>
+                    <item name="webp" xsi:type="string">image/webp</item>
+                    <item name="tiff" xsi:type="string">image/tiff</item>
+                    <item name="tif" xsi:type="string">image/tif</item>
+                    <item name="avif" xsi:type="string">image/avif</item>
+                    <item name="raw" xsi:type="string">image/raw</item>
+                </item>
+                <item name="image_allowed" xsi:type="array">
+                    <item name="svg" xsi:type="string">image/svg</item>
+                    <item name="svg-xml" xsi:type="string">image/svg+xml</item>
+                    <item name="webp" xsi:type="string">image/webp</item>
+                    <item name="tiff" xsi:type="string">image/tiff</item>
+                    <item name="tif" xsi:type="string">image/tif</item>
+                    <item name="avif" xsi:type="string">image/avif</item>
+                    <item name="raw" xsi:type="string">image/raw</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magento\Catalog\CategoryImageUpload" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+                <item name="webp" xsi:type="string">webp</item>
+                <item name="tiff" xsi:type="string">image/tiff</item>
+                <item name="tif" xsi:type="string">image/tif</item>
+                <item name="avif" xsi:type="string">image/avif</item>
+                <item name="raw" xsi:type="string">image/raw</item>
+            </argument>
+            <argument name="allowedMimeTypes" xsi:type="array">
+                <item name="svg" xsi:type="string">image/svg</item>
+                <item name="svg-xml" xsi:type="string">image/svg+xml</item>
+                <item name="webp" xsi:type="string">image/webp</item>
+                <item name="tiff" xsi:type="string">image/tiff</item>
+                <item name="tif" xsi:type="string">image/tif</item>
+                <item name="avif" xsi:type="string">image/avif</item>
+                <item name="raw" xsi:type="string">image/raw</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\MediaGallerySynchronization\Model\FetchMediaStorageFileBatches">
+        <arguments>
+            <argument name="fileExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+                <item name="webp" xsi:type="string">webp</item>
+                <item name="tiff" xsi:type="string">tiff</item>
+                <item name="tif" xsi:type="string">tif</item>
+                <item name="avif" xsi:type="string">avif</item>
+                <item name="raw" xsi:type="string">raw</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\MediaStorage\App\Media">
+        <plugin name="pixelbin-web-images-media-plugin" type="Pixelbinio\Pixelbin\Plugin\App\MediaPlugin" />
+    </type>
+    <type name="Magento\MediaStorage\Model\File\Validator\NotProtectedExtension">
+        <plugin name="pixelbin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\File\Validator\NotProtectedExtensionPlugin" />
+    </type>
+    <type name="Magento\Cms\Model\Wysiwyg\Images\Storage">
+        <plugin name="pixelbin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Wysiwyg\Images\StoragePlugin" />
+    </type>
+    <type name="Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Thumbnail">
+        <plugin name="pixelbinallow-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\Images\ThumbnailPlugin" />
+    </type>
+    <type name="Magento\Cms\Controller\Adminhtml\Wysiwyg\Directive">
+        <plugin name="allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\DirectivePlugin" />
+    </type>
+    <type name="Magento\MediaGallerySynchronization\Model\CreateAssetFromFile">
+        <arguments>
+            <argument name="assetFactory" xsi:type="object">Pixelbinio\Pixelbin\Model\AssetFactory</argument>
+        </arguments>
+    </type>
+    <type name="Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload">
+        <arguments>
+            <argument name="uploaderFactory" xsi:type="object">Pixelbinio\Pixelbin\Model\File\UploaderFactory</argument>
+        </arguments>
+    </type>
+</config>

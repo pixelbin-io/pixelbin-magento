@@ -1,0 +1,49 @@
+<?php
+/**
+ * @var \Pixelbinio\Pixelbin\Block\System\Config\SyncButton $block
+ */
+?>
+<?php
+$totalSyncCollectionCount = $block->getTotalSyncCollection()->getSize();
+$successSyncCollectionCount = $block->getSuccessSyncCollection()->getSize();
+$pendingSyncCollectionCount = $block->getPendingSyncCollection()->getSize();
+$filedSyncCollectionCount = $block->getFiledSyncCollection()->getSize();
+?>
+<div class="pp-buttons-container">
+    <button
+        id="<?= /** @escapeNotVerified */ $block->getId() ?>"
+        type="button"
+        onclick="window.location='<?= /** @escapeNotVerified */ $block->getAjaxCheckUrl() ?>'"
+        class="action-default scalable primary ui-button ui-corner-all ui-widget"
+        <?php if ($pendingSyncCollectionCount>0): ?>
+        disabled="disabled"
+        <?php endif; ?>
+    >
+        <span>
+            <span>
+                <span><?= /** @escapeNotVerified */ $escaper->escapeHtml($block->getButtonLabel()); ?></span>
+            </span>
+        </span>
+    </button>
+</div>
+<?php
+if ($successSyncCollectionCount > 0 && $pendingSyncCollectionCount == 0) {
+    $pendingSyncCollectionCount = ($totalSyncCollectionCount-$successSyncCollectionCount)-$filedSyncCollectionCount;
+}
+?>
+<?php if ($totalSyncCollectionCount > 0): ?>
+    <p><?= /** @escapeNotVerified */
+        __("Total Media file %1", $totalSyncCollectionCount) ?></p>
+    <p><?= /** @escapeNotVerified */
+        __("Total Media file synced %1", $successSyncCollectionCount) ?></p>
+    <p><?= /** @escapeNotVerified */
+        __("Total Media file pending to sync %1", $pendingSyncCollectionCount) ?></p>
+    <p><?= /** @escapeNotVerified */
+        __("Total Media file failed %1", $filedSyncCollectionCount) ?></p>
+<?php endif; ?>
+<script>
+    const btnId = "<?= /** @escapeNotVerified */ $block->getId() ?>";
+    document.getElementById(btnId).addEventListener("click", function() {
+        this.disabled = true;
+    });
+</script>

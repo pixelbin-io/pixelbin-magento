@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var \Pixelbinio\Pixelbin\Block\Lazyload $block
+ */
+?>
+<?php if (!$block->isEnabledLazyload()) {
+    return;
+} ?>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "pixelbinLazyload": <?= /** @escapeNotVerified */ $block->getLazyloadOptions() ?>
+        }
+    }
+</script>

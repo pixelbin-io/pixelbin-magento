@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="pixelbinio" translate="label" sortOrder="100">
+            <label>Pixelbin.io</label>
+        </tab>
+        <section id="pixelbin" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Configuration</label>
+            <tab>pixelbinio</tab>
+            <resource>Pixelbinio_Pixelbin::config_Pixelbinio_Pixelbin</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="is_enable" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Module Enable/Disable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="app_configuration" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Application Credentials</label>
+                <field id="cloud_name" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cloud Name</label>
+                    <comment><![CDATA[Changing the cloud name will switch your PixelBin account, potentially disrupting image sync between Magento and PixelBin storage. This may require resyncing files, resulting in additional charges.]]></comment>
+                </field>
+                <field id="zone" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Zone Slug</label>
+                    <comment><![CDATA[Check how to get your zone slug <a href="https://www.pixelbin.io/docs/external-storage/zones/configuring/#general" target="_blank">Click Here</a>]]></comment>
+                </field>
+                <field id="api_secret" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>APP Token</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment><![CDATA[Check how to get your APP token <a href="https://www.pixelbin.io/docs/tokens/" target="_blank">Click Here</a>]]></comment>
+                </field>
+            </group>
+            <group id="pixelbin_image_sync" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Manual Sync</label>
+                <field id="enable_manual_sync_cron" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Manual Sync Cron</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="image_sync_time" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cron Time to sync images</label>
+                    <backend_model>Pixelbinio\Pixelbin\Model\Config\Backend\Cron\CronSyncTime</backend_model>
+                </field>
+                <field id="sync" translate="label" type="button" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Sync Image</label>
+                    <frontend_model>Pixelbinio\Pixelbin\Block\System\Config\SyncButton</frontend_model>
+                </field>
+            </group>
+            <group id="image_transformations" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Default Image Transformations</label>
+                <field id="auto_optimisation" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Custom Transformation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="global_custom_transformation" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Global Custom Transformation</label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field</frontend_model>
+                    <validate>validate-transformation</validate>
+                </field>
+                <field id="product_custom_transformation" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Products Custom Transformation</label>
+                    <frontend_model>Magento\Config\Block\System\Config\Form\Field</frontend_model>
+                    <validate>validate-transformation</validate>
+                </field>
+            </group>
+            <group id="lazyload" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Lazyload Settings</label>
+                <field id="lazyload_enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Lazyload</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[Enable lazyload (using <a href="https://github.com/tuupola/lazyload/tree/1.9.7" target="_blank" title="Lazy Load Plugin for jQuery" >Lazy Load Plugin for jQuery</a>).]]></comment>
+                </field>
+                <field id="is_enable_for_cms_block" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Apply on CMS Blocks</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="lazyload_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="is_exclude_for_cms_block" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>CMS Blocks to Exclude</label>
+                    <comment>List of CMS blocks to exclude from Lazyloading. Use this if there are conflicts on some of the blocks.</comment>
+                    <source_model>Pixelbinio\Pixelbin\Model\Config\Source\CmsBlocks</source_model>
+                    <can_be_empty>1</can_be_empty>
+                    <depends>
+                        <field id="lazyload_enabled">1</field>
+                        <field id="is_enable_for_cms_block">1</field>
+                    </depends>
+                </field>
+                <field id="threshold" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Lazyload Threshold</label>
+                    <comment>The threshold for how many pixels from the top of the page before lazy loading is applied to your images.</comment>
+                </field>
+                <field id="effect" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Lazyload Effect</label>
+                    <comment>The effect to use to show the loaded images.</comment>
+                    <config_path>pixelbin/lazyload/effect</config_path>
+                    <source_model>Pixelbinio\Pixelbin\Model\Config\Source\Lazyload\Effect</source_model>
+                    <depends>
+                        <field id="lazyload_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="placeholder" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Lazyload Placeholder</label>
+                    <comment>The transformation effect that will be used on the images as a loading placeholder.</comment>
+                    <config_path>pixelbin/lazyload/placeholder</config_path>
+                    <source_model>Pixelbinio\Pixelbin\Model\Config\Source\Lazyload\Placeholder</source_model>
+                    <depends>
+                        <field id="lazyload_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="developer" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Developer Settings</label>
+                <field id="enabled_log" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Log</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[The log file can be found at var/log/pixelbin.log for further analysis.]]></comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

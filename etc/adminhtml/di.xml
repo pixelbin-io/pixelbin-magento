@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+/**
+ * Iksula
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ * @version     1.0.0
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery\Content"
+                type="Pixelbinio\Pixelbin\Block\Adminhtml\Product\Helper\Form\Gallery\Content"/>
+    <preference for="Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVideo"
+                type="Pixelbinio\Pixelbin\Block\Adminhtml\Product\Edit\NewVideo" />
+    <type name="Magento\MediaGalleryIntegration\Plugin\SaveImageInformation">
+        <arguments>
+            <argument name="imageExtensions" xsi:type="array">
+                <item name="svg" xsi:type="string">svg</item>
+                <item name="webp" xsi:type="string">webp</item>
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="png" xsi:type="string">png</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="tiff" xsi:type="string">tiff</item>
+                <item name="tif" xsi:type="string">tif</item>
+                <item name="avif" xsi:type="string">avif</item>
+                <item name="raw" xsi:type="string">raw</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Config\Model\Config">
+        <plugin name="pixelbin_before_config_save_plugin"
+                type="Pixelbinio\Pixelbin\Plugin\Config\BeforeConfigSavePlugin"
+                sortOrder="10"/>
+    </type>
+    <preference for="Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload" type="Pixelbinio\Pixelbin\Controller\Adminhtml\ContentType\Image\Upload"/>
+    <preference for="Magento\Framework\File\Uploader" type="Pixelbinio\Pixelbin\Model\File\Uploader"/>
+    <preference for="Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload" type="Pixelbinio\Pixelbin\Controller\Adminhtml\Product\Gallery\Upload"/>
+</config>
