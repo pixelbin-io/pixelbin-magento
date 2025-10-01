@@ -113,7 +113,7 @@ class Collection extends PixelbinImageSyncLogsCollection implements SearchInterf
      * @param SearchCriteriaInterface $searchCriteria
      * @return $this
      */
-    public function setSearchCriteria(SearchCriteriaInterface $searchCriteria = null)
+    public function setSearchCriteria(SearchCriteriaInterface $searchCriteria)
     {
         return $this;
     }
