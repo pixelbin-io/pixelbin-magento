@@ -63,8 +63,8 @@ class Url implements ResolverInterface
         Field $field,
         $context,
         ResolveInfo $info,
-        array $value = null,
-        array $args = null
+        ?array $value = null,
+        ?array $args = null
     ) {
         if (!isset($value['image_type']) && !isset($value['file'])) {
             throw new LocalizedException(__('"image_type" value should be specified'));
