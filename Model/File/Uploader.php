@@ -41,11 +41,11 @@ class Uploader extends \Magento\Framework\File\Uploader
     public function __construct(
         HelperData $helperData,
         string $fileId,
-        Mime $fileMime = null,
-        DirectoryList $directoryList = null,
-        DriverPool $driverPool = null,
-        TargetDirectory $targetDirectory = null,
-        Filesystem $filesystem = null
+        ?Mime $fileMime = null,
+        ?DirectoryList $directoryList = null,
+        ?DriverPool $driverPool = null,
+        ?TargetDirectory $targetDirectory = null,
+        ?Filesystem $filesystem = null
     ) {
         parent::__construct(
             $fileId,
