@@ -170,7 +170,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         SaveAssetsInterface $mediaAssetSave,
         Logger $logger,
         UploadFileToPixelbin $uploadFileToPixelbin,
-        DirectoryResolver $directoryResolver = null
+        ?DirectoryResolver $directoryResolver = null
     ) {
         parent::__construct($context, $coreRegistry, $resultJsonFactory, $directoryResolver);
         $this->directoryList = $directoryList;

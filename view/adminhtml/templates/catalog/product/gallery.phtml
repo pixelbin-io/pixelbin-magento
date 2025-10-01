@@ -55,8 +55,7 @@ $elementToggleCode = $element->getToggleCode() ?
      data-mage-init='{"openVideoModal":{}}'
      data-parent-component="<?= $escaper->escapeHtml($block->getData('config/parentComponent')) ?>"
      data-images="<?= $escaper->escapeHtmlAttr($block->getImagesJson()) ?>"
-     data-types="<?= $escaper->escapeHtml($block->helper(\Magento\Framework\Json\Helper\Data::class)
-         ->jsonEncode($block->getImageTypes())) ?>">
+     data-types="<?= $escaper->escapeHtml(json_encode($block->getImageTypes())) ?>">
 
     <?php if ($pixelbinWidgetOptions): ?>
         <div id="gallery_inner_add_from_pixelbin_placeholder_button_<?= /** @escapeNotVerified */
