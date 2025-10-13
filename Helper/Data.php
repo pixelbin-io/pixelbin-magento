@@ -14,7 +14,9 @@
 namespace Pixelbinio\Pixelbin\Helper;
 
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
@@ -350,28 +352,6 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Check use of default image enabled
-     *
-     * @return string
-     * @throws NoSuchEntityException
-     */
-    // public function isDefaultImageEnabled()
-    // {
-    //     return $this->getConfigValue(self::XML_PATH_SETUP_USE_DEFAULT_IMAGE);
-    // }
-
-    /**
-     * Get default image
-     *
-     * @return string
-     * @throws NoSuchEntityException
-     */
-    // public function getDefaultImage()
-    // {
-    //     return $this->getMediaUrl() . 'pixel_bin/' . $this->getConfigValue(self::XML_PATH_SETUP_DEFAULT_IMAGE);
-    // }
-
-    /**
      * Replace product image url with pixelbin url
      *
      * @param string $imageUrl
@@ -380,57 +360,62 @@ class Data extends AbstractHelper
      */
     public function replaceProductImageUrlWithPixelbin($imageUrl)
     {
-        if ($imageUrl != null) {
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction
-            $path = parse_url($imageUrl, PHP_URL_PATH);
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction
-            $lastPart = basename($path);
-            $extension = explode('.', $lastPart);
-            $extension = strtolower($extension[1]);
+        return $this->replaceImageUrlWithPixelbin($imageUrl, true);
+    }
 
-            $allowed_formats = self::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
+    /**
+     * Common function to replace image URL with Pixelbin transformation
+     *
+     * @param string $imageUrl
+     * @param bool $isProduct
+     * @param bool $isGraphql
+     * @return string
+     * @throws NoSuchEntityException
+     */
+    private function replaceImageUrlWithPixelbin($imageUrl, $isProduct = false, $isGraphql = false)
+    {
+        if (empty($imageUrl)) {
+            return $imageUrl;
+        }
 
-            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+        $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
+        $imagePathArray = explode('media/', $imagePath);
+        $pixelbinImage = (is_array($imagePathArray) && isset($imagePathArray[1]))
+            ? $this->getAppZone() . $imagePathArray[1]
+            : $imagePath;
 
-            $imagePathArray = explode('media/', $imagePath);
+        $storeId = $this->getStoreId();
+        $allowedFormats = self::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
 
-            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
-                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
-            } else {
-                $pixelbinImage = $imagePath;
+        // @codingStandardsIgnoreLine
+        $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
+        if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowedFormats)) {
+            $globalTransformation = $this->getGlobalCustomTransformation($storeId);
+            $productTransformation = $this->getProductCustomTransformation($storeId);
+
+            // For CMS images (no product transformation)
+            if (!$isProduct && $globalTransformation) {
+                $transformation = '/' . $globalTransformation . '/';
+                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
 
-            $storeId = $this->getStoreId();
-
-            if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
-                $globalTransformation = $this->getGlobalCustomTransformation($storeId);
-                $productTransformation = $this->getProductCustomTransformation($storeId);
-
+            // For Product Images
+            if ($isProduct) {
                 if ($globalTransformation && !$productTransformation) {
-                    $transformation = '/'.$globalTransformation.'/';
-                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
+                    $transformation = '/' . $globalTransformation . '/';
+                } elseif (!$globalTransformation && $productTransformation) {
+                    $transformation = '/' . $productTransformation . '/';
+                } else {
+                    $transformation = '/' . ($productTransformation ?: $globalTransformation) . '/';
                 }
-
-                if (!$globalTransformation && $productTransformation) {
-                    $transformation = '/'.$productTransformation.'/';
-                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                }
-
-                if ($globalTransformation && $productTransformation) {
-                    if ($globalTransformation === $productTransformation) {
-                        $transformation = '/'.$globalTransformation.'/';
-                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                    } else {
-                        $transformation = '/'.$productTransformation.'/';
-                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                    }
-                }
-            }
-
-            if ($this->checkSyncStatus()) {
-                $imageUrl = $pixelbinImage;
+                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
             }
         }
+
+        if ($this->checkSyncStatus() || $isGraphql) {
+            return $pixelbinImage;
+        }
+
         return $imageUrl;
     }
 
@@ -443,40 +428,7 @@ class Data extends AbstractHelper
      */
     public function replaceCmsImageUrlWithPixelbin($imageUrl)
     {
-        if ($imageUrl != null) {
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction
-            $path = parse_url($imageUrl, PHP_URL_PATH);
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction
-            $lastPart = basename($path);
-            $extension = explode('.', $lastPart);
-            $extension = strtolower($extension[1]);
-
-            $allowed_formats = self::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
-
-            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-
-            $imagePathArray = explode('media/', $imagePath);
-
-            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
-                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
-            } else {
-                $pixelbinImage = $imagePath;
-            }
-
-            $storeId = $this->getStoreId();
-            if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
-                $globalTransformation = $this->getGlobalCustomTransformation($storeId);
-                if (!empty($globalTransformation)) {
-                    $transformation = '/'.$globalTransformation.'/';
-                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                }
-            }
-
-            if ($this->checkSyncStatus()) {
-                $imageUrl = $pixelbinImage;
-            }
-        }
-        return $imageUrl;
+        return $this->replaceImageUrlWithPixelbin($imageUrl, false);
     }
 
     /**
@@ -704,14 +656,7 @@ class Data extends AbstractHelper
      */
     public function isVectorImage($file)
     {
-        //@codingStandardsIgnoreStart
-        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-        if (empty($extension) && file_exists($file)) {
-            $mimeType = mime_content_type($file);
-            $extension = str_replace('image/', '', $mimeType);
-        }
-        return in_array($extension, $this->getVectorExtensions());
-        //@codingStandardsIgnoreEnd
+        return $this->getExtensionForWebpAndVector($file, $this->getVectorExtensions());
     }
 
     /**
@@ -732,13 +677,25 @@ class Data extends AbstractHelper
      */
     public function isWebImage($file)
     {
+        return $this->getExtensionForWebpAndVector($file, $this->getWebImageExtensions());
+    }
+
+    /**
+     * Get Extension for webp and vector
+     *
+     * @param string $file
+     * @param array $extensions
+     * @return bool
+     */
+    public function getExtensionForWebpAndVector($file, $extensions)
+    {
         //@codingStandardsIgnoreStart
         $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
         if (empty($extension) && file_exists($file)) {
             $mimeType = mime_content_type($file);
             $extension = str_replace('image/', '', $mimeType);
         }
-        return in_array($extension, $this->getWebImageExtensions());
+        return in_array($extension, $extensions);
         //@codingStandardsIgnoreEnd
     }
 
@@ -761,56 +718,7 @@ class Data extends AbstractHelper
      */
     public function replaceGraphqlProductImageUrlWithPixelbin($imageUrl)
     {
-        if ($imageUrl != null) {
-            // if ($this->isDefaultImageEnabled()) {
-            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-            //         strpos($imageUrl, 'pixel_bin') !== 0) {
-            //         return $this->getDefaultImage();
-            //     }
-            // }
-
-            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-
-            $imagePathArray = explode('media/', $imagePath);
-
-            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
-                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
-            } else {
-                $pixelbinImage = $imagePath;
-            }
-
-            $storeId = $this->getStoreId();
-
-            if ($this->isImageTransformationEnabled($storeId)) {
-                $globalTransformation = $this->getGlobalCustomTransformation($storeId);
-                $productTransformation = $this->getProductCustomTransformation($storeId);
-
-                if ($globalTransformation && !$productTransformation) {
-                    $transformation = '/'.$globalTransformation.'/';
-                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                }
-
-                if (!$globalTransformation && $productTransformation) {
-                    $transformation = '/'.$productTransformation.'/';
-                    $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                }
-
-                if ($globalTransformation && $productTransformation) {
-                    if ($globalTransformation === $productTransformation) {
-                        $transformation = '/'.$globalTransformation.'/';
-                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                    } else {
-                        $transformation = '/'.$productTransformation.'/';
-                        $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-                    }
-                }
-            }
-
-            if ($pixelbinImage) {
-                $imageUrl = $pixelbinImage;
-            }
-        }
-        return $imageUrl;
+        return $this->replaceImageUrlWithPixelbin($imageUrl, true, true);
     }
 
     /**
@@ -822,37 +730,7 @@ class Data extends AbstractHelper
      */
     public function replaceGraphqlCmsImageUrlWithPixelbin($imageUrl)
     {
-        if ($imageUrl != null) {
-
-            // if ($this->isDefaultImageEnabled()) {
-            //     if (strpos($imageUrl, 'Magento_Catalog/images/product/placeholder/thumbnail.jpg') !== 0 ||
-            //         strpos($imageUrl, 'pixel_bin') !== 0) {
-            //         return $this->getDefaultImage();
-            //     }
-            // }
-
-            $imagePath = preg_replace('/\/cache\/[a-f0-9]{32}\//', '/', $imageUrl);
-
-            $imagePathArray = explode('media/', $imagePath);
-
-            if (is_array($imagePathArray) && array_key_exists(1, $imagePathArray)) {
-                $pixelbinImage = $this->getAppZone().$imagePathArray[1];
-            } else {
-                $pixelbinImage = $imagePath;
-            }
-
-            $storeId = $this->getStoreId();
-            if ($this->isImageTransformationEnabled($storeId)) {
-                $globalTransformation = $this->getGlobalCustomTransformation($storeId);
-                $transformation = '/'.$globalTransformation.'/';
-                $pixelbinImage = preg_replace('/\/original\//', "$transformation", $pixelbinImage);
-            }
-
-            if ($pixelbinImage) {
-                $imageUrl = $pixelbinImage;
-            }
-        }
-        return $imageUrl;
+        return $this->replaceImageUrlWithPixelbin($imageUrl, false, true);
     }
 
     /**

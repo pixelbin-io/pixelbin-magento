@@ -17,38 +17,8 @@ use Magento\Catalog\Block\Product\Image;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
-class AfterGetImageUrl
+class AfterGetImageUrl extends AbstractPixelbinPlugin
 {
-    /**
-     * @var Logger
-     */
-    protected $logger;
-
-    /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
-     * @var \Magento\Framework\View\Asset\Repository
-     */
-    protected $assetRepo;
-
-    /**
-     * @param Logger $logger
-     * @param HelperData $helperData
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo
-     */
-    public function __construct(
-        Logger $logger,
-        HelperData $helperData,
-        \Magento\Framework\View\Asset\Repository $assetRepo
-    ) {
-        $this->logger = $logger;
-        $this->helperData = $helperData;
-        $this->assetRepo = $assetRepo;
-    }
-
     /**
      * After Plugin to change Image Url on Call method for PDP page
      *
@@ -69,7 +39,7 @@ class AfterGetImageUrl
                 $result = $this->helperData->replaceProductImageUrlWithPixelbin($result);
             }
         } catch (\Exception $e) {
-            $this->logger->info("Image URL PDP error" . $e->getMessage());
+            $this->helperData->logData("Image URL PDP error" . $e->getMessage());
         }
 
         return $result;

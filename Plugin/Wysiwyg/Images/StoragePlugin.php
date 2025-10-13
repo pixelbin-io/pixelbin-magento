@@ -45,15 +45,7 @@ class StoragePlugin
      */
     public function aroundResizeFile(Storage $storage, callable $proceed, $source, $keepRatio = true)
     {
-        if ($this->helperData->isVectorImage($source)) {
-            return $source;
-        }
-
-        if ($this->helperData->isWebImage($source)) {
-            return $source;
-        }
-
-        return $proceed($source, $keepRatio);
+        return $this->checkAndProcess($proceed, $source, $keepRatio);
     }
 
     /**
@@ -63,8 +55,22 @@ class StoragePlugin
      * @param callable $proceed
      * @param string $filePath
      * @param bool $checkFile
+     * @return string
      */
     public function aroundGetThumbnailPath(Storage $storage, callable $proceed, $filePath, $checkFile = false)
+    {
+        return $this->checkAndProcess($proceed, $filePath, $checkFile);
+    }
+
+    /**
+     * Check and process
+     *
+     * @param callable $proceed
+     * @param string $filePath
+     * @param bool $checkFile
+     * @return mixed
+     */
+    public function checkAndProcess($proceed, $filePath, $checkFile)
     {
         if ($this->helperData->isVectorImage($filePath)) {
             return $filePath;
