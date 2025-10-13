@@ -33,64 +33,19 @@ use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
 
 class UploadFileToPixelbin extends AbstractHelper
 {
-    /**
-     * @var Data
-     */
     protected $helperData;
-
-    /**
-     * @var FileIo
-     */
     protected $fileIo;
-
-    /**
-     * @var Filesystem `
-     */
     protected $filesystem;
-
-    /**
-     * @var PixelbinImageSyncLogsFactory
-     */
     protected $pixelbinImageSyncLogsFactory;
-
-    /**
-     * @var PixelbinSyncCollectionFactory
-     */
     protected $pixelbinSyncCollectionFactory;
-
-    /**
-     * @var PixelbinSynchronisationFactory
-     */
     protected $pixelbinSynchronisationFactory;
-
-    /**
-     * @var DriverFile
-     */
     protected $driverFile;
-
-    /**
-     * Cache key for media directory absolute path
-     *
-     * @var string
-     */
     protected $mediaDir = "";
-
-    /**
-     * Cache key for pub directory absolute path
-     *
-     * @var string
-     */
     protected $pubDir = "";
-
-    /**
-     * Cache key for Pixelbin class object
-     *
-     * @var null|PixelbinClient
-     */
     protected $pixelbinObj = null;
 
     /**
-     * UploadFileToPixelbin Construct
+     * UploadFileToPixelbin construct
      *
      * @param Context $context
      * @param Data $helperData
@@ -118,12 +73,11 @@ class UploadFileToPixelbin extends AbstractHelper
         $this->pixelbinImageSyncLogsFactory = $pixelbinImageSyncLogsFactory;
         $this->pixelbinSyncCollectionFactory = $pixelbinSyncCollectionFactory;
         $this->pixelbinSynchronisationFactory = $pixelbinSynchronisationFactory;
-
         parent::__construct($context);
     }
 
     /**
-     * Get pixelbin object
+     * Create pixelbin obj
      *
      * @return PixelbinClient
      * @throws LocalizedException
@@ -131,7 +85,7 @@ class UploadFileToPixelbin extends AbstractHelper
     public function getPixelbinObj()
     {
         try {
-            if ($this->pixelbinObj == null) {
+            if ($this->pixelbinObj === null) {
                 $config = new PixelbinConfig([
                     "domain" => $this->helperData->getApiUrl(),
                     "apiSecret" => $this->helperData->getAppApiSecret(),
@@ -141,13 +95,13 @@ class UploadFileToPixelbin extends AbstractHelper
             return $this->pixelbinObj;
         } catch (\Exception $ex) {
             throw new LocalizedException(
-                __("Unable to create pixelbin object error is => " . $ex->getMessage())
+                __("Unable to create pixelbin object: " . $ex->getMessage())
             );
         }
     }
 
     /**
-     * Upload file to pixelbin
+     * Update file to Pixelbin
      *
      * @param array $file
      * @param string $syncType
@@ -162,10 +116,11 @@ class UploadFileToPixelbin extends AbstractHelper
                 file: $this->driverFile->fileOpen($file["absolute_path"], "r"),
                 path: $file["path_folder"],
                 access: AccessEnum::PUBLIC_READ,
-                tags:$file["tags"] ?? [],
+                tags: $file["tags"] ?? [],
                 overwrite: true,
                 filenameOverride: true
             );
+
             $requestData = [
                 "path" => $file["path_folder"],
                 "name" => $file["filename"],
@@ -175,21 +130,21 @@ class UploadFileToPixelbin extends AbstractHelper
                 "overwrite" => true,
                 "filenameOverride" => true,
             ];
-            $this->helperData->logData("request for pixelbin => ".json_encode($requestData));
+
+            $this->helperData->logData("Request for Pixelbin => " . json_encode($requestData));
+
             $syncLog = [
                 PixelbinImageSyncLogsInterface::KEY_REQUEST => json_encode($requestData),
                 PixelbinImageSyncLogsInterface::KEY_RESPONSE => json_encode($result),
                 PixelbinImageSyncLogsInterface::KEY_SYNC_TYPE => $syncType,
             ];
-            $this->pixelbinImageSyncLogsFactory->create()
-                ->setData($syncLog)
-                ->save();
-            $pixelbinId = $result["_id"] ?? "";
-            if (empty($pixelbinId)) {
-                throw new LocalizedException(
-                    __("Unable to upload file to pixelbin some error is there.")
-                );
+
+            $this->pixelbinImageSyncLogsFactory->create()->setData($syncLog)->save();
+
+            if (empty($result["_id"] ?? "")) {
+                throw new LocalizedException(__("Unable to upload file to Pixelbin."));
             }
+
             if (isset($file["full_path"])) {
                 $data = [
                     PixelbinSynchronisationInterface::KEY_IMAGE_PATH => $file["full_path"],
@@ -197,16 +152,15 @@ class UploadFileToPixelbin extends AbstractHelper
                 ];
                 $this->saveSynchronisationLogs($data);
             }
+
             return $result;
         } catch (\Exception $ex) {
-            throw new LocalizedException(
-                __($ex->getMessage())
-            );
+            throw new LocalizedException(__($ex->getMessage()));
         }
     }
 
     /**
-     * Save synchronisation logs
+     * Save log in table
      *
      * @param array $data
      * @return \Pixelbinio\Pixelbin\Model\PixelbinSynchronisation
@@ -215,15 +169,15 @@ class UploadFileToPixelbin extends AbstractHelper
     public function saveSynchronisationLogs(array $data)
     {
         $imagePath = $data[PixelbinSynchronisationInterface::KEY_IMAGE_PATH];
-        $syncedCollection = $this->getSyncCollection($imagePath);
-        if ($syncedCollection->getSize() > 0) {
-            $syncedModel = $syncedCollection->getFirstItem();
-            return $this->pixelbinSynchronisationFactory->create()
-                ->addData($data)->setId($syncedModel->getEntityId())->save();
-        } else {
-            return $this->pixelbinSynchronisationFactory->create()
-                ->setData($data)->save();
+        $collection = $this->getSyncCollection($imagePath);
+
+        $model = $this->pixelbinSynchronisationFactory->create()->addData($data);
+
+        if ($collection->getSize() > 0) {
+            $model->setId($collection->getFirstItem()->getEntityId());
         }
+
+        return $model->save();
     }
 
     /**
@@ -234,9 +188,9 @@ class UploadFileToPixelbin extends AbstractHelper
     public function getMediaAbsolutePath()
     {
         if (empty($this->mediaDir)) {
-            $this->mediaDir = $this->filesystem->getDirectoryRead(
-                DirectoryList::MEDIA
-            )->getAbsolutePath();
+            $this->mediaDir = $this->filesystem
+                ->getDirectoryRead(DirectoryList::MEDIA)
+                ->getAbsolutePath();
         }
         return $this->mediaDir;
     }
@@ -249,15 +203,15 @@ class UploadFileToPixelbin extends AbstractHelper
     public function getPubAbsolutePath()
     {
         if (empty($this->pubDir)) {
-            $this->pubDir = $this->filesystem->getDirectoryRead(
-                DirectoryList::PUB
-            )->getAbsolutePath();
+            $this->pubDir = $this->filesystem
+                ->getDirectoryRead(DirectoryList::PUB)
+                ->getAbsolutePath();
         }
         return $this->pubDir;
     }
 
     /**
-     * Import file to pixelbin
+     * Import files
      *
      * @param array $files
      * @param string $syncType
@@ -265,59 +219,59 @@ class UploadFileToPixelbin extends AbstractHelper
      */
     public function importFiles(array $files, string $syncType): array
     {
-        $success = [];
-        $successCounts = [];
-        $error = [];
-        $errorCounts = [];
-        $excludeFolderCounts = [];
-        $excludeExtensionCounts = [];
+        $success = $error = [];
+        $counts = [
+            "success" => 0,
+            "error" => 0,
+            "excludeFolder" => 0,
+            "excludeExtension" => 0
+        ];
+
         foreach ($files as $file) {
             try {
                 unset($file["content"]);
-                $folderMatchCount = 0;
-                str_replace(Data::EXCLUDE_FOLDERS, '', (string)$file["directory"], $folderMatchCount);
-                if ($folderMatchCount > 0) {
-                    $excludeFolderCounts = count($excludeFolderCounts) + 1;
-                    $this->helperData->logData("EXCLUDE_FOLDERS directory found => " . $file["directory"]);
+
+                // Skip excluded folders
+                $folderMatch = 0;
+                str_replace(Data::EXCLUDE_FOLDERS, '', (string)$file["directory"], $folderMatch);
+                if ($folderMatch > 0) {
+                    $counts["excludeFolder"]++;
                     continue;
                 }
+
+                // Skip non-supported extensions
                 $pathInfo = $this->getPathInfo($file["filename"]);
                 if (!in_array(strtolower($pathInfo["extension"]), Data::ALLOWED_EXTENSION_SYNC)) {
-                    $this->helperData->logData("EXCLUDE_EXTENSION found => " . $pathInfo["extension"]);
-                    $excludeExtensionCounts = count($excludeExtensionCounts) + 1;
+                    $counts["excludeExtension"]++;
                     continue;
                 }
-                $file["file_name"] = $pathInfo["filename"];
+
                 $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
-                if ($syncType != SyncType::TYPE_CRON) {
-                    $syncCollection = $this->getSyncCollection($fileName);
-                    if ($syncCollection->getSize() > 0) {
-                        continue;
-                    }
+                if ($syncType !== SyncType::TYPE_CRON &&
+                    $this->getSyncCollection($fileName)->getSize() > 0) {
+                    continue;
                 }
+
                 $mediaDir = $this->getMediaAbsolutePath();
                 $file["absolute_path"] = $mediaDir . $fileName;
-                $filePathArr = explode("/", $fileName);
-                array_pop($filePathArr);
-                $file["path_folder"] = implode('/', $filePathArr);
+                $file["path_folder"] = dirname($fileName);
                 $file["full_path"] = $fileName;
-                $fileUploadResult = $this->uploadFile($file, $syncType);
-                //$this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
-                $success[] = __("successfully uploaded %1", $fileName);
-                $successCounts[] = count($successCounts) + 1;
+                $file["file_name"] = $pathInfo["filename"];
+
+                $this->uploadFile($file, $syncType);
+                $success[] = __("Uploaded: %1", $fileName);
+                $counts["success"]++;
             } catch (\Exception $ex) {
                 $error[] = $ex->getMessage();
-                $errorCounts[] = count($errorCounts) + 1;
-                $this->helperData->logData("file upload exception here => " . $ex->getMessage());
+                $counts["error"]++;
+                $this->helperData->logData("Upload exception => " . $ex->getMessage());
             }
         }
+
         return [
             "success" => $success,
-            "successCount" => $successCounts,
             "errors" => $error,
-            "errorCount" => $errorCounts,
-            "excludeFolderCounts" => $excludeFolderCounts,
-            "excludeExtensionCounts" => $excludeExtensionCounts,
+            "counts" => $counts,
         ];
     }
 
@@ -330,104 +284,90 @@ class UploadFileToPixelbin extends AbstractHelper
      */
     public function getSyncCollection($fileName, $status = "")
     {
-        $syncCollection = $this->pixelbinSyncCollectionFactory->create()
-            ->addFieldToFilter(
-                PixelbinSynchronisationInterface::KEY_IMAGE_PATH,
-                $fileName
-            );
+        $collection = $this->pixelbinSyncCollectionFactory->create()
+            ->addFieldToFilter(PixelbinSynchronisationInterface::KEY_IMAGE_PATH, $fileName);
+
         if (!empty($status)) {
-            $syncCollection->addFieldToFilter(
+            $collection->addFieldToFilter(
                 PixelbinSynchronisationInterface::KEY_SYNC_STATUS,
                 $status
             );
         }
-        return $syncCollection;
+
+        return $collection;
     }
 
     /**
-     * Upload catalog image to pixelbin
+     * Prepare and upload files
+     *
+     * @param string $relativePath
+     * @param string $basePath
+     * @param bool $appendMedia
+     * @return bool
+     */
+    private function prepareAndUploadFile(string $relativePath, string $basePath, bool $appendMedia = false): bool
+    {
+        try {
+            $mediaDir = $this->getMediaAbsolutePath();
+            $file = [];
+
+            // Build file data
+            $file["absolute_path"] = $appendMedia ? $mediaDir . $relativePath : $basePath . "/" . $relativePath;
+            $folders = $appendMedia ? dirname($relativePath) : str_replace($mediaDir, "", $basePath);
+            $fileName = ltrim($folders . "/" . basename($relativePath), "/");
+            $file["path_folder"] = dirname($fileName);
+            $file["full_path"] = $fileName;
+
+            $pathInfo = $this->getPathInfo(basename($relativePath));
+            $file["file_name"] = $pathInfo["filename"];
+            $file["filename"] = $pathInfo["basename"];
+
+            $result = $this->uploadFile($file, SyncType::TYPE_MANUAL);
+            $this->helperData->logData("Response from Pixelbin => ", $result);
+        } catch (\Exception $ex) {
+            $this->helperData->logData("Upload exception => " . $ex->getMessage());
+        }
+
+        return true;
+    }
+
+    /**
+     * Catalog upload file sync
      *
      * @param array $file
      * @return bool
      */
     public function catalogUploadFileSync(array $file): bool
     {
-        try {
-            $file["absolute_path"] = $file["path"];
-            $fileName = "catalog/product" . $file["file"];
-            $filePathArr = explode("/", $fileName);
-            array_pop($filePathArr);
-            $file["path_folder"] = implode('/', $filePathArr);
-            $file["full_path"] = $fileName;
-            $pathInfo = $this->getPathInfo($file["file"]);
-            $file["file_name"] = $pathInfo["filename"];
-            $file["filename"] = $pathInfo["basename"];
-            $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
-            $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
-        } catch (\Exception $ex) {
-            $this->helperData->logData("file upload exception here => " . $ex->getMessage());
-        }
-        return true;
+        $relativePath = ltrim("catalog/product" . $file["file"], "/");
+        return $this->prepareAndUploadFile($relativePath, $file["path"], false);
     }
 
     /**
-     * Upload CMS image to pixelbin
+     * Cms upload file sync
      *
      * @param array $file
      * @return bool
      */
     public function cmsUploadFileSync(array $file): bool
     {
-        try {
-            $file["absolute_path"] = $file["path"] . "/" . $file["file"];
-            $mediaDir = $this->getMediaAbsolutePath();
-            $folders = str_replace($mediaDir, "", $file["path"]);
-            $fileName = $folders . "/" . $file["file"];
-            $filePathArr = explode("/", $fileName);
-            array_pop($filePathArr);
-            $file["path_folder"] = implode('/', $filePathArr);
-            $file["full_path"] = $fileName;
-            $pathInfo = $this->getPathInfo($file["file"]);
-            $file["file_name"] = $pathInfo["filename"];
-            $file["filename"] = $pathInfo["basename"];
-            $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
-            $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
-        } catch (\Exception $ex) {
-            $this->helperData->logData("file upload exception here => " . $ex->getMessage());
-        }
-        return true;
+        return $this->prepareAndUploadFile($file["file"], $file["path"], false);
     }
 
     /**
-     * Upload category image to pixelbin
+     * Category upload file sync
      *
      * @param string $image
      * @return bool
      */
     public function categoryUploadFileSync(string $image): bool
     {
-        try {
-            $image = str_replace("/media", "", $image);
-            $mediaDir = $this->getMediaAbsolutePath();
-            $file["absolute_path"] = $mediaDir . $image;
-            $fileName = $image;
-            $filePathArr = explode("/", $fileName);
-            array_pop($filePathArr);
-            $file["path_folder"] = implode('/', $filePathArr);
-            $file["full_path"] = $fileName;
-            $pathInfo = $this->getPathInfo($fileName);
-            $file["file_name"] = $pathInfo["filename"];
-            $file["filename"] = $pathInfo["basename"];
-            $fileUploadResult = $this->uploadFile($file, SyncType::TYPE_MANUAL);
-            $this->helperData->logData("response from pixelbin is => ", $fileUploadResult);
-        } catch (\Exception $ex) {
-            $this->helperData->logData("file upload exception here => " . $ex->getMessage());
-        }
-        return true;
+        $relativePath = str_replace("/media", "", $image);
+        return $this->prepareAndUploadFile($relativePath, $this->getMediaAbsolutePath(), true);
     }
 
     /**
-     * Get file path info
+     * Get path info
      *
      * @param string $fileName
      * @return mixed
@@ -435,5 +375,23 @@ class UploadFileToPixelbin extends AbstractHelper
     public function getPathInfo($fileName)
     {
         return $this->fileIo->getPathInfo($fileName);
+    }
+
+    /**
+     * File upload after save
+     *
+     * @param array $result
+     * @return void
+     */
+    public function fileUploadAfterSave($result)
+    {
+        if ($this->helperData->isModuleEnabled()) {
+            if (!empty($result) && !empty($result['path']) && !empty($result['file'])) {
+                $filePath = $result['path'] . '/' . $result['file'];
+                if (!str_contains($filePath, 'tmp/')) {
+                    $this->cmsUploadFileSync($result);
+                }
+            }
+        }
     }
 }
