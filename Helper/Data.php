@@ -387,6 +387,7 @@ class Data extends AbstractHelper
         $storeId = $this->getStoreId();
         $allowedFormats = self::ALLOWED_EXTENSION_FOR_TRANSFORMATION;
 
+        // @codingStandardsIgnoreLine
         $extension = strtolower(pathinfo($imageUrl, PATHINFO_EXTENSION));
         if ($this->isImageTransformationEnabled($storeId) && in_array($extension, $allowedFormats)) {
             $globalTransformation = $this->getGlobalCustomTransformation($storeId);
@@ -679,7 +680,14 @@ class Data extends AbstractHelper
         return $this->getExtensionForWebpAndVector($file, $this->getWebImageExtensions());
     }
 
-    public function getExtensionForWebpAndVector($file, $extensions )
+    /**
+     * Get Extension for webp and vector
+     *
+     * @param string $file
+     * @param array $extensions
+     * @return bool
+     */
+    public function getExtensionForWebpAndVector($file, $extensions)
     {
         //@codingStandardsIgnoreStart
         $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -687,7 +695,7 @@ class Data extends AbstractHelper
             $mimeType = mime_content_type($file);
             $extension = str_replace('image/', '', $mimeType);
         }
-        return in_array($extension, $this->getWebImageExtensions());
+        return in_array($extension, $extensions);
         //@codingStandardsIgnoreEnd
     }
 

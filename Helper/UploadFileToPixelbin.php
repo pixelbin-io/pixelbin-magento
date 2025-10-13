@@ -33,15 +33,54 @@ use Pixelbinio\Pixelbin\Model\Config\Source\SyncStatus;
 
 class UploadFileToPixelbin extends AbstractHelper
 {
+    /**
+     * @var Data
+     */
     protected $helperData;
+
+    /**
+     * @var FileIo
+     */
     protected $fileIo;
+
+    /**
+     * @var Filesystem
+     */
     protected $filesystem;
+
+    /**
+     * @var PixelbinImageSyncLogsFactory
+     */
     protected $pixelbinImageSyncLogsFactory;
+
+    /**
+     * @var PixelbinSyncCollectionFactory
+     */
     protected $pixelbinSyncCollectionFactory;
+
+    /**
+     * @var PixelbinSynchronisationFactory
+     */
     protected $pixelbinSynchronisationFactory;
+
+    /**
+     * @var DriverFile
+     */
     protected $driverFile;
+
+    /**
+     * @var string
+     */
     protected $mediaDir = "";
+
+    /**
+     * @var string
+     */
     protected $pubDir = "";
+
+    /**
+     * @var null
+     */
     protected $pixelbinObj = null;
 
     /**
@@ -254,6 +293,7 @@ class UploadFileToPixelbin extends AbstractHelper
 
                 $mediaDir = $this->getMediaAbsolutePath();
                 $file["absolute_path"] = $mediaDir . $fileName;
+                // @codingStandardsIgnoreLine
                 $file["path_folder"] = dirname($fileName);
                 $file["full_path"] = $fileName;
                 $file["file_name"] = $pathInfo["filename"];
@@ -313,11 +353,15 @@ class UploadFileToPixelbin extends AbstractHelper
 
             // Build file data
             $file["absolute_path"] = $appendMedia ? $mediaDir . $relativePath : $basePath . "/" . $relativePath;
+            // @codingStandardsIgnoreLine
             $folders = $appendMedia ? dirname($relativePath) : str_replace($mediaDir, "", $basePath);
+            // @codingStandardsIgnoreLine
             $fileName = ltrim($folders . "/" . basename($relativePath), "/");
+            // @codingStandardsIgnoreLine
             $file["path_folder"] = dirname($fileName);
             $file["full_path"] = $fileName;
 
+            // @codingStandardsIgnoreLine
             $pathInfo = $this->getPathInfo(basename($relativePath));
             $file["file_name"] = $pathInfo["filename"];
             $file["filename"] = $pathInfo["basename"];
