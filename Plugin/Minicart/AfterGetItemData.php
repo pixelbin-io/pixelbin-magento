@@ -16,42 +16,10 @@ namespace Pixelbinio\Pixelbin\Plugin\Minicart;
 use Magento\Checkout\CustomerData\AbstractItem;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Plugin\AbstractPixelbinPlugin;
 
-class AfterGetItemData
+class AfterGetItemData extends AbstractPixelbinPlugin
 {
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
-
-    /**
-     * @var HelperData
-     */
-    protected $helperData;
-
-    /**
-     * @var \Magento\Framework\View\Asset\Repository
-     */
-    protected $assetRepo;
-
-    /**
-     * AfterGetImageData constructor.
-     *
-     * @param Logger $logger
-     * @param HelperData $helperData
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo
-     */
-    public function __construct(
-        Logger $logger,
-        HelperData $helperData,
-        \Magento\Framework\View\Asset\Repository $assetRepo
-    ) {
-        $this->logger = $logger;
-        $this->helperData = $helperData;
-        $this->assetRepo = $assetRepo;
-    }
-
     /**
      * After get item data
      *
@@ -70,7 +38,7 @@ class AfterGetItemData
                 $result['product_image']['src'] = $image;
             }
         } catch (\Exception $e) {
-            $this->logger->info("Image URL Minicart error - " . $e->getMessage());
+            $this->helperData->logData("Image URL Minicart error - " . $e->getMessage());
         }
         return $result;
     }

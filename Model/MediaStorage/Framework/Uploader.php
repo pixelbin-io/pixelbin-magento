@@ -60,14 +60,7 @@ class Uploader
      */
     public function afterSave($subject, $result)
     {
-        if ($this->helperData->isModuleEnabled()) {
-            if (!empty($result) && !empty($result['path']) && !empty($result['file'])) {
-                $filePath = $result['path'] . '/' . $result['file'];
-                if (!str_contains($filePath, 'tmp/')) {
-                    $this->uploadFileToPixelbin->cmsUploadFileSync($result);
-                }
-            }
-        }
+        $this->uploadFileToPixelbin->fileUploadAfterSave($result);
         return $result;
     }
 

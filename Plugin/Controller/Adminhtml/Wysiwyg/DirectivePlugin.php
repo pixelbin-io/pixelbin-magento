@@ -14,55 +14,11 @@
 namespace Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg;
 
 use Magento\Cms\Controller\Adminhtml\Wysiwyg\Directive;
-use Magento\Cms\Model\Template\Filter;
 use Magento\Framework\Controller\Result\Raw;
-use Magento\Framework\Controller\Result\RawFactory;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Url\DecoderInterface;
-use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Plugin\AbstractPixelbinPlugin;
 
-class DirectivePlugin
+class DirectivePlugin extends AbstractPixelbinPlugin
 {
-    /**
-     * @var DecoderInterface
-     */
-    private $urlDecoder;
-
-    /**
-     * @var Filter
-     */
-    private $filter;
-
-    /**
-     * @var RawFactory
-     */
-    private $resultRawFactory;
-
-    /**
-     * @var HelperData
-     */
-    private $helperData;
-
-    /**
-     * DirectivePlugin constructor.
-     *
-     * @param DecoderInterface $urlDecoder
-     * @param Filter $filter
-     * @param RawFactory $resultRawFactory
-     * @param HelperData $helperData
-     */
-    public function __construct(
-        DecoderInterface $urlDecoder,
-        Filter $filter,
-        RawFactory $resultRawFactory,
-        HelperData $helperData
-    ) {
-        $this->urlDecoder = $urlDecoder;
-        $this->filter = $filter;
-        $this->resultRawFactory = $resultRawFactory;
-        $this->helperData = $helperData;
-    }
-
     /**
      * Handle vector images for media storage thumbnails
      *
@@ -76,18 +32,7 @@ class DirectivePlugin
             $directive = $subject->getRequest()->getParam('___directive');
             $directive = $this->urlDecoder->decode($directive);
             $imagePath = $this->filter->filter($directive);
-
-            if (!$this->helperData->isVectorImage($imagePath)) {
-                throw new LocalizedException(__('This is not a vector image'));
-            }
-
-            /** @var Raw $resultRaw */
-            $resultRaw = $this->resultRawFactory->create();
-            $resultRaw->setHeader('Content-Type', 'image/svg+xml');
-            //@codingStandardsIgnoreStart
-            $resultRaw->setContents(file_get_contents($imagePath));
-            //@codingStandardsIgnoreEnd
-            return $resultRaw;
+            return $this->saveSvgVectorImage($imagePath);
         } catch (\Exception $e) {
             return $proceed();
         }

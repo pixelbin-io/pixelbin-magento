@@ -14,45 +14,11 @@
 namespace Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\Images;
 
 use Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Thumbnail;
-use Magento\Cms\Helper\Wysiwyg\Images;
 use Magento\Framework\Controller\Result\Raw;
-use Magento\Framework\Controller\Result\RawFactory;
-use Magento\Framework\Exception\LocalizedException;
-use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Plugin\AbstractPixelbinPlugin;
 
-class ThumbnailPlugin
+class ThumbnailPlugin extends AbstractPixelbinPlugin
 {
-    /**
-     * @var Images
-     */
-    private $wysiwygImages;
-
-    /**
-     * @var RawFactory
-     */
-    private $resultRawFactory;
-
-    /**
-     * @var HelperData
-     */
-    private $helperData;
-
-    /**
-     * ThumbnailPlugin constructor.
-     *
-     * @param Images $wysiwygImages
-     * @param RawFactory $resultRawFactory
-     * @param HelperData $helperData
-     */
-    public function __construct(
-        Images $wysiwygImages,
-        RawFactory $resultRawFactory,
-        HelperData $helperData
-    ) {
-        $this->wysiwygImages = $wysiwygImages;
-        $this->resultRawFactory = $resultRawFactory;
-        $this->helperData = $helperData;
-    }
 
     /**
      * Handle vector images for media storage thumbnails
@@ -67,19 +33,7 @@ class ThumbnailPlugin
             $file = $subject->getRequest()->getParam('file');
             $file = $this->wysiwygImages->idDecode($file);
             $thumb = $subject->getStorage()->resizeOnTheFly($file);
-
-            if (!$this->helperData->isVectorImage($thumb)) {
-                throw new LocalizedException(__('This is not a vector image'));
-            }
-
-            /** @var Raw $resultRaw */
-            $resultRaw = $this->resultRawFactory->create();
-            $resultRaw->setHeader('Content-Type', 'image/svg+xml');
-            //@codingStandardsIgnoreStart
-            $resultRaw->setContents(file_get_contents($thumb));
-            //@codingStandardsIgnoreEnd
-
-            return $resultRaw;
+            return $this->saveSvgVectorImage($thumb);
         } catch (\Exception $e) {
             return $proceed();
         }

@@ -13,7 +13,7 @@
 
 namespace Pixelbinio\Pixelbin\Model\Config\Source;
 
-class SyncType implements \Magento\Framework\Data\OptionSourceInterface
+class SyncType extends AbstractOptionSource implements \Magento\Framework\Data\OptionSourceInterface
 {
     public const TYPE_CLI = "cli";
     public const TYPE_CRON = "cron";
@@ -26,11 +26,8 @@ class SyncType implements \Magento\Framework\Data\OptionSourceInterface
      */
     public function toOptionArray(): array
     {
-        $result = [];
-        foreach ($this->getOptionArray() as $index => $value) {
-            $result[] = ['value' => $index, 'label' => $value];
-        }
-        return $result;
+        $options = $this->getOptionArray();
+        return $this->processOptionArray($options);
     }
 
     /**
@@ -54,11 +51,8 @@ class SyncType implements \Magento\Framework\Data\OptionSourceInterface
      */
     public function getAllOptions(): array
     {
-        $result = [];
-        foreach ($this->getOptionArray() as $index => $value) {
-            $result[] = ['value' => $index, 'label' => $value];
-        }
-        return $result;
+        $options = $this->getOptionArray();
+        return $this->processOptionArray($options);
     }
 
     /**
