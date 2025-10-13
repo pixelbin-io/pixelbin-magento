@@ -350,7 +350,6 @@ class UploadFileToPixelbin extends AbstractHelper
         try {
             $mediaDir = $this->getMediaAbsolutePath();
             $file = [];
-
             // Build file data
             $file["absolute_path"] = $appendMedia ? $mediaDir . $relativePath : $basePath . "/" . $relativePath;
             // @codingStandardsIgnoreLine
@@ -365,7 +364,6 @@ class UploadFileToPixelbin extends AbstractHelper
             $pathInfo = $this->getPathInfo(basename($relativePath));
             $file["file_name"] = $pathInfo["filename"];
             $file["filename"] = $pathInfo["basename"];
-
             $result = $this->uploadFile($file, SyncType::TYPE_MANUAL);
             $this->helperData->logData("Response from Pixelbin => ", $result);
         } catch (\Exception $ex) {
@@ -384,7 +382,7 @@ class UploadFileToPixelbin extends AbstractHelper
     public function catalogUploadFileSync(array $file): bool
     {
         $relativePath = ltrim("catalog/product" . $file["file"], "/");
-        return $this->prepareAndUploadFile($relativePath, $file["path"], false);
+        return $this->prepareAndUploadFile($relativePath, $file["path"], true);
     }
 
     /**
@@ -395,7 +393,7 @@ class UploadFileToPixelbin extends AbstractHelper
      */
     public function cmsUploadFileSync(array $file): bool
     {
-        return $this->prepareAndUploadFile($file["file"], $file["path"], false);
+        return $this->prepareAndUploadFile($file["file"], $file["path"]);
     }
 
     /**
