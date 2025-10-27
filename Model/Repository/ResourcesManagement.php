@@ -202,6 +202,10 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
      */
     public function getResourcesByTag()
     {
+        $response = [
+            "error" => 1,
+            "message" => ""
+        ];
         try {
             $this->initialize();
             $resources = $this->_api->assetsByTag(
@@ -211,19 +215,11 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
                     "max_results" => (int) $this->maxResults || null
                 ]
             )['resources'];
-            return $this->_jsonEncoder->encode(
-                [
-                    "error" => 0,
-                    "data" => $resources
-                ]
-            );
+            $response["error"] = 0;
+            $response["data"] = $resources;
         } catch (\Exception $e) {
-            return $this->_jsonEncoder->encode(
-                [
-                    "error" => 1,
-                    "message" => $e->getMessage()
-                ]
-            );
+            $response["message"] = $e->getMessage();
         }
+        return $this->_jsonEncoder->encode($response);
     }
 }

@@ -98,10 +98,6 @@ class UploadImageToPixelBin extends Command
             $flag = false;
             $output->writeln('');
             $output->writeln("<error>{$e->getMessage()}</error>");
-        } catch (\Error $e) {
-            $flag = false;
-            $output->writeln('');
-            $output->writeln("<error>{$e->getMessage()}</error>");
         }
 
         $output->writeln('');
