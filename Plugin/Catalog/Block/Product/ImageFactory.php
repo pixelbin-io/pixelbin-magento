@@ -13,55 +13,26 @@
 
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Block\Product;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Block\Product\Image as ImageBlock;
 use Magento\Catalog\Block\Product\ImageFactory as CatalogImageFactory;
-use Magento\Catalog\Helper\Image as CatalogImageHelper;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\View\ConfigInterface;
-use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class ImageFactory
 {
-    /**
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
-
     /**
      * @var HelperData
      */
     protected $helperData;
 
     /**
-     * @var \Magento\Framework\View\Asset\Repository
-     */
-    protected $assetRepo;
-
-    /**
-     * @param ObjectManagerInterface $objectManager
-     * @param Logger $logger
      * @param HelperData $helperData
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
-        Logger $logger,
-        HelperData $helperData,
-        \Magento\Framework\View\Asset\Repository $assetRepo
+        HelperData $helperData
     ) {
-        $this->objectManager = $objectManager;
-        $this->logger = $logger;
         $this->helperData = $helperData;
-        $this->assetRepo = $assetRepo;
     }
 
     /**
