@@ -13,50 +13,18 @@
 
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Model\Product\Image;
 
-use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Helper\Image as CatalogImageHelper;
 use Magento\Catalog\Model\Product\Image\UrlBuilder as CatalogUrlBuilder;
-use Magento\Framework\ObjectManagerInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\ConfigInterface;
-use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class UrlBuilder
 {
     /**
-     * @var ObjectManagerInterface
-     */
-    protected $objectManager;
-
-    /**
      * @var ConfigInterface
      */
-    private $presentationConfig;
-
-    /**
-     * @var ProductInterface
-     */
-    private $product;
-
-    /**
-     * @var Dimensions
-     */
-    private $dimensions;
-
-    /**
-     * @var string
-     */
-    private $imageFile;
-
-    /**
-     * @var bool
-     */
-    private $keepFrame;
-
-    /**
-     * @var Logger
-     */
-    protected $logger;
+    protected $presentationConfig;
 
     /**
      * @var HelperData
@@ -64,42 +32,26 @@ class UrlBuilder
     protected $helperData;
 
     /**
-     * @var \Magento\Framework\View\Asset\Repository
-     */
-    protected $assetRepo;
-
-    /**
-     * @param ObjectManagerInterface $objectManager
      * @param ConfigInterface $presentationConfig
-     * @param Logger $logger
      * @param HelperData $helperData
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo
      */
     public function __construct(
-        ObjectManagerInterface $objectManager,
         ConfigInterface $presentationConfig,
-        Logger $logger,
-        HelperData $helperData,
-        \Magento\Framework\View\Asset\Repository $assetRepo
+        HelperData $helperData
     ) {
-        $this->objectManager = $objectManager;
         $this->presentationConfig = $presentationConfig;
-        $this->logger = $logger;
         $this->helperData = $helperData;
-        $this->assetRepo = $assetRepo;
-        $this->dimensions = null;
-        $this->imageFile = null;
-        $this->keepFrame = true;
     }
 
     /**
      * Build image url using base path and params
      *
-     * @param  CatalogUrlBuilder $catalogUrlBuilder
-     * @param  callable          $proceed
-     * @param  string            $baseFilePath
-     * @param  string            $imageDisplayArea
+     * @param CatalogUrlBuilder $catalogUrlBuilder
+     * @param callable $proceed
+     * @param string $baseFilePath
+     * @param string $imageDisplayArea
      * @return string
+     * @throws NoSuchEntityException
      */
     public function aroundGetUrl(
         CatalogUrlBuilder $catalogUrlBuilder,
@@ -132,7 +84,6 @@ class UrlBuilder
         } catch (\Exception $e) {
             $url = $proceed($baseFilePath, $imageDisplayArea);
         }
-
         return $url;
     }
 }

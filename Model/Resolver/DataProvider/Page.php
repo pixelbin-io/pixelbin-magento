@@ -140,12 +140,12 @@ class Page
         }
         if (stripos($html, "&lt;img ") !== false) {
 
-            $dom = new \domDocument();
-            $useErrors = libxml_use_internal_errors(true);
-            $dom->loadHTML($html);
-            libxml_use_internal_errors($useErrors);
-            $dom->preserveWhiteSpace = false;
-            $modified = 0;
+//            $dom = new \domDocument();
+//            $useErrors = libxml_use_internal_errors(true);
+//            $dom->loadHTML($html);
+//            libxml_use_internal_errors($useErrors);
+//            $dom->preserveWhiteSpace = false;
+//            $modified = 0;
 
             preg_match_all('/img[^>]+g"/i', $html, $images);
             foreach ($images[0] as $image) {
