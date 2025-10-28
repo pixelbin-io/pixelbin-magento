@@ -145,7 +145,7 @@ class Collection extends PixelbinImageSyncLogsCollection implements SearchInterf
      * @param ExtensibleDataInterface[] $items
      * @return $this
      */
-    public function setItems(array $items = null)
+    public function setItems(?array $items = null)
     {
         return $this;
     }
