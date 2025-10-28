@@ -8,7 +8,7 @@
  *
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
- * @version     1.0.0
+ * @version     1.0.1
  */
 
 namespace Pixelbinio\Pixelbin\Logger;
