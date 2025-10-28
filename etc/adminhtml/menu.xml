@@ -9,46 +9,46 @@
  *
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
- * @version     1.0.0
+ * @version     1.0.1
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-          <add id="Pixelbinio_Pixelbin::menu" 
-               title="Pixelbin" 
-               module="Pixelbinio_Pixelbin" 
+          <add id="Pixelbinio_Pixelbin::menu"
+               title="Pixelbin"
+               module="Pixelbinio_Pixelbin"
                sortOrder="60"
                resource="Pixelbinio_Pixelbin::menu"/>
 
-          <add id="Pixelbinio_Pixelbin::settings" 
-               title="Settings" 
-               module="Pixelbinio_Pixelbin" 
+          <add id="Pixelbinio_Pixelbin::settings"
+               title="Settings"
+               module="Pixelbinio_Pixelbin"
                sortOrder="10"
-               resource="Pixelbinio_Pixelbin::settings" 
+               resource="Pixelbinio_Pixelbin::settings"
                parent="Pixelbinio_Pixelbin::menu"/>
-        
-          <add id="Pixelbinio_Pixelbin::system_config" 
-               title="System Configuration" 
-               module="Pixelbinio_Pixelbin" 
+
+          <add id="Pixelbinio_Pixelbin::system_config"
+               title="System Configuration"
+               module="Pixelbinio_Pixelbin"
                sortOrder="10"
-               action="adminhtml/system_config/edit/section/pixelbin/" 
+               action="adminhtml/system_config/edit/section/pixelbin/"
                resource="Pixelbinio_Pixelbin::system_config"
                parent="Pixelbinio_Pixelbin::settings"/>
 
-          <add id="Pixelbinio_Pixelbin::logs" 
-               title="Pixelbin" 
-               module="Pixelbinio_Pixelbin" 
-               sortOrder="20" 
+          <add id="Pixelbinio_Pixelbin::logs"
+               title="Pixelbin"
+               module="Pixelbinio_Pixelbin"
+               sortOrder="20"
                resource="Pixelbinio_Pixelbin::logs"
                parent="Pixelbinio_Pixelbin::menu"/>
-               
-          <add id="Pixelbinio_Pixelbin::image_sync" 
-               title="Images Sync" 
-               module="Pixelbinio_Pixelbin" 
+
+          <add id="Pixelbinio_Pixelbin::image_sync"
+               title="Images Sync"
+               module="Pixelbinio_Pixelbin"
                sortOrder="10"
-               action="pixelbin/images/index" 
-               resource="Pixelbinio_Pixelbin::image_sync" 
+               action="pixelbin/images/index"
+               resource="Pixelbinio_Pixelbin::image_sync"
                parent="Pixelbinio_Pixelbin::logs"/>
     </menu>
 </config>
