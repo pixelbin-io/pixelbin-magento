@@ -72,6 +72,7 @@
                 </item>
             </argument>
         </arguments>
+        <plugin name="storageplugin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Wysiwyg\Images\StoragePlugin" />
     </type>
     <virtualType name="Magento\Catalog\CategoryImageUpload" type="Magento\Catalog\Model\ImageUploader">
         <arguments>
@@ -110,13 +111,11 @@
         <plugin name="pixelbin-web-images-media-plugin" type="Pixelbinio\Pixelbin\Plugin\App\MediaPlugin" />
     </type>
     <type name="Magento\MediaStorage\Model\File\Validator\NotProtectedExtension">
-        <plugin name="pixelbin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\File\Validator\NotProtectedExtensionPlugin" />
+        <plugin name="notprotectedextensionplugin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\File\Validator\NotProtectedExtensionPlugin" />
     </type>
-    <type name="Magento\Cms\Model\Wysiwyg\Images\Storage">
-        <plugin name="pixelbin-allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Wysiwyg\Images\StoragePlugin" />
-    </type>
+    
     <type name="Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Thumbnail">
-        <plugin name="pixelbinallow-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\Images\ThumbnailPlugin" />
+        <plugin name="thumbnail-plugin-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\Images\ThumbnailPlugin" />
     </type>
     <type name="Magento\Cms\Controller\Adminhtml\Wysiwyg\Directive">
         <plugin name="allow-web-images" type="Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\DirectivePlugin" />
