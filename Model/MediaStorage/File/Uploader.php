@@ -55,7 +55,7 @@ class Uploader
      * @param array $result
      * @return array
      */
-    public function afterSave($subject, $result)
+    public function afterSave(FileUploader $subject, $result)
     {
         $this->uploadFileToPixelbin->fileUploadAfterSave($result);
         return $result;
