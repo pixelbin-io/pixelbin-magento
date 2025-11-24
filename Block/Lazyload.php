@@ -1,11 +1,16 @@
 <?php
-
 namespace Pixelbinio\Pixelbin\Block;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\View\Element\Template\Context;
 
+/**
+ * Lazyload Block
+ *
+ * @api
+ * @since 1.0.0
+ */
 class Lazyload extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -21,7 +26,7 @@ class Lazyload extends \Magento\Framework\View\Element\Template
     /**
      * @method __construct
      * @param  Context                $context
-     * @param  HelperData             $helperData,
+     * @param  HelperData             $helperData
      * @param  EncoderInterface       $jsonEncoder
      * @param  array                  $data
      */
