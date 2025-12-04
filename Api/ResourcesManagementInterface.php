@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Api;
 
 interface ResourcesManagementInterface
@@ -20,14 +23,14 @@ interface ResourcesManagementInterface
      * @return string
      */
     public function getImage();
-    
+
     /**
      * GET for getVideo api
      *
      * @return string
      */
     public function getVideo();
-    
+
     /**
      * GET for getResourcesByTag api
      *

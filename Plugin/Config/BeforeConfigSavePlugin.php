@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Config;
 
 use Magento\Config\Model\Config;
@@ -62,7 +65,8 @@ class BeforeConfigSavePlugin
             $productCustomTransformation = $configData["image_transformations"]["fields"]
             ["product_custom_transformation"]["value"];
 
-            if (!empty($globalCustomTransformation)
+            if (
+                !empty($globalCustomTransformation)
                 && !preg_match(HelperData::TRANSFORMATION_REGEX, $globalCustomTransformation)
             ) {
                 throw new LocalizedException(
@@ -70,7 +74,8 @@ class BeforeConfigSavePlugin
                 );
             }
 
-            if (!empty($productCustomTransformation)
+            if (
+                !empty($productCustomTransformation)
                 && !preg_match(HelperData::TRANSFORMATION_REGEX, $productCustomTransformation)
             ) {
                 throw new LocalizedException(

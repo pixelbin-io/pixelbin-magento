@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Cms\Wysiwyg\Images;
@@ -202,7 +204,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $path = ($this->getStorage()->getSession()->getCurrentPath()) ?? null;
 
             if (!$path) {
-                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/';
+                $path = $this->directoryList->getRoot() . '/pub/' . DirectoryList::MEDIA . '/';
             }
 
             if (!$this->validatePath($path, DirectoryList::MEDIA)) {
@@ -212,7 +214,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             }
             $allData = $this->getRequest()->getParams();
             if (!empty($allData["target_path"])) {
-                $path = $path . $allData["target_path"]."/";
+                $path = $path . $allData["target_path"] . "/";
             }
             $localFileName = $this->remoteFileUrl = $allData["asset"]["url"];
             $imagePathArray = explode($this->helperData->getAppZone(), $localFileName);
@@ -242,7 +244,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                 [
                     'path' => $newPath,
                     'description' => $localFileName,
-                    'contentType' => $asset['assetType'].'/'.$asset['format'],
+                    'contentType' => $asset['assetType'] . '/' . $asset['format'],
                     'title' => $localFileName,
                     'source' => 'Pixelbin',
                     'width' => $asset['width'],
@@ -251,7 +253,6 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                 ]
             );
             $this->mediaAssetSave->execute([$ma]);
-
         } catch (\Exception $e) {
             $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode(), "trace" => $e->getTraceAsString()];
         }

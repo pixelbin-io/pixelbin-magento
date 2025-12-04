@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Model\MediaStorage\File;
@@ -35,7 +37,7 @@ class Uploader
      */
     public function __construct(
         UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData           $helperData
+        HelperData $helperData
     ) {
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
         $this->helperData = $helperData;

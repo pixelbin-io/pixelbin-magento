@@ -52,7 +52,8 @@ define(
         };
 
         $.widget(
-            'mage.productVideoLoader', {
+            'mage.productVideoLoader',
+            {
 
                 /**
                  * @private
@@ -82,7 +83,7 @@ define(
                                 toString: function () {
                                     return this.name + ': ' + this.message;
                                 }
-                            };
+                        };
                     }
                 },
 
@@ -161,7 +162,9 @@ define(
         );
 
         $.widget(
-            'mage.videoYoutube', $.mage.productVideoLoader, {
+            'mage.videoYoutube',
+            $.mage.productVideoLoader,
+            {
 
                 /**
                  * Initialization of the Youtube widget
@@ -176,7 +179,8 @@ define(
                     this.element.append('<div></div>');
 
                     this._on(
-                        window, {
+                        window,
+                        {
 
                             /**
                              * Handle event
@@ -202,7 +206,8 @@ define(
                                 }
 
                                 self._player = new window.YT.Player(
-                                    self.element.children(':first')[0], {
+                                    self.element.children(':first')[0],
+                                    {
                                         height: self._height,
                                         width: self._width,
                                         videoId: self._code,
@@ -328,7 +333,9 @@ define(
         );
 
         $.widget(
-            'mage.videoVimeo', $.mage.productVideoLoader, {
+            'mage.videoVimeo',
+            $.mage.productVideoLoader,
+            {
 
                 /**
                  * Initialize the Vimeo widget
@@ -411,7 +418,9 @@ define(
         );
 
         $.widget(
-            'mage.videoPixelbin', $.mage.productVideoLoader, {
+            'mage.videoPixelbin',
+            $.mage.productVideoLoader,
+            {
 
                 /**
                  * Initialize the Vimeo widget
@@ -431,7 +440,7 @@ define(
                                 .attr('class', 'cld-video-player')
                                 .attr('width', this._width)
                                 .attr('height', this._height)
-                                .attr('src', this._videoUrl.replace(/(^\w+:|^)/, '')+"?autoplay=1&mute=1")
+                                .attr('src', this._videoUrl.replace(/(^\w+:|^)/, '') + "?autoplay=1&mute=1")
                                 .attr('webkitallowfullscreen', '')
                                 .attr('mozallowfullscreen', '')
                                 .attr('allowfullscreen', '')

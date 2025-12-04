@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
@@ -30,7 +32,6 @@ use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class UpdateAdminImage extends Action
 {
-
     /**
      * @var StoreManagerInterface
      */

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Helper;
@@ -160,11 +162,11 @@ class Data extends AbstractHelper
      * @param PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory
      */
     public function __construct(
-        Context               $context,
-        Curl                  $curl,
-        CurlFactory           $curlFactory,
-        JsonHelperData        $jsonHelper,
-        Logger                $logger,
+        Context $context,
+        Curl $curl,
+        CurlFactory $curlFactory,
+        JsonHelperData $jsonHelper,
+        Logger $logger,
         StoreManagerInterface $storeManager,
         EncryptorInterface $encryptor,
         PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory
@@ -245,9 +247,9 @@ class Data extends AbstractHelper
         if ($this->_appZoneLink === null) {
             $zoneSlug = $this->getConfigValue(self::XML_PATH_APP_ZONE, $storeId);
             if (!empty($zoneSlug)) {
-                $this->_appZoneLink = self::ZONE_DEFAULT_URL.$this->getAppCloudName()."/".$zoneSlug."original/";
+                $this->_appZoneLink = self::ZONE_DEFAULT_URL . $this->getAppCloudName() . "/" . $zoneSlug . "original/";
             }
-            $this->_appZoneLink = self::ZONE_DEFAULT_URL.$this->getAppCloudName()."/original/";
+            $this->_appZoneLink = self::ZONE_DEFAULT_URL . $this->getAppCloudName() . "/original/";
         }
         return $this->_appZoneLink;
     }
@@ -767,8 +769,8 @@ class Data extends AbstractHelper
                 $this->curl->get($pixelbinUrl);
                 $statusCode = $this->curl->getStatus();
                 $body = $this->curl->getBody();
-                $this->logData("image url request => ".$pixelbinUrl);
-                $this->logData("image url response => ".$body);
+                $this->logData("image url request => " . $pixelbinUrl);
+                $this->logData("image url response => " . $body);
                 if ($this->isJson($body)) {
                     $data = json_decode($body, true);
                     if ($flag) {
@@ -780,7 +782,7 @@ class Data extends AbstractHelper
                     }
                 }
             } catch (\Exception $e) {
-                $this->logData("image url request => ".$pixelbinUrl);
+                $this->logData("image url request => " . $pixelbinUrl);
                 $this->logData('Pixelbin image API Error Exception => : ' . $e->getMessage());
                 return false;
             }

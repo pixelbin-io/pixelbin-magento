@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Model\Image\Adapter;
@@ -151,7 +153,7 @@ class Gd2 extends AbstractAdapter
      * @param string $filename
      * @return bool
      */
-    private function validateURLScheme(string $filename) : bool
+    private function validateURLScheme(string $filename): bool
     {
         $allowed_schemes = ['ftp', 'ftps', 'http', 'https'];
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -636,7 +638,8 @@ class Gd2 extends AbstractAdapter
         bool $merged,
         bool $tile
     ) {
-        if ($this->getWatermarkWidth() &&
+        if (
+            $this->getWatermarkWidth() &&
             $this->getWatermarkHeight() &&
             $this->getWatermarkPosition() != self::POSITION_STRETCH
         ) {

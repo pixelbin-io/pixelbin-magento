@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Model\Config\Backend\Cron;
@@ -53,15 +55,15 @@ class CronSyncTime extends Value
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\Model\Context                        $context,
-        \Magento\Framework\Registry                             $registry,
-        ScopeConfigInterface                                    $config,
-        \Magento\Framework\App\Cache\TypeListInterface          $cacheTypeList,
-        ValueFactory                                            $configValueFactory,
-        ManagerInterface                                        $messageManager,
+        \Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        ScopeConfigInterface $config,
+        \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
+        ValueFactory $configValueFactory,
+        ManagerInterface $messageManager,
         ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        ?\Magento\Framework\Data\Collection\AbstractDb           $resourceCollection = null,
-        array                                                   $data = []
+        ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = []
     ) {
         parent::__construct(
             $context,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Block\Product;
 
 use Magento\Catalog\Block\Product\Image as ImageBlock;
@@ -100,7 +103,6 @@ class ImageFactory
 
         try {
             if (strpos($imageBlock->getImageUrl(), $mediaUrl . 'catalog/product') === 0) {
-
                 $generatedImageUrl = $this->helperData->replaceProductImageUrlWithPixelbin($imageBlock->getImageUrl());
 
                 $imageBlock->setOriginalImageUrl($generatedImageUrl);

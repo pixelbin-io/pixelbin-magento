@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Console;
@@ -151,11 +153,11 @@ class UploadImageToPixelBin extends Command
         $progressBar->finish();
         unset($files);
         $output->writeln("");
-        $output->writeln("Successfully uploaded file count is => ".count($successCount));
-        $output->writeln("<error>Failed to uploaded file count is => ".count($errorCount)."</error>");
-        $output->writeln("<error>Skipped due to folder restriction => ".count($excludeFolderCounts)."</error>");
+        $output->writeln("Successfully uploaded file count is => " . count($successCount));
+        $output->writeln("<error>Failed to uploaded file count is => " . count($errorCount) . "</error>");
+        $output->writeln("<error>Skipped due to folder restriction => " . count($excludeFolderCounts) . "</error>");
         $output->writeln(
-            "<error>Skipped due to file extension restriction => ".count($excludeExtensionCounts)."</error>"
+            "<error>Skipped due to file extension restriction => " . count($excludeExtensionCounts) . "</error>"
         );
     }
 }

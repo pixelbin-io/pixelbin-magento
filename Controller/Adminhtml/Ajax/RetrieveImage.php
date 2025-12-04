@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
@@ -193,7 +195,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
             $fileData = $this->fileIo->getPathInfo($localUniqFilePath);
             if (!isset($fileData["extension"])) {
                 $extension = $allData["asset"]["format"];
-                $localUniqFilePath = $this->remoteFileUrl = $localUniqFilePath.".".strtolower($extension);
+                $localUniqFilePath = $this->remoteFileUrl = $localUniqFilePath . "." . strtolower($extension);
             }
             $imageData = $this->helperData->validatePixelbinUrl($localUniqFilePath, true);
             if (is_array($imageData)) {
@@ -278,7 +280,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
         $localFileName = Uploader::getCorrectFileName(basename($remoteFileUrl));
         $fileData = $this->fileIo->getPathInfo($localFileName);
         if ($fileData["extension"] == "mp4") {
-            $localFileName = $fileData["filename"].".png";
+            $localFileName = $fileData["filename"] . ".png";
         }
         switch ($this->getRequest()->getParam('type')) {
             case 'pagebuilder_contenttype':
@@ -374,7 +376,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
             $this->usingPlaceholderFallback = true;
             $mediaDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::APP)
                 ->getAbsolutePath();
-            $defaultImage = $mediaDirectory.HelperData::DEFAULT_PIXELBIN_IMAGE;
+            $defaultImage = $mediaDirectory . HelperData::DEFAULT_PIXELBIN_IMAGE;
             $image = $this->fileDriver->fileGetContents($defaultImage);
         }
 

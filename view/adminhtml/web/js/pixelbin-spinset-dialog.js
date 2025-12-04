@@ -12,7 +12,7 @@ define(
         'mage/backend/tree-suggest',
         'mage/backend/validation'
     ],
-    function($, _) {
+    function ($, _) {
         'use strict';
 
         $.widget('mage.newCldSpinsetDialog', {
@@ -21,7 +21,7 @@ define(
              *
              * @private
              */
-            _create: function() {
+            _create: function () {
                 var widget = this;
 
                 this.element.modal({
@@ -38,20 +38,20 @@ define(
                             text: $.mage.__('Cancel'),
                             class: 'video-cancel-button',
                             click: $.proxy(widget._onCancel, widget)
-                        }
+                    }
                     ],
 
                     /**
                      * @returns {null}
                      */
-                    opened: function() {
+                    opened: function () {
                     },
 
                     /**
                      * Closed
                      * Closed
                      */
-                    closed: function() {
+                    closed: function () {
                     }
                 });
             },
@@ -61,7 +61,7 @@ define(
              *
              * @private
              */
-            _onCreate: function() {
+            _onCreate: function () {
             },
 
             /**
@@ -69,7 +69,7 @@ define(
              *
              * @private
              */
-            _onCancel: function() {
+            _onCancel: function () {
             }
         });
 

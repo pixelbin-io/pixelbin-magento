@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Model\Product\Image;
 
 use Magento\Catalog\Helper\Image as CatalogImageHelper;

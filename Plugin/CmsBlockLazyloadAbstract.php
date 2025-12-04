@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin;
 
 use Magento\Cms\Block\Widget\Block as CmsBlockWidget;
@@ -72,17 +75,19 @@ class CmsBlockLazyloadAbstract
             $modified = 0;
 
             foreach ($dom->getElementsByTagName('img') as $element) {
-                if (strpos($element->getAttribute('class'), "lazyload") === false &&
+                if (
+                    strpos($element->getAttribute('class'), "lazyload") === false &&
                     strpos($element->getAttribute('class'), "owl-lazy") === false &&
-                    ($image = $element->getAttribute('src')) !== null) {
-
+                    ($image = $element->getAttribute('src')) !== null
+                ) {
                     $placeholderUrl = $this->helperData->replaceCmsImageUrlWithPixelbin($image);
                     $modified++;
 
-                    if ($this->helperData->isEnabledLazyload() &&
+                    if (
+                        $this->helperData->isEnabledLazyload() &&
                         $this->helperData->isLazyloadAutoReplaceCmsBlocks() &&
-                        !in_array($subject->getBlockId(), $this->helperData->getLazyloadIgnoredCmsBlocksArray())) {
-
+                        !in_array($subject->getBlockId(), $this->helperData->getLazyloadIgnoredCmsBlocksArray())
+                    ) {
                         $element->setAttribute('class', 'pixelbin-lazyload ' . $element->getAttribute('class'));
                         $element->setAttribute('data-original', $placeholderUrl);
                     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Cms\Block\Widget;
 
 use Pixelbinio\Pixelbin\Plugin\CmsBlockLazyloadAbstract;
@@ -17,7 +20,6 @@ use Magento\Cms\Block\Widget\Block as CmsBlockWidget;
 
 class Block extends CmsBlockLazyloadAbstract
 {
-
     /**
      * After to html
      *

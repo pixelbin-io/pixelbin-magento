@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Cron;
@@ -54,10 +56,10 @@ class PushImagesToPixelbin
      * @param UploadFileToPixelbin $uploadFileToPixelbin
      */
     public function __construct(
-        Logger                        $logger,
-        HelperData                    $helperData,
+        Logger $logger,
+        HelperData $helperData,
         PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory,
-        UploadFileToPixelbin          $uploadFileToPixelbin
+        UploadFileToPixelbin $uploadFileToPixelbin
     ) {
         $this->logger = $logger;
         $this->helperData = $helperData;

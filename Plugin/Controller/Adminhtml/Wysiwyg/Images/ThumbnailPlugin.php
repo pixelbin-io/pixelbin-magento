@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Controller\Adminhtml\Wysiwyg\Images;
 
 use Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Thumbnail;
@@ -18,7 +21,6 @@ use Pixelbinio\Pixelbin\Plugin\AbstractPixelbinPlugin;
 
 class ThumbnailPlugin extends AbstractPixelbinPlugin
 {
-
     /**
      * Handle vector images for media storage thumbnails
      *

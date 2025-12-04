@@ -12,7 +12,7 @@ define([
     'mage/backend/validation',
     'pixelbinMediaLibraryAll',
     'es6Promise',
-], function($, mageUtils, registry, productGallery, uiAlert, notification, $t, imageUploader) {
+], function ($, mageUtils, registry, productGallery, uiAlert, notification, $t, imageUploader) {
     'use strict';
 
     $.widget('mage.pixelbinMediaLibraryModal', {
@@ -32,7 +32,7 @@ define([
          * Bind events
          * @private
          */
-        _bind: function() {
+        _bind: function () {
             if ($(this.options.buttonSelector).length) {
                 $(this.options.buttonSelector).on('click', this.openMediaLibrary.bind(this));
             } else {
@@ -43,7 +43,7 @@ define([
         /**
          * @param {Array} messages
          */
-        notifyError: function(messages) {
+        notifyError: function (messages) {
             var data = {
                 content: messages.join('')
             };
@@ -57,7 +57,7 @@ define([
         /**
          * @private
          */
-        _create: function() {
+        _create: function () {
             this._super();
             this._bind();
 
@@ -70,9 +70,10 @@ define([
 
             if (typeof window.pixelbin[this.options.cldMLid] === "undefined") {
                 window.ml = window.pixelbin.createMediaLibrary(
-                    this.options, {
-                        insertHandler: function(data) {
-             
+                    this.options,
+                    {
+                        insertHandler: function (data) {
+
                             $("#close_pixelbin_widget_container").hide();
                             $('body').first().css('overflow', 'initial');
                             if (widget.isMediaBrowser()) {
@@ -91,7 +92,7 @@ define([
             } else {
                 this.pixelbin_ml = window.pixelbin_ml[this.options.cldMLid];
             }
-            $(document).on("click", "#close_pixelbin_widget_container", function (){
+            $(document).on("click", "#close_pixelbin_widget_container", function () {
                 window.ml.hide();
                 $(this).hide();
             });
@@ -111,7 +112,7 @@ define([
         /**
          * Fired on trigger "openMediaLibrary"
          */
-        openMediaLibrary: function() {
+        openMediaLibrary: function () {
             window.ml.show(this.options.pixelbinShowOptions);
             $("#close_pixelbin_widget_container").show();
         },
@@ -128,14 +129,14 @@ define([
         /**
          * Escape Regex
          */
-        escapeRegex: function(string) {
+        escapeRegex: function (string) {
             return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         },
 
         /**
          * Fired on trigger "pixelbinInsertHandler"
          */
-        pixelbinInsertHandler: function(data) {
+        pixelbinInsertHandler: function (data) {
             var widget = this;
             var aggregatedErrorMessages = [];
             var $i = data.assets.length;
@@ -159,7 +160,7 @@ define([
                         async: false,
                         showLoader: true
                     }).done(
-                        function(file) {
+                        function (file) {
                             if (file.file && !file.error) {
                                 var context = (asset.context && asset.context.custom) ? asset.context.custom : {};
                                 if (asset.assetType === "video") {
@@ -203,7 +204,7 @@ define([
                                 notification().add({
                                     error: true,
                                     message: $t('An error occured during ' + asset.assetType + ' insert (' + asset.public_id + ')!') + '%s%sError: ' + file.error.replace(/File:.*$/, ''),
-                                    insertMethod: function(constructedMessage) {
+                                    insertMethod: function (constructedMessage) {
                                         aggregatedErrorMessages.push(constructedMessage.replace('%s%s', '<br>'));
                                     }
                                 });
@@ -213,7 +214,7 @@ define([
                             }
                         }
                     ).fail(
-                        function(response) {
+                        function (response) {
                             console.error(response);
                             notification().add({
                                 error: true,

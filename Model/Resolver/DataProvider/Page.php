@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,6 +10,7 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Model\Resolver\DataProvider;
@@ -145,7 +147,6 @@ class Page
             return $html;
         }
         if (stripos($html, "&lt;img ") !== false) {
-
 //            $dom = new \domDocument();
 //            $useErrors = libxml_use_internal_errors(true);
 //            $dom->loadHTML($html);
@@ -160,7 +161,7 @@ class Page
 
                 $secureImg = $this->helperData->replaceGraphqlCmsImageUrlWithPixelbin($secureImg);
 
-                $secureImg = '&lt;img src="'. $secureImg .'"';
+                $secureImg = '&lt;img src="' . $secureImg . '"';
 
                 $html = str_replace($image, $secureImg, $html);
             }

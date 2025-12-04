@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pixelbinio
  *
@@ -9,7 +10,9 @@
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
  */
+
 declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model\ResourceModel\PixelbinSynchronisation;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
