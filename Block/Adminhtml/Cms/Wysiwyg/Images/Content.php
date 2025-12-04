@@ -74,10 +74,10 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
         try {
             if (version_compare($this->productMetadata->getVersion(), '2.3.5', '<=')) {
                 // @codingStandardsIgnoreLine
-                $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
+                $imageUploadUrl = $this->_urlBuilder->addSessionParam()->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->getMediaType()]);
             } else {
                 // @codingStandardsIgnoreLine
-                $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->_getMediaType()]);
+                $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/cms_wysiwyg_images/upload', ['type' => $this->getMediaType()]);
             }
         } catch (\Exception $e) {
             throw new LocalizedException(
@@ -113,7 +113,7 @@ class Content extends \Magento\Cms\Block\Adminhtml\Wysiwyg\Images\Content
      *
      * @return string
      */
-    protected function _getMediaType()
+    protected function getMediaType()
     {
         if ($this->hasData('media_type')) {
             return $this->_getData('media_type');

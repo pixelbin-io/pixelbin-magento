@@ -35,7 +35,7 @@ class CmsBlockLazyloadAbstract
     /**
      * @var Registry
      */
-    protected $_coreRegistry;
+    protected $coreRegistry;
 
     /**
      * @method __construct
@@ -50,7 +50,7 @@ class CmsBlockLazyloadAbstract
     ) {
         $this->logger = $logger;
         $this->helperData = $helperData;
-        $this->_coreRegistry = $coreRegistry;
+        $this->coreRegistry = $coreRegistry;
     }
 
     /**

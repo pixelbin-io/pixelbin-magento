@@ -55,7 +55,7 @@ class UpdateAdminImage extends Action
     /**
      * @var string
      */
-    private $_authorised;
+    private $authorised;
 
     /**
      * @var Transformation

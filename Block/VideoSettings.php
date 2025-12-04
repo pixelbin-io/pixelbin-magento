@@ -29,7 +29,7 @@ class VideoSettings extends Template
     /**
      * @var Helper
      */
-    protected $_helper;
+    protected $helper;
 
     /**
      * @param Template\Context $context
@@ -41,7 +41,7 @@ class VideoSettings extends Template
         Helper $helper,
         array $data = []
     ) {
-        $this->_helper = $helper;
+        $this->helper = $helper;
         parent::__construct($context, $data);
     }
 
@@ -66,7 +66,7 @@ class VideoSettings extends Template
 
         // Build player settings
         $playerSettings = [
-            'cloudName' => $this->_helper->getAppCloudName(),
+            'cloudName' => $this->helper->getAppCloudName(),
             'controls' => ($controls === 'all'),
             'autoplay' => $autoplay,
             'loop' => $isLoop,

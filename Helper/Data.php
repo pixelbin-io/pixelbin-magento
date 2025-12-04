@@ -107,12 +107,12 @@ class Data extends AbstractHelper
     /**
      * @var null
      */
-    protected $_appZoneLink = null;
+    protected $appZoneLink = null;
 
     /**
      * @var null
      */
-    protected $_syncStatus = null;
+    protected $syncStatus = null;
 
     /**
      * @var Curl
@@ -244,14 +244,14 @@ class Data extends AbstractHelper
      */
     public function getAppZone($storeId = null)
     {
-        if ($this->_appZoneLink === null) {
+        if ($this->appZoneLink === null) {
             $zoneSlug = $this->getConfigValue(self::XML_PATH_APP_ZONE, $storeId);
             if (!empty($zoneSlug)) {
-                $this->_appZoneLink = self::ZONE_DEFAULT_URL . $this->getAppCloudName() . "/" . $zoneSlug . "original/";
+                $this->appZoneLink = self::ZONE_DEFAULT_URL . $this->getAppCloudName() . "/" . $zoneSlug . "original/";
             }
-            $this->_appZoneLink = self::ZONE_DEFAULT_URL . $this->getAppCloudName() . "/original/";
+            $this->appZoneLink = self::ZONE_DEFAULT_URL . $this->getAppCloudName() . "/original/";
         }
-        return $this->_appZoneLink;
+        return $this->appZoneLink;
     }
 
     /**
@@ -809,8 +809,8 @@ class Data extends AbstractHelper
      */
     public function checkSyncStatus()
     {
-        if ($this->_syncStatus === null) {
-            $this->_syncStatus = false;
+        if ($this->syncStatus === null) {
+            $this->syncStatus = false;
             $totalCollection = $this->pixelbinSyncCollectionFactory->create()->getSize();
             $pendingToSync = $this->pixelbinSyncCollectionFactory->create()
                 ->addFieldToFilter(
@@ -823,9 +823,9 @@ class Data extends AbstractHelper
                     SyncStatus::STATUS_PENDING_TO_START
                 )->getSize();
             if ($totalCollection > 0 && $pendingToSync == 0 && $pendingToStart == 0) {
-                $this->_syncStatus = true;
+                $this->syncStatus = true;
             }
         }
-        return $this->_syncStatus;
+        return $this->syncStatus;
     }
 }

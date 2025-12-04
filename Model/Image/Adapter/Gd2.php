@@ -138,7 +138,7 @@ class Gd2 extends AbstractAdapter
         $this->imageDestroy();
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->_imageHandler = call_user_func(
-            $this->_getCallback(
+            $this->getCallback(
                 'create',
                 null,
                 sprintf('Unsupported image format. File: %s', $this->_fileName)
@@ -201,7 +201,7 @@ class Gd2 extends AbstractAdapter
      */
     protected function _isMemoryLimitReached()
     {
-        $limit = $this->_convertToByte(ini_get('memory_limit'));
+        $limit = $this->convertToByte(ini_get('memory_limit'));
         $requiredMemory = $this->_getImageNeedMemorySize($this->_fileName);
         if ($limit === -1) {
             // A limit of -1 means no limit: http://www.php.net/manual/en/ini.core.php#ini.memory-limit
@@ -245,7 +245,7 @@ class Gd2 extends AbstractAdapter
      * @param string $memoryValue
      * @return int
      */
-    protected function _convertToByte($memoryValue)
+    protected function convertToByte($memoryValue)
     {
         if (stripos($memoryValue, 'G') !== false) {
             return (int)$memoryValue * pow(1024, 3);
@@ -276,7 +276,7 @@ class Gd2 extends AbstractAdapter
             // keep alpha transparency
             $isAlpha = false;
             $isTrueColor = false;
-            $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
+            $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
             if ($isAlpha) {
                 if ($isTrueColor) {
                     // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -319,7 +319,7 @@ class Gd2 extends AbstractAdapter
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
-        call_user_func_array($this->_getCallback('output'), $functionParameters);
+        call_user_func_array($this->getCallback('output'), $functionParameters);
     }
 
     /**
@@ -334,7 +334,7 @@ class Gd2 extends AbstractAdapter
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         ob_start();
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
-        call_user_func($this->_getCallback('output'), $this->_imageHandler);
+        call_user_func($this->getCallback('output'), $this->_imageHandler);
         return ob_get_clean();
     }
 
@@ -348,7 +348,7 @@ class Gd2 extends AbstractAdapter
      * @throws \InvalidArgumentException
      * @throws \BadFunctionCallException
      */
-    private function _getCallback($callbackType, $fileType = null, $unsupportedText = 'Unsupported image format.')
+    private function getCallback($callbackType, $fileType = null, $unsupportedText = 'Unsupported image format.')
     {
         if (null === $fileType) {
             $fileType = $this->_fileType;
@@ -377,7 +377,7 @@ class Gd2 extends AbstractAdapter
         // try to keep transparency, if any
         if ($this->_keepTransparency) {
             $isAlpha = false;
-            $transparentIndex = $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
+            $transparentIndex = $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
 
             try {
                 // fill true color png with alpha transparency
@@ -494,7 +494,7 @@ class Gd2 extends AbstractAdapter
      *
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    private function _getTransparency($imageResource, $fileType, &$isAlpha = false, &$isTrueColor = false)
+    private function getTransparency($imageResource, $fileType, &$isAlpha = false, &$isTrueColor = false)
     {
         $isAlpha = false;
         $isTrueColor = false;
@@ -535,7 +535,7 @@ class Gd2 extends AbstractAdapter
         // create new image
         $isAlpha = false;
         $isTrueColor = false;
-        $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
+        $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
         if ($isTrueColor) {
             // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $newImage = imagecreatetruecolor($dims['frame']['width'], $dims['frame']['height']);
@@ -545,7 +545,7 @@ class Gd2 extends AbstractAdapter
         }
 
         if ($isAlpha) {
-            $this->_saveAlpha($newImage);
+            $this->saveAlpha($newImage);
         }
 
         // fill new image with required color
@@ -605,7 +605,7 @@ class Gd2 extends AbstractAdapter
         $this->_getFileAttributes();
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $watermark = call_user_func(
-            $this->_getCallback('create', $watermarkFileType, 'Unsupported watermark image format.'),
+            $this->getCallback('create', $watermarkFileType, 'Unsupported watermark image format.'),
             $imagePath
         );
 
@@ -855,7 +855,7 @@ class Gd2 extends AbstractAdapter
         $canvas = imagecreatetruecolor($newWidth, $newHeight);
 
         if ($this->_fileType == IMAGETYPE_PNG) {
-            $this->_saveAlpha($canvas);
+            $this->saveAlpha($canvas);
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -932,7 +932,7 @@ class Gd2 extends AbstractAdapter
      * @param resource $imageHandler
      * @return void
      */
-    private function _saveAlpha($imageHandler)
+    private function saveAlpha($imageHandler)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $background = imagecolorallocate($imageHandler, 0, 0, 0);
@@ -971,13 +971,13 @@ class Gd2 extends AbstractAdapter
         $error = false;
         $this->_resized = true;
         try {
-            $this->_createImageFromTtfText($text, $font);
+            $this->createImageFromTtfText($text, $font);
         } catch (\Exception $e) {
             $error = true;
         }
 
         if ($error || empty($this->_imageHandler)) {
-            $this->_createImageFromText($text);
+            $this->createImageFromText($text);
         }
 
         return $this;
@@ -989,14 +989,14 @@ class Gd2 extends AbstractAdapter
      * @param string $text
      * @return void
      */
-    protected function _createImageFromText($text)
+    protected function createImageFromText($text)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $width = imagefontwidth($this->_fontSize) * strlen((string)$text);
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $height = imagefontheight($this->_fontSize);
 
-        $this->_createEmptyImage($width, $height);
+        $this->createEmptyImage($width, $height);
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $black = imagecolorallocate($this->_imageHandler, 0, 0, 0);
@@ -1014,14 +1014,14 @@ class Gd2 extends AbstractAdapter
      * @return void
      * @throws \InvalidArgumentException
      */
-    protected function _createImageFromTtfText($text, $font)
+    protected function createImageFromTtfText($text, $font)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $boundingBox = imagettfbbox($this->_fontSize, 0, $font, $text);
         $width = abs($boundingBox[4] - $boundingBox[0]);
         $height = abs($boundingBox[5] - $boundingBox[1]);
 
-        $this->_createEmptyImage($width, $height);
+        $this->createEmptyImage($width, $height);
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $black = imagecolorallocate($this->_imageHandler, 0, 0, 0);
@@ -1048,7 +1048,7 @@ class Gd2 extends AbstractAdapter
      * @param int $height
      * @return void
      */
-    protected function _createEmptyImage($width, $height)
+    protected function createEmptyImage($width, $height)
     {
         $this->_fileType = IMAGETYPE_PNG;
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -1169,13 +1169,13 @@ class Gd2 extends AbstractAdapter
      */
     private function createTruecolorImageCopy()
     {
-        $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
+        $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $newImage = imagecreatetruecolor($this->_imageSrcWidth, $this->_imageSrcHeight);
 
         if ($isAlpha) {
-            $this->_saveAlpha($newImage);
+            $this->saveAlpha($newImage);
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
