@@ -41,7 +41,6 @@ define(
                                 }
                             },
                             error: function(xhr, textStatus, errorThrown) {
-                                console.log('Error:', textStatus, errorThrown);
                             }
                         });
 

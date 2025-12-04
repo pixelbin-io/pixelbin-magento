@@ -8,6 +8,14 @@
     "type": "magento2-module",
     "version": "1.0.2",
     "license": [ "GPL-3.0" ],
+    "authors": [
+        {
+            "name": "Pixelbin",
+            "email": "support@pixelbin.io",
+            "homepage": "https://www.pixelbin.io",
+            "role": "Developer"
+        }
+    ],
     "autoload": {
         "files": [ "registration.php" ],
         "psr-4": {

@@ -45,7 +45,6 @@ define(
                      * @returns {null}
                      */
                     opened: function() {
-                        console.log('cldspinset opened');
                     },
 
                     /**
@@ -53,7 +52,6 @@ define(
                      * Closed
                      */
                     closed: function() {
-                        console.log('cldspinset closed');
                     }
                 });
             },
@@ -64,7 +62,6 @@ define(
              * @private
              */
             _onCreate: function() {
-                console.log('_onCreate');
             },
 
             /**
@@ -73,7 +70,6 @@ define(
              * @private
              */
             _onCancel: function() {
-                console.log('_onCancel');
             }
         });
 

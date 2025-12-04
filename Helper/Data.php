@@ -1,4 +1,15 @@
 <?php
+/**
+ * Pixelbinio
+ *
+ * DISCLAIMER
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Pixelbinio
+ * @package     Pixelbinio_Pixelbin
+ */
+declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Helper;
 
@@ -506,18 +517,15 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Parse Pixelbin URL
+     * Parse array creation for Pixelbin URL
      *
-     * @method parsePixelbinUrl
+     * @method parseArrayCreation
      * @param  string $url
-     * @param  string|null $publicId
+     * @param  string|null $parsedUrlParts
      * @return array
      */
-    public function parsePixelbinUrl($url, $publicId = null)
+    public function parseArrayCreation($url, $parsedUrlParts)
     {
-        $parsedUrlParts = $this->mbParseUrl($url);
-        $url = preg_replace('/\?.*/', '', $url);
-
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $extension = pathinfo($url, PATHINFO_EXTENSION);
         $parsed = [
@@ -538,6 +546,24 @@ class Data extends AbstractHelper
             "versionless_transformationless_url" => $url,
             "thumbnail_url" => null,
         ];
+
+        return $parsed;
+    }
+
+    /**
+     * Parse Pixelbin URL
+     *
+     * @method parsePixelbinUrl
+     * @param  string $url
+     * @param  string|null $publicId
+     * @return array
+     */
+    public function parsePixelbinUrl($url, $publicId = null)
+    {
+        $url = preg_replace('/\?.*/', '', $url);
+        $parsedUrlParts = $this->mbParseUrl($url);
+
+        $parsed = $this->parseArrayCreation($url, $parsedUrlParts);
 
         $_url = ltrim($parsed["path"], '/');
         $_url = preg_replace('/\.[^.]+$/', '', $_url);

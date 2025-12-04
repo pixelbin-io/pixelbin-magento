@@ -144,7 +144,6 @@ define(
                  * Destroyer
                  */
                 destroy: function () {
-                    console.log(this._player);
                 },
 
                 /**

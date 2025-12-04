@@ -65,15 +65,14 @@ define([
             var uiRegistry = registry;
 
             window.pixelbin = window.pixelbin || [];
-            console.log('all options');
-            console.log(this.options)
+
             this.options.cldMLid = this.options.cldMLid || 0;
 
             if (typeof window.pixelbin[this.options.cldMLid] === "undefined") {
                 window.ml = window.pixelbin.createMediaLibrary(
                     this.options, {
                         insertHandler: function(data) {
-                            console.log(data);
+             
                             $("#close_pixelbin_widget_container").hide();
                             $('body').first().css('overflow', 'initial');
                             if (widget.isMediaBrowser()) {
