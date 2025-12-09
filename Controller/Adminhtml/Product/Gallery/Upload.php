@@ -15,35 +15,19 @@ declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Product\Gallery;
 
-use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
-use Pixelbinio\Pixelbin\Logger\Logger;
-use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Controller\Adminhtml\AbstractUploadController;
 
 /**
  * Product Gallery image upload controller for different types of image type
- *
  */
-class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload
+class Upload extends AbstractUploadController implements HttpPostActionInterface
 {
-    /**
-     * Authorization level of a basic admin session
-     *
-     * @see _isAllowed()
-     */
     public const ADMIN_RESOURCE = 'Magento_Catalog::products';
 
-    /**
-     * @var \Magento\Framework\Controller\Result\RawFactory
-     */
-    protected $resultRawFactory;
-
-    /**
-     * @var array
-     */
-    private $allowedMimeTypes = [
+    private const ALLOWED_MIME_TYPES = [
         'jpg' => 'image/jpg',
         'jpeg' => 'image/jpeg',
         'gif' => 'image/gif',
@@ -56,6 +40,11 @@ class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Uploa
         'avif' => 'image/avif',
         'raw' => 'image/raw'
     ];
+
+    /**
+     * @var \Magento\Framework\Controller\Result\RawFactory
+     */
+    private $resultRawFactory;
 
     /**
      * @var \Magento\Framework\Image\AdapterFactory
@@ -75,9 +64,9 @@ class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Uploa
     /**
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
-     * @param \Magento\Framework\Image\AdapterFactory $adapterFactory
-     * @param \Magento\Framework\Filesystem $filesystem
-     * @param \Magento\Catalog\Model\Product\Media\Config $productMediaConfig
+     * @param \Magento\Framework\Image\AdapterFactory|null $adapterFactory
+     * @param \Magento\Framework\Filesystem|null $filesystem
+     * @param \Magento\Catalog\Model\Product\Media\Config|null $productMediaConfig
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -86,14 +75,20 @@ class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Uploa
         ?\Magento\Framework\Filesystem $filesystem = null,
         ?\Magento\Catalog\Model\Product\Media\Config $productMediaConfig = null
     ) {
-        parent::__construct($context, $resultRawFactory);
+        parent::__construct($context);
         $this->resultRawFactory = $resultRawFactory;
-        $this->adapterFactory = $adapterFactory ?: ObjectManager::getInstance()
-            ->get(\Magento\Framework\Image\AdapterFactory::class);
-        $this->filesystem = $filesystem ?: ObjectManager::getInstance()
-            ->get(\Magento\Framework\Filesystem::class);
-        $this->productMediaConfig = $productMediaConfig ?: ObjectManager::getInstance()
-            ->get(\Magento\Catalog\Model\Product\Media\Config::class);
+        $this->adapterFactory = $this->getDependencyWithFallback(
+            $adapterFactory,
+            \Magento\Framework\Image\AdapterFactory::class
+        );
+        $this->filesystem = $this->getDependencyWithFallback(
+            $filesystem,
+            \Magento\Framework\Filesystem::class
+        );
+        $this->productMediaConfig = $this->getDependencyWithFallback(
+            $productMediaConfig,
+            \Magento\Catalog\Model\Product\Media\Config::class
+        );
     }
 
     /**
@@ -103,44 +98,69 @@ class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Uploa
      */
     public function execute()
     {
-        try {
-            $uploader = $this->_objectManager->create(
-                \Magento\MediaStorage\Model\File\Uploader::class,
-                ['fileId' => 'image']
-            );
-            $uploader->setAllowedExtensions($this->getAllowedExtensions());
-            $imageAdapter = $this->adapterFactory->create();
-            $uploader->addValidateCallback('catalog_product_image', $imageAdapter, 'validateUploadFile');
-            $uploader->setAllowRenameFiles(true);
-            $uploader->setFilesDispersion(true);
-            $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
-            $result = $uploader->save(
-                $mediaDirectory->getAbsolutePath($this->productMediaConfig->getBaseTmpMediaPath())
-            );
-            $this->_eventManager->dispatch(
-                'catalog_product_gallery_upload_image_after',
-                ['result' => $result, 'action' => $this]
-            );
+        $result = $this->executeUploadWithErrorHandling(function () {
+            return $this->performUpload();
+        });
 
-            if (is_array($result)) {
-                unset($result['tmp_name']);
-                unset($result['path']);
+        return $this->createRawResponse($result);
+    }
 
-                $result['url'] = $this->productMediaConfig->getTmpMediaUrl($result['file']);
-                $result['file'] = $result['file'] . '.tmp';
-            } else {
-                $result = ['error' => 'Something went wrong while saving the file(s).'];
-            }
-        } catch (LocalizedException $e) {
-            $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
-        } catch (\Throwable $e) {
-            $result = ['error' => $e->getMessage(), 'errorcode' => 0];
+    /**
+     * Perform the actual upload operation
+     *
+     * @return array
+     * @throws \Exception
+     */
+    private function performUpload(): array
+    {
+        $uploader = $this->createUploader('image', $this->getAllowedExtensions());
+        
+        $imageAdapter = $this->adapterFactory->create();
+        $uploader->addValidateCallback('catalog_product_image', $imageAdapter, 'validateUploadFile');
+
+        $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
+        $result = $uploader->save(
+            $mediaDirectory->getAbsolutePath($this->productMediaConfig->getBaseTmpMediaPath())
+        );
+
+        $this->_eventManager->dispatch(
+            'catalog_product_gallery_upload_image_after',
+            ['result' => $result, 'action' => $this]
+        );
+
+        return $this->formatUploadResult($result);
+    }
+
+    /**
+     * Format upload result
+     *
+     * @param mixed $result
+     * @return array
+     */
+    private function formatUploadResult($result): array
+    {
+        if (!is_array($result)) {
+            return ['error' => 'Something went wrong while saving the file(s).'];
         }
 
-        /** @var \Magento\Framework\Controller\Result\Raw $response */
+        unset($result['tmp_name'], $result['path']);
+        $result['url'] = $this->productMediaConfig->getTmpMediaUrl($result['file']);
+        $result['file'] = $result['file'] . '.tmp';
+
+        return $result;
+    }
+
+    /**
+     * Create raw response with JSON content
+     *
+     * @param array $data
+     * @return \Magento\Framework\Controller\Result\Raw
+     */
+    private function createRawResponse(array $data): \Magento\Framework\Controller\Result\Raw
+    {
         $response = $this->resultRawFactory->create();
         $response->setHeader('Content-type', 'text/plain');
-        $response->setContents(json_encode($result));
+        $response->setContents(json_encode($data));
         return $response;
     }
 
@@ -149,8 +169,8 @@ class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Uploa
      *
      * @return array
      */
-    private function getAllowedExtensions()
+    private function getAllowedExtensions(): array
     {
-        return array_keys($this->allowedMimeTypes);
+        return array_keys(self::ALLOWED_MIME_TYPES);
     }
 }

@@ -17,25 +17,20 @@ namespace Pixelbinio\Pixelbin\Controller\Adminhtml\ContentType\Image;
 
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Filesystem;
+use Pixelbinio\Pixelbin\Controller\Adminhtml\AbstractUploadController;
 
 /**
  * Image upload controller class for Content type
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Upload extends \Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload
+class Upload extends AbstractUploadController implements HttpPostActionInterface
 {
     public const UPLOAD_DIR = 'wysiwyg';
-
     public const ADMIN_RESOURCE = 'Magento_Backend::content';
 
-    /**
-     * @var \Magento\Framework\Filesystem\DirectoryList
-     * @deprecad use $mediaDirectory instead
-     */
-    private $directoryList;
+    private const ALLOWED_EXTENSIONS = ['jpeg', 'jpg', 'png', 'gif'];
 
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
@@ -83,33 +78,14 @@ class Upload extends \Magento\PageBuilder\Controller\Adminhtml\ContentType\Image
         \Magento\Cms\Helper\Wysiwyg\Images $cmsWysiwygImages,
         ?Filesystem $filesystem = null
     ) {
-        parent::__construct(
-            $context,
-            $resultJsonFactory,
-            $storeManager,
-            $uploaderFactory,
-            $directoryList,
-            $cmsWysiwygImages
-        );
+        parent::__construct($context);
         $this->resultJsonFactory = $resultJsonFactory;
         $this->storeManager = $storeManager;
         $this->uploaderFactory = $uploaderFactory;
-        $this->directoryList = $directoryList;
         $this->cmsWysiwygImages = $cmsWysiwygImages;
-        $filesystem = $filesystem ?? ObjectManager::getInstance()->create(Filesystem::class);
+        
+        $filesystem = $this->getDependencyWithFallback($filesystem, Filesystem::class);
         $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
-    }
-
-    /**
-     * Retrieve path
-     *
-     * @param string $path
-     * @param string $imageName
-     * @return string
-     */
-    private function getFilePath($path, $imageName)
-    {
-        return rtrim($path, '/') . '/' . ltrim($imageName, '/');
     }
 
     /**
@@ -119,28 +95,61 @@ class Upload extends \Magento\PageBuilder\Controller\Adminhtml\ContentType\Image
      */
     public function execute()
     {
+        $result = $this->executeUploadWithErrorHandling(function () {
+            return $this->performUpload();
+        });
+
+        return $this->resultJsonFactory->create()->setData($result);
+    }
+
+    /**
+     * Perform the actual upload operation
+     *
+     * @return array
+     * @throws \Exception
+     */
+    private function performUpload(): array
+    {
         $fieldName = $this->getRequest()->getParam('param_name');
         $fileUploader = $this->uploaderFactory->create(['fileId' => $fieldName]);
 
-        // Set our parameters
-        $fileUploader->setFilesDispersion(false);
-        $fileUploader->setAllowRenameFiles(true);
-        $fileUploader->setAllowedExtensions(['jpeg','jpg','png','gif']);
-        $fileUploader->setAllowCreateFolders(true);
+        $this->configureUploader($fileUploader);
 
-        try {
+        $result = $fileUploader->save($this->getUploadDir());
+        
+        return $this->formatUploadResult($result);
+    }
 
-            $result = $fileUploader->save($this->getUploadDir());
-            $baseUrl = $this->_backendUrl->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]);
-            $result['id'] = $this->cmsWysiwygImages->idEncode($result['file']);
-            $result['url'] = $baseUrl . $this->getFilePath(self::UPLOAD_DIR, $result['file']);
-        } catch (\Exception $e) {
-            $result = [
-                'error' => $e->getMessage(),
-                'errorcode' => $e->getCode()
-            ];
-        }
-        return $this->resultJsonFactory->create()->setData($result);
+    /**
+     * Configure file uploader settings
+     *
+     * @param \Magento\Framework\File\Uploader $uploader
+     * @return void
+     */
+    private function configureUploader(\Magento\Framework\File\Uploader $uploader): void
+    {
+        $uploader->setFilesDispersion(false);
+        $uploader->setAllowRenameFiles(true);
+        $uploader->setAllowedExtensions(self::ALLOWED_EXTENSIONS);
+        $uploader->setAllowCreateFolders(true);
+    }
+
+    /**
+     * Format upload result with additional metadata
+     *
+     * @param array $result
+     * @return array
+     */
+    private function formatUploadResult(array $result): array
+    {
+        $baseUrl = $this->_backendUrl->getBaseUrl([
+            '_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+        ]);
+        
+        $result['id'] = $this->cmsWysiwygImages->idEncode($result['file']);
+        $result['url'] = $baseUrl . $this->buildFilePath(self::UPLOAD_DIR, $result['file']);
+        
+        return $result;
     }
 
     /**
@@ -148,7 +157,7 @@ class Upload extends \Magento\PageBuilder\Controller\Adminhtml\ContentType\Image
      *
      * @return string
      */
-    private function getUploadDir()
+    private function getUploadDir(): string
     {
         return $this->mediaDirectory->getAbsolutePath(self::UPLOAD_DIR);
     }
