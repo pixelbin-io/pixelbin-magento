@@ -9,6 +9,7 @@
  *
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
+ * @api
  */
 
 declare(strict_types=1);
@@ -21,6 +22,7 @@ interface ResourcesManagementInterface
      * GET for getImage api
      *
      * @return string
+     * @api
      */
     public function getImage();
 
@@ -28,6 +30,7 @@ interface ResourcesManagementInterface
      * GET for getVideo api
      *
      * @return string
+     * @api
      */
     public function getVideo();
 
@@ -35,6 +38,7 @@ interface ResourcesManagementInterface
      * GET for getResourcesByTag api
      *
      * @return string
+     * @api
      */
     public function getResourcesByTag();
 }

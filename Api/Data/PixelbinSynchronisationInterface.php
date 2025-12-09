@@ -9,6 +9,7 @@
  *
  * @category    Pixelbinio
  * @package     Pixelbinio_Pixelbin
+ * @api
  */
 
 declare(strict_types=1);
@@ -34,6 +35,7 @@ interface PixelbinSynchronisationInterface
      * Get Entity Id
      *
      * @return int
+     * @api
      */
     public function getEntityId();
 
@@ -42,66 +44,75 @@ interface PixelbinSynchronisationInterface
      *
      * @param int $entityId
      * @return $this
+     * @api
      */
     public function setEntityId($entityId);
 
     /**
-     * Set Image Path
+     * Get Image Path
      *
      * @return string
+     * @api
      */
     public function getImagePath();
 
     /**
-     * Get Image Path
+     * Set Image Path
      *
      * @param string $imagePath
      * @return $this
+     * @api
      */
     public function setImagePath($imagePath);
 
     /**
-     * Set File Data
+     * Get File Data
      *
      * @return string
+     * @api
      */
     public function getFileData();
 
     /**
-     * Get File Data
+     * Set File Data
      *
      * @param string $fileData
      * @return $this
+     * @api
      */
     public function setFileData($fileData);
 
     /**
-     * Set Sync status
+     * Get Sync status
      *
      * @return string
+     * @api
      */
     public function getSyncStatus();
 
     /**
-     * Get Sync status
+     * Set Sync status
      *
      * @param string $syncStatus
      * @return $this
+     * @api
      */
     public function setSyncStatus($syncStatus);
 
     /**
-     * Set Error Message
+     * Get Error Message
      *
      * @return string
+     * @api
      */
     public function getErrorMessage();
 
     /**
-     * Get Error Message
+     * Set Error Message
      *
      * @param string $errorMessage
      * @return $this
+     * @api
      */
     public function setErrorMessage($errorMessage);
 
@@ -109,6 +120,7 @@ interface PixelbinSynchronisationInterface
      * Get Created At
      *
      * @return string
+     * @api
      */
     public function getCreatedAt();
 
@@ -117,6 +129,7 @@ interface PixelbinSynchronisationInterface
      *
      * @param string $createdAt
      * @return $this
+     * @api
      */
     public function setCreatedAt($createdAt);
 
@@ -124,6 +137,7 @@ interface PixelbinSynchronisationInterface
      * Get Updated At
      *
      * @return string
+     * @api
      */
     public function getUpdatedAt();
 
@@ -132,6 +146,7 @@ interface PixelbinSynchronisationInterface
      *
      * @param string $updateAt
      * @return $this
+     * @api
      */
     public function setUpdatedAt($updateAt);
 }
