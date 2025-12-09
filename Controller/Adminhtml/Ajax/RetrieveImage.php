@@ -258,8 +258,7 @@ class RetrieveImage extends \Magento\Backend\App\Action implements CsrfAwareActi
         } catch (\Exception $e) {
             $result = [
                 'error' => $e->getMessage(),
-                'errorcode' => $e->getCode(),
-                'trace' => $e->getTraceAsString()
+                'errorcode' => $e->getCode()
             ];
             $fileWriter = $this->fileSystem->getDirectoryWrite(DirectoryList::MEDIA);
             if (isset($localFileFullPath) && $fileWriter->isExist($localFileFullPath)) {

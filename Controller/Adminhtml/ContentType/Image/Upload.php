@@ -21,7 +21,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Filesystem;
 
 /**
- * Image upload controller
+ * Image upload controller class for Content type
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */

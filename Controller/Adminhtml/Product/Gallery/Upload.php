@@ -22,6 +22,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Pixelbinio\Pixelbin\Logger\Logger;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
+/**
+ * Product Gallery image upload controller for different types of image type
+ *
+ */
 class Upload extends \Magento\Catalog\Controller\Adminhtml\Product\Gallery\Upload
 {
     /**
