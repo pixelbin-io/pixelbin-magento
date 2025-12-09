@@ -15,37 +15,15 @@ declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Core\Image\Transformation;
 
-class Crop
+// File: Crop.php
+// This extends AbstractTransformation to eliminate code duplication
+
+class Crop extends AbstractTransformation
 {
     public const PAD = 'pad';
     public const LPAD = 'lpad';
     public const FIT = 'fit';
     public const LIMIT = 'limit';
-
-    /**
-     * @var value
-     */
-    private $value;
-
-    /**
-     * @param string $value
-     */
-    private function __construct($value)
-    {
-        $this->value = $value;
-    }
-
-    /**
-     * From String value for Crop
-     *
-     * @param string $value
-     * @return Crop
-     * @codingStandardsIgnoreStart
-     */
-    public static function fromString($value)
-    {
-        return new Crop($value);
-    }
 
     /**
      * Pad for Crop
@@ -55,7 +33,7 @@ class Crop
      */
     public static function pad()
     {
-        return new Crop(self::PAD);
+        return new self(self::PAD);
     }
 
     /**
@@ -66,7 +44,7 @@ class Crop
      */
     public static function lpad()
     {
-        return new Crop(self::LPAD);
+        return new self(self::LPAD);
     }
 
     /**
@@ -77,7 +55,7 @@ class Crop
      */
     public static function fit()
     {
-        return new Crop(self::FIT);
+        return new self(self::FIT);
     }
 
     /**
@@ -88,16 +66,6 @@ class Crop
      */
     public static function limit()
     {
-        return new Crop(self::LIMIT);
-    }
-
-    /**
-     * To String
-     *
-     * @return value
-     */
-    public function __toString()
-    {
-        return $this->value;
+        return new self(self::LIMIT);
     }
 }
