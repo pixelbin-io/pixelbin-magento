@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Cms\Wysiwyg\Images;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Helper\PixelbinHelperData as PixelbinHelperData;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 use Pixelbinio\Pixelbin\Model\Framework\File\Uploader;
 use Magento\Backend\App\Action\Context;
@@ -109,6 +110,11 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     private $helperData;
 
     /**
+     * @var PixelbinHelperData
+     */
+    private $pixelbinHelperData;
+
+    /**
      * @var MediaGalleryUploader
      */
     private $mediaGalleryUploader;
@@ -147,6 +153,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      * @param AllowedProtocols $protocolValidator
      * @param NotProtectedExtension $extensionValidator
      * @param HelperData $helperData
+     * @param PixelbinHelperData $pixelbinHelperData
      * @param MediaGalleryUploader $mediaGalleryUploader
      * @param AssetInterfaceFactory $mediaAsset
      * @param SaveAssetsInterface $mediaAssetSave
@@ -167,6 +174,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         AllowedProtocols $protocolValidator,
         NotProtectedExtension $extensionValidator,
         HelperData $helperData,
+        PixelbinHelperData $pixelbinHelperData,
         MediaGalleryUploader $mediaGalleryUploader,
         AssetInterfaceFactory $mediaAsset,
         SaveAssetsInterface $mediaAssetSave,
@@ -184,6 +192,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         $this->extensionValidator = $extensionValidator;
         $this->protocolValidator = $protocolValidator;
         $this->helperData = $helperData;
+        $this->pixelbinHelperData = $pixelbinHelperData;
         $this->mediaGalleryUploader = $mediaGalleryUploader;
         $this->mediaAsset = $mediaAsset;
         $this->mediaAssetSave = $mediaAssetSave;
@@ -219,7 +228,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $localFileName = $this->remoteFileUrl = $allData["asset"]["url"];
             $imagePathArray = explode($this->helperData->getAppZone(), $localFileName);
             $this->validateRemoteFile($this->remoteFileUrl);
-            $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
+            $this->parsedRemoteFileUrl = $this->pixelbinHelperData->parsePixelbinUrl($this->remoteFileUrl);
 
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
 

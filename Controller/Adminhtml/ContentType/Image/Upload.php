@@ -129,9 +129,6 @@ class Upload extends \Magento\PageBuilder\Controller\Adminhtml\ContentType\Image
         $fileUploader->setAllowCreateFolders(true);
 
         try {
-            // if (!$fileUploader->checkMimeType(['image/png', 'image/jpeg', 'image/gif'])) {
-            //     throw new \Magento\Framework\Exception\LocalizedException(__('File validation failed aloo.'));
-            // }
 
             $result = $fileUploader->save($this->getUploadDir());
             $baseUrl = $this->_backendUrl->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]);
