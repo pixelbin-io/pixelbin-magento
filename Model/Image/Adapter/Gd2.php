@@ -35,7 +35,7 @@ class Gd2 extends AbstractAdapter
     /**
      * @var array
      */
-    protected $_requiredExtensions = ["gd"];
+    protected $requiredExtensions = ["gd"];
 
     /**
      * Image output callbacks by type
@@ -44,7 +44,7 @@ class Gd2 extends AbstractAdapter
      *
      * @var array
      */
-    private static $_callbacks = [
+    private static $callbacks = [
         IMAGETYPE_GIF => ['output' => 'imagegif', 'create' => 'imagecreatefromgif'],
         IMAGETYPE_JPEG => ['output' => 'imagejpeg', 'create' => 'imagecreatefromjpeg'],
         IMAGETYPE_PNG => ['output' => 'imagepng', 'create' => 'imagecreatefrompng'],
@@ -58,7 +58,7 @@ class Gd2 extends AbstractAdapter
      *
      * @var bool
      */
-    protected $_resized = false;
+    protected $resized = false;
 
     /**
      * @var HelperData
@@ -87,7 +87,7 @@ class Gd2 extends AbstractAdapter
      *
      * @return void
      */
-    protected function _reset()
+    protected function reset()
     {
         $this->_fileMimeType = null;
         $this->_fileType = null;
@@ -114,11 +114,11 @@ class Gd2 extends AbstractAdapter
         }
 
         $this->_fileName = $filename;
-        $this->_reset();
+        $this->reset();
         $this->getMimeType();
         $this->_getFileAttributes();
 
-        if ($this->_isMemoryLimitReached()) {
+        if ($this->isMemoryLimitReached()) {
             throw new \OverflowException('Memory limit has been reached.');
         }
 
@@ -199,10 +199,10 @@ class Gd2 extends AbstractAdapter
      *
      * @return bool
      */
-    protected function _isMemoryLimitReached()
+    protected function isMemoryLimitReached()
     {
         $limit = $this->convertToByte(ini_get('memory_limit'));
-        $requiredMemory = $this->_getImageNeedMemorySize($this->_fileName);
+        $requiredMemory = $this->getImageNeedMemorySize($this->_fileName);
         if ($limit === -1) {
             // A limit of -1 means no limit: http://www.php.net/manual/en/ini.core.php#ini.memory-limit
             return false;
@@ -216,7 +216,7 @@ class Gd2 extends AbstractAdapter
      * @param string $file
      * @return float|int
      */
-    protected function _getImageNeedMemorySize($file)
+    protected function getImageNeedMemorySize($file)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $imageInfo = getimagesize($file);
@@ -272,7 +272,7 @@ class Gd2 extends AbstractAdapter
     {
         $fileName = $this->_prepareDestination($destination, $newName);
 
-        if (!$this->_resized) {
+        if (!$this->resized) {
             // keep alpha transparency
             $isAlpha = false;
             $isTrueColor = false;
@@ -353,13 +353,13 @@ class Gd2 extends AbstractAdapter
         if (null === $fileType) {
             $fileType = $this->_fileType;
         }
-        if (empty(self::$_callbacks[$fileType])) {
+        if (empty(self::$callbacks[$fileType])) {
             throw new \InvalidArgumentException($unsupportedText);
         }
-        if (empty(self::$_callbacks[$fileType][$callbackType])) {
+        if (empty(self::$callbacks[$fileType][$callbackType])) {
             throw new \BadFunctionCallException('Callback not found.');
         }
-        return self::$_callbacks[$fileType][$callbackType];
+        return self::$callbacks[$fileType][$callbackType];
     }
 
     /**
@@ -569,7 +569,7 @@ class Gd2 extends AbstractAdapter
         $this->imageDestroy();
         $this->_imageHandler = $newImage;
         $this->refreshImageDimensions();
-        $this->_resized = true;
+        $this->resized = true;
     }
 
     /**
@@ -885,7 +885,7 @@ class Gd2 extends AbstractAdapter
      */
     public function checkDependencies()
     {
-        foreach ($this->_requiredExtensions as $value) {
+        foreach ($this->requiredExtensions as $value) {
             if (!extension_loaded($value)) {
                 throw new \RuntimeException("Required PHP extension '{$value}' was not loaded.");
             }
@@ -969,7 +969,7 @@ class Gd2 extends AbstractAdapter
     public function createPngFromString($text, $font = '')
     {
         $error = false;
-        $this->_resized = true;
+        $this->resized = true;
         try {
             $this->createImageFromTtfText($text, $font);
         } catch (\Exception $e) {

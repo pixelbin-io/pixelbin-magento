@@ -34,11 +34,11 @@ abstract class AbstractUploadController extends Action
     {
         try {
             $result = $uploadCallback();
-            
+
             if (!is_array($result)) {
                 return ['error' => 'Something went wrong while saving the file(s).'];
             }
-            
+
             return $result;
         } catch (LocalizedException $e) {
             return ['error' => $e->getMessage(), 'errorcode' => $e->getCode()];
@@ -78,11 +78,11 @@ abstract class AbstractUploadController extends Action
             \Magento\MediaStorage\Model\File\Uploader::class,
             ['fileId' => $fileId]
         );
-        
+
         $uploader->setAllowedExtensions($allowedExtensions);
         $uploader->setAllowRenameFiles($allowRenameFiles);
         $uploader->setFilesDispersion($filesDispersion);
-        
+
         return $uploader;
     }
 

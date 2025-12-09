@@ -83,7 +83,7 @@ class Upload extends AbstractUploadController implements HttpPostActionInterface
         $this->storeManager = $storeManager;
         $this->uploaderFactory = $uploaderFactory;
         $this->cmsWysiwygImages = $cmsWysiwygImages;
-        
+
         $filesystem = $this->getDependencyWithFallback($filesystem, Filesystem::class);
         $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
     }
@@ -116,7 +116,7 @@ class Upload extends AbstractUploadController implements HttpPostActionInterface
         $this->configureUploader($fileUploader);
 
         $result = $fileUploader->save($this->getUploadDir());
-        
+
         return $this->formatUploadResult($result);
     }
 
@@ -145,10 +145,10 @@ class Upload extends AbstractUploadController implements HttpPostActionInterface
         $baseUrl = $this->_backendUrl->getBaseUrl([
             '_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
         ]);
-        
+
         $result['id'] = $this->cmsWysiwygImages->idEncode($result['file']);
         $result['url'] = $baseUrl . $this->buildFilePath(self::UPLOAD_DIR, $result['file']);
-        
+
         return $result;
     }
 

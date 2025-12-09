@@ -114,7 +114,7 @@ class Upload extends AbstractUploadController implements HttpPostActionInterface
     private function performUpload(): array
     {
         $uploader = $this->createUploader('image', $this->getAllowedExtensions());
-        
+
         $imageAdapter = $this->adapterFactory->create();
         $uploader->addValidateCallback('catalog_product_image', $imageAdapter, 'validateUploadFile');
 

@@ -20,7 +20,7 @@ use Magento\Cms\Block\Block as CmsBlockBlock;
 
 /**
  * Plugin for CMS Block lazy loading
- * 
+ *
  * Note: This class appears similar to other CMS block plugins in this module.
  * Separate plugin classes are required by Magento's plugin architecture to
  * properly intercept different block types with correct type hints.

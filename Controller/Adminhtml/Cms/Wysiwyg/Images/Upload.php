@@ -264,7 +264,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $this->mediaAssetSave->execute([$ma]);
         } catch (\Exception $e) {
             $result = [
-                'error' => $e->getMessage(), 
+                'error' => $e->getMessage(),
                 'errorcode' => $e->getCode()
             ];
         }

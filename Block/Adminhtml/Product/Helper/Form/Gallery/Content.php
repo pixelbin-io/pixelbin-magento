@@ -34,12 +34,12 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
     /**
      * @var DecoderInterface
      */
-    protected $_jsonDecoder;
+    protected $jsonDecoder;
 
     /**
      * @var MediaLibraryHelper
      */
-    protected $_mediaLibraryHelper;
+    protected $mediaLibraryHelper;
 
     /**
      * @method __construct
@@ -59,8 +59,8 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
         array $data = []
     ) {
         parent::__construct($context, $jsonEncoder, $mediaConfig, $data);
-        $this->_jsonDecoder = $jsonDecoder;
-        $this->_mediaLibraryHelper = $mediaLibraryHelper;
+        $this->jsonDecoder = $jsonDecoder;
+        $this->mediaLibraryHelper = $mediaLibraryHelper;
     }
 
     /**
@@ -79,7 +79,7 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
             //Catch deprecation error on Magento 2.3.5 and above
             $imageUploadUrl = $this->_urlBuilder->getUrl('pixelbin/ajax/retrieveImage');
         }
-        $pixelbinOptions = $this->_mediaLibraryHelper->getPixelbinOptions(null);
+        $pixelbinOptions = $this->mediaLibraryHelper->getPixelbinOptions(null);
         return $this->_jsonEncoder->encode(
             [
                 'htmlId' => $this->getHtmlId(),
@@ -98,7 +98,7 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
                 'useDerived' => false,
                 'addTmpExtension' => true,
                 'pixelbin_options' => $pixelbinOptions,
-                'pixelbinShowOptions' => $this->_mediaLibraryHelper->getPixelbinShowOptions(null),
+                'pixelbinShowOptions' => $this->mediaLibraryHelper->getPixelbinShowOptions(null),
             ]
         );
     }
