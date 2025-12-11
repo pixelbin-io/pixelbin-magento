@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model\MediaStorage\Framework;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -32,7 +39,7 @@ class Uploader
      */
     public function __construct(
         UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData           $helperData,
+        HelperData $helperData,
         DirectoryList $directoryList
     ) {
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;

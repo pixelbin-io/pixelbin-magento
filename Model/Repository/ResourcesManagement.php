@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model\Repository;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
@@ -28,32 +35,32 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     /**
      * @var string
      */
-    protected $_resourceType = "image";
+    protected $resourceType = "image";
 
     /**
      * @var array
      */
-    protected $_resourceData = [];
+    protected $resourceData = [];
 
     /**
      * @var HelperData
      */
-    protected $_helperData;
+    protected $helperData;
 
     /**
      * @var UploadFileToPixelbin
      */
-    protected $_uploadFileToPixelbin;
+    protected $uploadFileToPixelbin;
 
     /**
      * @var Http
      */
-    private $_request;
+    private $request;
 
     /**
      * @var EncoderInterface
      */
-    private $_jsonEncoder;
+    private $jsonEncoder;
 
     /**
      * @param HelperData $helperData
@@ -67,10 +74,10 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
         Http $request,
         EncoderInterface $jsonEncoder
     ) {
-        $this->_helperData = $helperData;
-        $this->_uploadFileToPixelbin = $uploadFileToPixelbin;
-        $this->_request = $request;
-        $this->_jsonEncoder = $jsonEncoder;
+        $this->helperData = $helperData;
+        $this->uploadFileToPixelbin = $uploadFileToPixelbin;
+        $this->request = $request;
+        $this->jsonEncoder = $jsonEncoder;
     }
 
     /**
@@ -83,15 +90,15 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     {
         if (!$this->initialized) {
             $this->initialized = true;
-            if (($id = $this->_request->getParam("id"))) {
+            if (($id = $this->request->getParam("id"))) {
                 // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $this->setId(\rawurldecode($id));
             }
-            if (($maxResults = $this->_request->getParam("max_results"))) {
+            if (($maxResults = $this->request->getParam("max_results"))) {
                 $this->setMaxResults($maxResults);
             }
-            if ($this->_helperData->isModuleEnabled()) {
-                $this->_uploadFileToPixelbin->getPixelbinObj();
+            if ($this->helperData->isModuleEnabled()) {
+                $this->uploadFileToPixelbin->getPixelbinObj();
                 return Url::url_to_obj($this->id);
             }
         }
@@ -145,21 +152,21 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
     /**
      * Get details of a single resource
      *
-     * @method _getResourceData
+     * @method getResourceData
      * @return string (json encoded data)
      */
-    protected function _getResourceData()
+    protected function getResourceData()
     {
         try {
             $response = $this->initialize();
-            return $this->_jsonEncoder->encode(
+            return $this->jsonEncoder->encode(
                 [
                     "error" => 0,
                     "data" => $response
                 ]
             );
         } catch (\Exception $e) {
-            return $this->_jsonEncoder->encode(
+            return $this->jsonEncoder->encode(
                 [
                     "error" => 1,
                     "message" => $e->getMessage()
@@ -173,8 +180,8 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
      */
     public function getImage()
     {
-        $this->_resourceType = "image";
-        return $this->_getResourceData();
+        $this->resourceType = "image";
+        return $this->getResourceData();
     }
 
     /**
@@ -182,8 +189,8 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
      */
     public function getVideo()
     {
-        $this->_resourceType = "video";
-        return $this->_getResourceData();
+        $this->resourceType = "video";
+        return $this->getResourceData();
     }
 
     /**
@@ -200,7 +207,7 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
             $resources = $this->_api->assetsByTag(
                 $this->getId(),
                 [
-                    "resource_type" => $this->_resourceType,
+                    "resource_type" => $this->resourceType,
                     "max_results" => (int) $this->maxResults || null
                 ]
             )['resources'];
@@ -209,6 +216,6 @@ class ResourcesManagement implements \Pixelbinio\Pixelbin\Api\ResourcesManagemen
         } catch (\Exception $e) {
             $response["message"] = $e->getMessage();
         }
-        return $this->_jsonEncoder->encode($response);
+        return $this->jsonEncoder->encode($response);
     }
 }

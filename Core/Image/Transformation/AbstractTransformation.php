@@ -9,42 +9,40 @@ declare(strict_types=1);
 
 namespace Pixelbinio\Pixelbin\Core\Image\Transformation;
 
-class Freeform
+abstract class AbstractTransformation
 {
     /**
      * @var string
      */
-    private $urlParameters;
+    protected $value;
 
     /**
-     * Freeform constructor.
-     *
-     * @param string $urlParameters
+     * @param string $value
      */
-    public function __construct($urlParameters)
+    protected function __construct($value)
     {
-        $this->urlParameters = $urlParameters;
+        $this->value = $value;
     }
 
     /**
-     * Free form from string value
+     * Create instance from string value
      *
-     * @param  string $value
-     * @return Freeform
+     * @param string $value
+     * @return static
      * @codingStandardsIgnoreStart
      */
     public static function fromString($value)
     {
-        return new Freeform($value);
+        return new static($value);
     }
 
     /**
-     * To String conversion of URL
+     * Convert to string
      *
      * @return string
      */
     public function __toString()
     {
-        return $this->urlParameters;
+        return $this->value;
     }
 }

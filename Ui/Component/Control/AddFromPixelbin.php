@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Ui\Component\Control;
 
 use Magento\Cms\Helper\Wysiwyg\Images;
@@ -9,7 +16,7 @@ use Magento\Framework\AuthorizationInterface;
 
 class AddFromPixelbin implements ButtonProviderInterface
 {
-    private const ACL_UPLOAD_ASSETS= 'Magento_MediaGalleryUiApi::upload_assets';
+    private const ACL_UPLOAD_ASSETS = 'Magento_MediaGalleryUiApi::upload_assets';
 
     /**
      * @var Content

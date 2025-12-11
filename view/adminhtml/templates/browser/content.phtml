@@ -32,7 +32,7 @@ $pixelbinMLwidgetOprions = $block->getPixelbinMediaLibraryWidgetOptions();
                     data-role="add-from-pixelbin-button"
                     type="button"
                     data-mage-init='{"pixelbinMediaLibraryModal":
-                    <?= /** @escapeNotVerified */ $pixelbinMLwidgetOprions ?>}'
+                    <?= $escaper->escapeHtml($pixelbinMLwidgetOprions) ?>}'
                     class="action-secondary add-from-pixelbin-button pixelbin-button-with-logo lg-margin-bottom">
                 <span><?= $escaper->escapeHtml(__('Add from Pixelbin')) ?></span>
             </button>

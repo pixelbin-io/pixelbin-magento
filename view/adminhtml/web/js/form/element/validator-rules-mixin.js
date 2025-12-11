@@ -7,7 +7,7 @@ define([
     'jquery',
     'underscore',
     'Magento_Ui/js/lib/validation/utils'
-], function($, _, utils) {
+], function ($, _, utils) {
     'use strict';
 
     /**
@@ -15,15 +15,16 @@ define([
      * @param {String} href
      * @return {Boolean}
      */
-    function validateIsUrl(href) {
+    function validateIsUrl(href)
+    {
         return (/^(http|https|ftp):\/\/(([A-Z0-9]([A-Z0-9_-]*[A-Z0-9]|))(\.[A-Z0-9]([A-Z0-9_-]*[A-Z0-9]|))*)(:(\d+))?(\/[A-Z0-9~](([A-Z0-9_~-]|\.)*[A-Z0-9~]|))*\/?(.*)?$/i).test(href); //eslint-disable-line max-len
     }
 
-    return function(validator) {
+    return function (validator) {
 
         validator.addRule(
             'validate-video-url',
-            function(href) {
+            function (href) {
                 if (utils.isEmptyNoTrim(href)) {
                     return true;
                 }

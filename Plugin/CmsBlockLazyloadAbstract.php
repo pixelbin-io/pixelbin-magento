@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin;
 
 use Magento\Cms\Block\Widget\Block as CmsBlockWidget;
@@ -22,7 +29,7 @@ class CmsBlockLazyloadAbstract
     /**
      * @var Registry
      */
-    protected $_coreRegistry;
+    protected $coreRegistry;
 
     /**
      * @method __construct
@@ -37,7 +44,7 @@ class CmsBlockLazyloadAbstract
     ) {
         $this->logger = $logger;
         $this->helperData = $helperData;
-        $this->_coreRegistry = $coreRegistry;
+        $this->coreRegistry = $coreRegistry;
     }
 
     /**
@@ -62,17 +69,19 @@ class CmsBlockLazyloadAbstract
             $modified = 0;
 
             foreach ($dom->getElementsByTagName('img') as $element) {
-                if (strpos($element->getAttribute('class'), "lazyload") === false &&
+                if (
+                    strpos($element->getAttribute('class'), "lazyload") === false &&
                     strpos($element->getAttribute('class'), "owl-lazy") === false &&
-                    ($image = $element->getAttribute('src')) !== null) {
-
+                    ($image = $element->getAttribute('src')) !== null
+                ) {
                     $placeholderUrl = $this->helperData->replaceCmsImageUrlWithPixelbin($image);
                     $modified++;
 
-                    if ($this->helperData->isEnabledLazyload() &&
+                    if (
+                        $this->helperData->isEnabledLazyload() &&
                         $this->helperData->isLazyloadAutoReplaceCmsBlocks() &&
-                        !in_array($subject->getBlockId(), $this->helperData->getLazyloadIgnoredCmsBlocksArray())) {
-
+                        !in_array($subject->getBlockId(), $this->helperData->getLazyloadIgnoredCmsBlocksArray())
+                    ) {
                         $element->setAttribute('class', 'pixelbin-lazyload ' . $element->getAttribute('class'));
                         $element->setAttribute('data-original', $placeholderUrl);
                     }

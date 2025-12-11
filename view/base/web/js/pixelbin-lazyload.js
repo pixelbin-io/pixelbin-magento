@@ -1,7 +1,7 @@
 define([
     'jquery',
     'jquery.lazyload'
-], function($) {
+], function ($) {
     'use strict';
 
     $.widget('mage.pixelbinLazyload', {
@@ -21,21 +21,21 @@ define([
         /**
          * @private
          */
-        _create: function() {
+        _create: function () {
             this._super();
             this.initialize();
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             var widget = this;
             options = $.extend({}, widget.options, options || {});
             this.cldLazyloadInit(options);
-            setInterval(function() {
+            setInterval(function () {
                 widget.cldLazyloadInit(options);
             }, 4000);
         },
 
-        cldLazyloadInit: function(options) {
+        cldLazyloadInit: function (options) {
             if ($(".pixelbin-lazyload").length) {
                 var widget = this;
                 try {
@@ -43,7 +43,7 @@ define([
                     $(".pixelbin-lazyload").addClass("pixelbin-lazyload-processed").removeClass("pixelbin-lazyload");
                 } catch (err) {
                     console.warn("Notice: An error occured while initializing Lazyload (" + err + "). Trying to fix automatically...");
-                    $(".pixelbin-lazyload").each(function() {
+                    $(".pixelbin-lazyload").each(function () {
                         if ($(this).is("img") || $(this).is("iframe")) {
                             $(this).attr("src", $(this).attr("data-original"));
                         } else {

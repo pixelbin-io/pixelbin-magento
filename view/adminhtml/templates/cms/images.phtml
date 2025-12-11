@@ -6,7 +6,7 @@
 <script type="text/x-magento-init">
 {"*": {
     "updateCmsImages": { "ajaxUrl": "<?=
-        /** @escapeNotVerified */ $block->getUrl('pixelbin/ajax/updateadminimage')
+        $escaper->escapeUrl($block->getUrl('pixelbin/ajax/updateadminimage'))
     ?>" }
 }}
 

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Images;
 
 use Magento\Backend\App\Action;
@@ -20,7 +27,7 @@ class Index extends Action
      * @param PageFactory $resultPageFactory
      */
     public function __construct(
-        Context     $context,
+        Context $context,
         PageFactory $resultPageFactory
     ) {
         parent::__construct($context);

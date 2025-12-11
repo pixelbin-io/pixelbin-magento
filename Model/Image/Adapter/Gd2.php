@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model\Image\Adapter;
 
 use Magento\Framework\Exception\FileSystemException;
@@ -22,7 +29,7 @@ class Gd2 extends AbstractAdapter
     /**
      * @var array
      */
-    protected $_requiredExtensions = ["gd"];
+    protected $requiredExtensions = ["gd"];
 
     /**
      * Image output callbacks by type
@@ -31,7 +38,7 @@ class Gd2 extends AbstractAdapter
      *
      * @var array
      */
-    private static $_callbacks = [
+    private static $callbacks = [
         IMAGETYPE_GIF => ['output' => 'imagegif', 'create' => 'imagecreatefromgif'],
         IMAGETYPE_JPEG => ['output' => 'imagejpeg', 'create' => 'imagecreatefromjpeg'],
         IMAGETYPE_PNG => ['output' => 'imagepng', 'create' => 'imagecreatefrompng'],
@@ -45,7 +52,7 @@ class Gd2 extends AbstractAdapter
      *
      * @var bool
      */
-    protected $_resized = false;
+    protected $resized = false;
 
     /**
      * @var HelperData
@@ -74,7 +81,7 @@ class Gd2 extends AbstractAdapter
      *
      * @return void
      */
-    protected function _reset()
+    protected function reset()
     {
         $this->_fileMimeType = null;
         $this->_fileType = null;
@@ -101,11 +108,11 @@ class Gd2 extends AbstractAdapter
         }
 
         $this->_fileName = $filename;
-        $this->_reset();
+        $this->reset();
         $this->getMimeType();
         $this->_getFileAttributes();
 
-        if ($this->_isMemoryLimitReached()) {
+        if ($this->isMemoryLimitReached()) {
             throw new \OverflowException('Memory limit has been reached.');
         }
 
@@ -125,7 +132,7 @@ class Gd2 extends AbstractAdapter
         $this->imageDestroy();
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->_imageHandler = call_user_func(
-            $this->_getCallback(
+            $this->getCallback(
                 'create',
                 null,
                 sprintf('Unsupported image format. File: %s', $this->_fileName)
@@ -140,7 +147,7 @@ class Gd2 extends AbstractAdapter
      * @param string $filename
      * @return bool
      */
-    private function validateURLScheme(string $filename) : bool
+    private function validateURLScheme(string $filename): bool
     {
         $allowed_schemes = ['ftp', 'ftps', 'http', 'https'];
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -186,10 +193,10 @@ class Gd2 extends AbstractAdapter
      *
      * @return bool
      */
-    protected function _isMemoryLimitReached()
+    protected function isMemoryLimitReached()
     {
-        $limit = $this->_convertToByte(ini_get('memory_limit'));
-        $requiredMemory = $this->_getImageNeedMemorySize($this->_fileName);
+        $limit = $this->convertToByte(ini_get('memory_limit'));
+        $requiredMemory = $this->getImageNeedMemorySize($this->_fileName);
         if ($limit === -1) {
             // A limit of -1 means no limit: http://www.php.net/manual/en/ini.core.php#ini.memory-limit
             return false;
@@ -203,7 +210,7 @@ class Gd2 extends AbstractAdapter
      * @param string $file
      * @return float|int
      */
-    protected function _getImageNeedMemorySize($file)
+    protected function getImageNeedMemorySize($file)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $imageInfo = getimagesize($file);
@@ -232,7 +239,7 @@ class Gd2 extends AbstractAdapter
      * @param string $memoryValue
      * @return int
      */
-    protected function _convertToByte($memoryValue)
+    protected function convertToByte($memoryValue)
     {
         if (stripos($memoryValue, 'G') !== false) {
             return (int)$memoryValue * pow(1024, 3);
@@ -259,11 +266,11 @@ class Gd2 extends AbstractAdapter
     {
         $fileName = $this->_prepareDestination($destination, $newName);
 
-        if (!$this->_resized) {
+        if (!$this->resized) {
             // keep alpha transparency
             $isAlpha = false;
             $isTrueColor = false;
-            $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
+            $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
             if ($isAlpha) {
                 if ($isTrueColor) {
                     // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -306,7 +313,7 @@ class Gd2 extends AbstractAdapter
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
-        call_user_func_array($this->_getCallback('output'), $functionParameters);
+        call_user_func_array($this->getCallback('output'), $functionParameters);
     }
 
     /**
@@ -321,7 +328,7 @@ class Gd2 extends AbstractAdapter
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         ob_start();
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
-        call_user_func($this->_getCallback('output'), $this->_imageHandler);
+        call_user_func($this->getCallback('output'), $this->_imageHandler);
         return ob_get_clean();
     }
 
@@ -335,18 +342,18 @@ class Gd2 extends AbstractAdapter
      * @throws \InvalidArgumentException
      * @throws \BadFunctionCallException
      */
-    private function _getCallback($callbackType, $fileType = null, $unsupportedText = 'Unsupported image format.')
+    private function getCallback($callbackType, $fileType = null, $unsupportedText = 'Unsupported image format.')
     {
         if (null === $fileType) {
             $fileType = $this->_fileType;
         }
-        if (empty(self::$_callbacks[$fileType])) {
+        if (empty(self::$callbacks[$fileType])) {
             throw new \InvalidArgumentException($unsupportedText);
         }
-        if (empty(self::$_callbacks[$fileType][$callbackType])) {
+        if (empty(self::$callbacks[$fileType][$callbackType])) {
             throw new \BadFunctionCallException('Callback not found.');
         }
-        return self::$_callbacks[$fileType][$callbackType];
+        return self::$callbacks[$fileType][$callbackType];
     }
 
     /**
@@ -364,7 +371,7 @@ class Gd2 extends AbstractAdapter
         // try to keep transparency, if any
         if ($this->_keepTransparency) {
             $isAlpha = false;
-            $transparentIndex = $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
+            $transparentIndex = $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
 
             try {
                 // fill true color png with alpha transparency
@@ -481,7 +488,7 @@ class Gd2 extends AbstractAdapter
      *
      * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
-    private function _getTransparency($imageResource, $fileType, &$isAlpha = false, &$isTrueColor = false)
+    private function getTransparency($imageResource, $fileType, &$isAlpha = false, &$isTrueColor = false)
     {
         $isAlpha = false;
         $isTrueColor = false;
@@ -522,7 +529,7 @@ class Gd2 extends AbstractAdapter
         // create new image
         $isAlpha = false;
         $isTrueColor = false;
-        $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
+        $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha, $isTrueColor);
         if ($isTrueColor) {
             // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $newImage = imagecreatetruecolor($dims['frame']['width'], $dims['frame']['height']);
@@ -532,7 +539,7 @@ class Gd2 extends AbstractAdapter
         }
 
         if ($isAlpha) {
-            $this->_saveAlpha($newImage);
+            $this->saveAlpha($newImage);
         }
 
         // fill new image with required color
@@ -556,7 +563,7 @@ class Gd2 extends AbstractAdapter
         $this->imageDestroy();
         $this->_imageHandler = $newImage;
         $this->refreshImageDimensions();
-        $this->_resized = true;
+        $this->resized = true;
     }
 
     /**
@@ -592,7 +599,7 @@ class Gd2 extends AbstractAdapter
         $this->_getFileAttributes();
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $watermark = call_user_func(
-            $this->_getCallback('create', $watermarkFileType, 'Unsupported watermark image format.'),
+            $this->getCallback('create', $watermarkFileType, 'Unsupported watermark image format.'),
             $imagePath
         );
 
@@ -625,7 +632,8 @@ class Gd2 extends AbstractAdapter
         bool $merged,
         bool $tile
     ) {
-        if ($this->getWatermarkWidth() &&
+        if (
+            $this->getWatermarkWidth() &&
             $this->getWatermarkHeight() &&
             $this->getWatermarkPosition() != self::POSITION_STRETCH
         ) {
@@ -841,7 +849,7 @@ class Gd2 extends AbstractAdapter
         $canvas = imagecreatetruecolor($newWidth, $newHeight);
 
         if ($this->_fileType == IMAGETYPE_PNG) {
-            $this->_saveAlpha($canvas);
+            $this->saveAlpha($canvas);
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -871,7 +879,7 @@ class Gd2 extends AbstractAdapter
      */
     public function checkDependencies()
     {
-        foreach ($this->_requiredExtensions as $value) {
+        foreach ($this->requiredExtensions as $value) {
             if (!extension_loaded($value)) {
                 throw new \RuntimeException("Required PHP extension '{$value}' was not loaded.");
             }
@@ -918,7 +926,7 @@ class Gd2 extends AbstractAdapter
      * @param resource $imageHandler
      * @return void
      */
-    private function _saveAlpha($imageHandler)
+    private function saveAlpha($imageHandler)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $background = imagecolorallocate($imageHandler, 0, 0, 0);
@@ -955,15 +963,15 @@ class Gd2 extends AbstractAdapter
     public function createPngFromString($text, $font = '')
     {
         $error = false;
-        $this->_resized = true;
+        $this->resized = true;
         try {
-            $this->_createImageFromTtfText($text, $font);
+            $this->createImageFromTtfText($text, $font);
         } catch (\Exception $e) {
             $error = true;
         }
 
         if ($error || empty($this->_imageHandler)) {
-            $this->_createImageFromText($text);
+            $this->createImageFromText($text);
         }
 
         return $this;
@@ -975,14 +983,14 @@ class Gd2 extends AbstractAdapter
      * @param string $text
      * @return void
      */
-    protected function _createImageFromText($text)
+    protected function createImageFromText($text)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $width = imagefontwidth($this->_fontSize) * strlen((string)$text);
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $height = imagefontheight($this->_fontSize);
 
-        $this->_createEmptyImage($width, $height);
+        $this->createEmptyImage($width, $height);
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $black = imagecolorallocate($this->_imageHandler, 0, 0, 0);
@@ -1000,14 +1008,14 @@ class Gd2 extends AbstractAdapter
      * @return void
      * @throws \InvalidArgumentException
      */
-    protected function _createImageFromTtfText($text, $font)
+    protected function createImageFromTtfText($text, $font)
     {
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $boundingBox = imagettfbbox($this->_fontSize, 0, $font, $text);
         $width = abs($boundingBox[4] - $boundingBox[0]);
         $height = abs($boundingBox[5] - $boundingBox[1]);
 
-        $this->_createEmptyImage($width, $height);
+        $this->createEmptyImage($width, $height);
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $black = imagecolorallocate($this->_imageHandler, 0, 0, 0);
@@ -1034,7 +1042,7 @@ class Gd2 extends AbstractAdapter
      * @param int $height
      * @return void
      */
-    protected function _createEmptyImage($width, $height)
+    protected function createEmptyImage($width, $height)
     {
         $this->_fileType = IMAGETYPE_PNG;
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
@@ -1155,13 +1163,13 @@ class Gd2 extends AbstractAdapter
      */
     private function createTruecolorImageCopy()
     {
-        $this->_getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
+        $this->getTransparency($this->_imageHandler, $this->_fileType, $isAlpha);
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $newImage = imagecreatetruecolor($this->_imageSrcWidth, $this->_imageSrcHeight);
 
         if ($isAlpha) {
-            $this->_saveAlpha($newImage);
+            $this->saveAlpha($newImage);
         }
 
         // phpcs:ignore Magento2.Functions.DiscouragedFunction

@@ -1,7 +1,17 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
 
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -25,12 +35,13 @@ use Magento\PageBuilder\Controller\Adminhtml\ContentType\Image\Upload as PageBui
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Model\Design\Config\FileUploader\FileProcessor;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Helper\PixelbinHelperData as PixelbinHelperData;
 use Magento\Framework\Filesystem\Driver\File;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class RetrieveImage extends \Magento\Backend\App\Action
+class RetrieveImage extends \Magento\Backend\App\Action implements CsrfAwareActionInterface
 {
     /**
      * @var string|null
@@ -110,6 +121,11 @@ class RetrieveImage extends \Magento\Backend\App\Action
     private $helperData;
 
     /**
+     * @var PixelbinHelperData
+     */
+    private $pixelbinHelperData;
+
+    /**
      * @var File
      */
     protected File $fileDriver;
@@ -133,6 +149,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
      * @param NotProtectedExtension $extensionValidator
      * @param StoreManagerInterface $storeManager
      * @param HelperData $helperData
+     * @param PixelbinHelperData $pixelbinHelperData
      * @param File $fileDriver
      * @param FileIo $fileIo
      */
@@ -149,6 +166,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
         NotProtectedExtension $extensionValidator,
         StoreManagerInterface $storeManager,
         HelperData $helperData,
+        PixelbinHelperData $pixelbinHelperData,
         File $fileDriver,
         FileIo $fileIo
     ) {
@@ -164,8 +182,31 @@ class RetrieveImage extends \Magento\Backend\App\Action
         $this->protocolValidator = $protocolValidator;
         $this->storeManager = $storeManager;
         $this->helperData = $helperData;
+        $this->pixelbinHelperData = $pixelbinHelperData;
         $this->fileDriver = $fileDriver;
         $this->fileIo = $fileIo;
+    }
+
+    /**
+     * Create CSRF validation exception
+     *
+     * @param RequestInterface $request
+     * @return InvalidRequestException|null
+     */
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    /**
+     * Validate for CSRF
+     *
+     * @param RequestInterface $request
+     * @return bool|null
+     */
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
     }
 
     /**
@@ -182,7 +223,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
             $fileData = $this->fileIo->getPathInfo($localUniqFilePath);
             if (!isset($fileData["extension"])) {
                 $extension = $allData["asset"]["format"];
-                $localUniqFilePath = $this->remoteFileUrl = $localUniqFilePath.".".strtolower($extension);
+                $localUniqFilePath = $this->remoteFileUrl = $localUniqFilePath . "." . strtolower($extension);
             }
             $imageData = $this->helperData->validatePixelbinUrl($localUniqFilePath, true);
             if (is_array($imageData)) {
@@ -193,9 +234,9 @@ class RetrieveImage extends \Magento\Backend\App\Action
                 ];
             } else {
                 $this->validateRemoteFile($this->remoteFileUrl);
-                $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
+                $this->parsedRemoteFileUrl = $this->pixelbinHelperData->parsePixelbinUrl($this->remoteFileUrl);
                 $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
-                $assetParsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($localUniqFilePath);
+                $assetParsedRemoteFileUrl = $this->pixelbinHelperData->parsePixelbinUrl($localUniqFilePath);
                 $this->parsedRemoteFileUrl["type"] = $assetParsedRemoteFileUrl['type'];
                 $this->parsedRemoteFileUrl["thumbnail_url"] = $assetParsedRemoteFileUrl['thumbnail_url'];
                 $baseTmpMediaPath = $this->getBaseTmpMediaPath();
@@ -211,8 +252,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
         } catch (\Exception $e) {
             $result = [
                 'error' => $e->getMessage(),
-                'errorcode' => $e->getCode(),
-                'trace' => $e->getTraceAsString()
+                'errorcode' => $e->getCode()
             ];
             $fileWriter = $this->fileSystem->getDirectoryWrite(DirectoryList::MEDIA);
             if (isset($localFileFullPath) && $fileWriter->isExist($localFileFullPath)) {
@@ -267,7 +307,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
         $localFileName = Uploader::getCorrectFileName(basename($remoteFileUrl));
         $fileData = $this->fileIo->getPathInfo($localFileName);
         if ($fileData["extension"] == "mp4") {
-            $localFileName = $fileData["filename"].".png";
+            $localFileName = $fileData["filename"] . ".png";
         }
         switch ($this->getRequest()->getParam('type')) {
             case 'pagebuilder_contenttype':
@@ -363,7 +403,7 @@ class RetrieveImage extends \Magento\Backend\App\Action
             $this->usingPlaceholderFallback = true;
             $mediaDirectory = $this->fileSystem->getDirectoryRead(DirectoryList::APP)
                 ->getAbsolutePath();
-            $defaultImage = $mediaDirectory.HelperData::DEFAULT_PIXELBIN_IMAGE;
+            $defaultImage = $mediaDirectory . HelperData::DEFAULT_PIXELBIN_IMAGE;
             $image = $this->fileDriver->fileGetContents($defaultImage);
         }
 

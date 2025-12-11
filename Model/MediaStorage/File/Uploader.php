@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model\MediaStorage\File;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
@@ -24,7 +31,7 @@ class Uploader
      */
     public function __construct(
         UploadFileToPixelbin $uploadFileToPixelbin,
-        HelperData           $helperData
+        HelperData $helperData
     ) {
         $this->uploadFileToPixelbin = $uploadFileToPixelbin;
         $this->helperData = $helperData;
@@ -55,7 +62,7 @@ class Uploader
      * @param array $result
      * @return array
      */
-    public function afterSave($subject, $result)
+    public function afterSave(FileUploader $subject, $result)
     {
         $this->uploadFileToPixelbin->fileUploadAfterSave($result);
         return $result;

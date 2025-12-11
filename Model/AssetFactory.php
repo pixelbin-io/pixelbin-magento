@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
@@ -50,7 +57,8 @@ class AssetFactory extends AssetInterfaceFactory
      */
     public function create(array $data = [])
     {
-        if ((empty($data['width']) || empty($data['height']))
+        if (
+            (empty($data['width']) || empty($data['height']))
             && isset($data['path'])
             && $this->helperData->isVectorImage($data['path'])
         ) {
