@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
@@ -85,13 +92,13 @@ class UploadFileToPixelbin extends AbstractHelper
      * @param PixelbinSynchronisationFactory $pixelbinSynchronisationFactory
      */
     public function __construct(
-        Context                        $context,
-        Data                           $helperData,
-        FileIo                         $fileIo,
-        Filesystem                     $filesystem,
-        DriverFile                     $driverFile,
-        PixelbinImageSyncLogsFactory   $pixelbinImageSyncLogsFactory,
-        PixelbinSyncCollectionFactory  $pixelbinSyncCollectionFactory,
+        Context $context,
+        Data $helperData,
+        FileIo $fileIo,
+        Filesystem $filesystem,
+        DriverFile $driverFile,
+        PixelbinImageSyncLogsFactory $pixelbinImageSyncLogsFactory,
+        PixelbinSyncCollectionFactory $pixelbinSyncCollectionFactory,
         PixelbinSynchronisationFactory $pixelbinSynchronisationFactory
     ) {
         $this->helperData = $helperData;
@@ -275,8 +282,10 @@ class UploadFileToPixelbin extends AbstractHelper
                 }
 
                 $fileName = ltrim($file["directory"] . "/" . $file["filename"], "/");
-                if ($syncType !== SyncType::TYPE_CRON &&
-                    $this->getSyncCollection($fileName)->getSize() > 0) {
+                if (
+                    $syncType !== SyncType::TYPE_CRON &&
+                    $this->getSyncCollection($fileName)->getSize() > 0
+                ) {
                     continue;
                 }
 

@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Catalog\Model\Category;
 
 use Magento\Catalog\Model\Category\Image;
@@ -8,7 +15,6 @@ use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
 class AfterGetCategoryImage
 {
-
     /**
      * @var Logger
      */

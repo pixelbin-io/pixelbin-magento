@@ -13,11 +13,12 @@ define(
         'mage/backend/validation',
         'Pixelbinio_Pixelbin/js/get-video-information'
     ],
-    function($, _) {
+    function ($, _) {
         'use strict';
 
         $.widget(
-            'mage.createVideoPlayer', {
+            'mage.createVideoPlayer',
+            {
                 options: {
                     videoId: '',
                     videoProvider: '',
@@ -52,7 +53,7 @@ define(
                 /**
                  * @private
                  */
-                _init: function() {
+                _init: function () {
                     if (this.options.reset) {
                         this.reset();
                     } else {
@@ -66,14 +67,14 @@ define(
                 /**
                  * @returns {Boolean}
                  */
-                update: function() {
+                update: function () {
                     var checkVideoID = this.element.find(this.options.container).find(
-                            '.' + this.options.videoClass
-                        ).data('code'),
+                        '.' + this.options.videoClass
+                    ).data('code'),
                         eventVideoData = {
                             oldVideoId: checkVideoID ? checkVideoID.toString() : checkVideoID,
                             newVideoId: this.options.videoId ? this.options.videoId.toString() : this.options.videoId
-                        };
+                    };
 
                     if (checkVideoID && checkVideoID !== this.options.videoId) {
                         this._doUpdate();
@@ -90,7 +91,7 @@ define(
                 /**
                  * @private
                  */
-                _doUpdate: function() {
+                _doUpdate: function () {
                     var uploaderLinkUrl,
                         uploaderLink;
 
@@ -132,7 +133,7 @@ define(
                 /**
                  * Reset
                  */
-                reset: function() {
+                reset: function () {
                     this.element.find(this.options.container).find('.' + this.options.videoClass).remove();
                     this.element.find(this.options.metaData.DOM.wrapper).hide();
                     this.element.find(this.options.metaData.DOM.all).text('');
@@ -142,7 +143,8 @@ define(
         );
 
         $.widget(
-            'mage.updateInputFields', {
+            'mage.updateInputFields',
+            {
                 options: {
                     reset: false,
                     DOM: {
@@ -163,7 +165,7 @@ define(
                 /**
                  * @private
                  */
-                _init: function() {
+                _init: function () {
                     if (this.options.reset) {
                         this.reset();
                     } else {
@@ -174,7 +176,7 @@ define(
                 /**
                  * Update
                  */
-                update: function() {
+                update: function () {
                     $(this.options.DOM.titleField).val(this.options.data.title);
                     $(this.options.DOM.descriptionField).val(this.options.data.description);
                 },
@@ -182,7 +184,7 @@ define(
                 /**
                  * Reset
                  */
-                reset: function() {
+                reset: function () {
                     $(this.options.DOM.fileField).val('');
                     $(this.options.DOM.urlField).val('');
                     $(this.options.DOM.titleField).val('');
@@ -194,7 +196,8 @@ define(
         /**
          */
         $.widget(
-            'mage.newVideoDialog', {
+            'mage.newVideoDialog',
+            {
 
                 _previewImage: null,
 
@@ -269,7 +272,7 @@ define(
                  *
                  * @private
                  */
-                _bind: function() {
+                _bind: function () {
                     var events = {
                         'setImage': '_onSetImage'
                     };
@@ -302,7 +305,7 @@ define(
                  *
                  * @private
                  */
-                _onGetVideoInformationClick: function() {
+                _onGetVideoInformationClick: function () {
                     this._onlyVideoPlayer = false;
                     this._isEditPage = false;
                     this._videoUrlWidget.trigger('update_video_information');
@@ -313,14 +316,14 @@ define(
                  *
                  * @private
                  */
-                _onGetVideoInformationFocusOut: function() {
+                _onGetVideoInformationFocusOut: function () {
                     this._videoUrlWidget.trigger('update_video_information');
                 },
 
                 /**
                  * @private
                  */
-                _onGetVideoInformationStartRequest: function() {
+                _onGetVideoInformationStartRequest: function () {
                     this._videoRequestComplete = false;
                 },
 
@@ -329,7 +332,7 @@ define(
                  *
                  * @private
                  */
-                _onGetVideoInformationEditClick: function() {
+                _onGetVideoInformationEditClick: function () {
                     this._onlyVideoPlayer = true;
                     this._isEditPage = true;
                     this._videoUrlWidget.trigger('update_video_information');
@@ -342,12 +345,13 @@ define(
                  * @param   {Object} data
                  * @private
                  */
-                _onGetVideoInformationSuccess: function(e, data) {
+                _onGetVideoInformationSuccess: function (e, data) {
                     var self = this;
 
                     self.element.on(
-                        'finish_update_video finish_create_video', $.proxy(
-                            function(element, playerData) {
+                        'finish_update_video finish_create_video',
+                        $.proxy(
+                            function (element, playerData) {
                                 if (!self._onlyVideoPlayer ||
                                     !self._isEditPage && playerData.oldVideoId !== playerData.newVideoId ||
                                     playerData.oldVideoId && playerData.oldVideoId !== playerData.newVideoId
@@ -362,7 +366,8 @@ define(
                                     this._loadRemotePreview(data.thumbnail, data.videoProvider);
                                 }
                                 self._onlyVideoPlayer = true;
-                            }, this
+                            },
+                            this
                         )
                     )
                         .createVideoPlayer({
@@ -400,7 +405,7 @@ define(
                  * @param   {String} sourceUrl
                  * @private
                  */
-                _loadRemotePreview: function(sourceUrl, videoProvider) {
+                _loadRemotePreview: function (sourceUrl, videoProvider) {
                     var url = this.options.saveRemoteVideoUrl,
                         self = this;
                     var defaultImageUrl = this.options.pixelbinPlaceholder
@@ -418,11 +423,12 @@ define(
                         },
                         type: 'post',
                         success: $.proxy(
-                            function(result) {
+                            function (result) {
                                 this._tempPreviewImageData = result;
                                 this._getPreviewImage().attr('src', sourceUrl).show();
                                 this._blockActionButtons(false, true);
-                            }, self
+                            },
+                            self
                         )
                     });
                 },
@@ -432,7 +438,7 @@ define(
                  *
                  * @private
                  */
-                _onGetVideoInformationError: function() {},
+                _onGetVideoInformationError: function () {},
 
                 /**
                  * Remove ".tmp"
@@ -441,7 +447,7 @@ define(
                  * @returns {*}
                  * @private
                  */
-                __prepareFilename: function(name) {
+                __prepareFilename: function (name) {
                     var tmppost = '.tmp';
 
                     if (!name) {
@@ -462,7 +468,7 @@ define(
                  * @param   {Object} imageData
                  * @private
                  */
-                _setImage: function(file, imageData) {
+                _setImage: function (file, imageData) {
                     file = this.__prepareFilename(file);
                     this._images[file] = imageData;
                     this._gallery.trigger('addItem', imageData);
@@ -477,7 +483,7 @@ define(
                  * @returns {*}
                  * @private
                  */
-                _getImage: function(file) {
+                _getImage: function (file) {
                     file = this.__prepareFilename(file);
 
                     return this._images[file];
@@ -491,7 +497,7 @@ define(
                  * @param   {Object} imageData
                  * @private
                  */
-                _replaceImage: function(oldFile, newFile, imageData) {
+                _replaceImage: function (oldFile, newFile, imageData) {
                     var tmpNewFile = newFile,
                         tmpOldImage,
                         newImageId,
@@ -545,7 +551,8 @@ define(
                     imageData.position = oldNewFilePosition;
 
                     this._gallery.trigger(
-                        'setPosition', {
+                        'setPosition',
+                        {
                             imageData: imageData,
                             position: oldNewFilePosition
                         }
@@ -558,7 +565,7 @@ define(
                  * @param   {String} file
                  * @private
                  */
-                _removeImage: function(file) {
+                _removeImage: function (file) {
                     var imageData = this._getImage(file);
 
                     if (!imageData) {
@@ -577,7 +584,7 @@ define(
                  * @param   {Object} imageData
                  * @private
                  */
-                _onSetImage: function(event, imageData) {
+                _onSetImage: function (event, imageData) {
                     this.saveImageRoles(imageData);
                 },
 
@@ -589,20 +596,22 @@ define(
                  * @param   {Function} callback
                  * @private
                  */
-                _uploadImage: function(file, oldFile, callback) {
+                _uploadImage: function (file, oldFile, callback) {
                     var url = this.options.saveVideoUrl,
                         data = {
                             files: file,
                             url: url
-                        };
+                    };
 
                     this._blockActionButtons(true, true);
                     this._uploadFile(
-                        data, $.proxy(
-                            function(result) {
+                        data,
+                        $.proxy(
+                            function (result) {
                                 this._onImageLoaded(result, file, oldFile, callback);
                                 this._blockActionButtons(false);
-                            }, this
+                            },
+                            this
                         )
                     );
 
@@ -615,7 +624,7 @@ define(
                  * @param   {Function} callback
                  * @private
                  */
-                _onImageLoaded: function(result, file, oldFile, callback) {
+                _onImageLoaded: function (result, file, oldFile, callback) {
                     var data = JSON.parse(result);
 
                     if (this.element.find('#video_url').parent().find('.image-upload-error').length > 0) {
@@ -632,7 +641,7 @@ define(
                     }
                     $.each(
                         this.element.find(this._videoFormSelector).serializeArray(),
-                        function(i, field) {
+                        function (i, field) {
                             data[field.name] = field.value;
                         }
                     );
@@ -651,7 +660,7 @@ define(
                  *
                  * @private
                  */
-                _uploadFile: function(data, callback) {
+                _uploadFile: function (data, callback) {
                     let form = this.element.find(this._videoFormSelector).get(0),
                         formData = new FormData(form);
 
@@ -674,7 +683,7 @@ define(
                  * @param   {String} url
                  * @private
                  */
-                _addVideoClass: function(url) {
+                _addVideoClass: function (url) {
                     var classVideo = 'video-item';
 
                     this._gallery.find('img[src="' + url + '"]').addClass(classVideo);
@@ -685,7 +694,7 @@ define(
                  *
                  * @private
                  */
-                _create: function() {
+                _create: function () {
                     var imgs = _.values(this.element.closest(this.options.videoSelector).data('images')) || [],
                         widget,
                         uploader,
@@ -726,23 +735,23 @@ define(
                                 text: $.mage.__('Cancel'),
                                 class: 'video-cancel-button',
                                 click: $.proxy(widget._onCancel, widget)
-                            },
+                        },
                             {
                                 text: $.mage.__('Delete'),
                                 class: 'video-delete-button',
                                 click: $.proxy(widget._onDelete, widget)
-                            },
+                        },
                             {
                                 text: $.mage.__('Save'),
                                 class: 'action-primary video-edit',
                                 click: $.proxy(widget._onUpdate, widget)
-                            }
+                        }
                         ],
 
                         /**
                          * @returns {null}
                          */
-                        opened: function() {
+                        opened: function () {
                             var roles,
                                 file,
                                 modalTitleElement,
@@ -777,7 +786,7 @@ define(
                                 imageData = {
                                     url: _.find(
                                         widget._gallery.find('.product-image'),
-                                        function(image) {
+                                        function (image) {
                                             return image.src.indexOf(file) > -1;
                                         }
                                     ).src
@@ -790,7 +799,7 @@ define(
                         /**
                          * Closed
                          */
-                        closed: function() {
+                        closed: function () {
                             widget._onClose();
                             widget.createVideoItemIcons();
                         }
@@ -802,7 +811,7 @@ define(
                  * @param   {String} status
                  * @private
                  */
-                _blockActionButtons: function(status) {
+                _blockActionButtons: function (status) {
                     this.element
                         .closest('.mage-new-video-dialog')
                         .find('.page-actions-buttons button.video-create-button, .page-actions-buttons button.video-edit')
@@ -814,30 +823,32 @@ define(
                  *
                  * @param {Function} callback
                  */
-                isValid: function(callback) {
+                isValid: function (callback) {
                     var videoForm = this.element.find(this._videoFormSelector),
                         videoLoaded = true;
 
                     this._blockActionButtons(true);
 
                     this._videoUrlWidget.trigger(
-                        'validate_video_url', $.proxy(
-                            function() {
+                        'validate_video_url',
+                        $.proxy(
+                            function () {
 
                                 videoForm.mage(
-                                    'validation', {
+                                    'validation',
+                                    {
 
                                         /**
                                          * @param {jQuery} error
                                          * @param {jQuery} element
                                          */
-                                        errorPlacement: function(error, element) {
+                                        errorPlacement: function (error, element) {
                                             error.insertAfter(element);
                                         }
                                     }
                                 ).on(
                                     'highlight.validate',
-                                    function() {
+                                    function () {
                                         $(this).validation('option');
                                     }
                                 );
@@ -849,7 +860,8 @@ define(
                                 }
 
                                 callback(videoForm.valid() && videoLoaded);
-                            }, this
+                            },
+                            this
                         )
                     );
 
@@ -859,7 +871,7 @@ define(
                 /**
                  * Create video item icons
                  */
-                createVideoItemIcons: function() {
+                createVideoItemIcons: function () {
                     var $imageWidget = this._gallery.find('.product-image.video-item'),
                         $productGalleryWrapper = $(this._imageProductGalleryWrapperSelector).find('.product-image.video-item');
 
@@ -876,7 +888,7 @@ define(
                  *
                  * @private
                  */
-                _onCreate: function() {
+                _onCreate: function () {
                     var nvs = this.element.find(this._videoPreviewInputSelector),
                         file = nvs.get(0),
                         reqClass = 'required-entry _required';
@@ -893,7 +905,7 @@ define(
 
                     this.isValid(
                         $.proxy(
-                            function(videoValidStatus) {
+                            function (videoValidStatus) {
 
                                 if (!videoValidStatus) {
                                     return;
@@ -903,16 +915,20 @@ define(
                                     this._onImageLoaded(this._tempPreviewImageData, null, null, $.proxy(this.close, this));
                                 } else {
                                     this._uploadImage(
-                                        file, null, $.proxy(
-                                            function() {
+                                        file,
+                                        null,
+                                        $.proxy(
+                                            function () {
                                                 this.close();
-                                            }, this
+                                            },
+                                            this
                                         )
                                     );
                                 }
 
                                 nvs.removeClass(reqClass);
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -922,12 +938,12 @@ define(
                  *
                  * @private
                  */
-                _onUpdate: function() {
+                _onUpdate: function () {
                     var inputFile, itemId, _inputSelector, mediaFields, imageData, flagChecked, fileName, callback;
 
                     this.isValid(
                         $.proxy(
-                            function(videoValidStatus) {
+                            function (videoValidStatus) {
 
                                 if (!videoValidStatus) {
                                     return;
@@ -941,7 +957,7 @@ define(
                                 mediaFields = this._gallery.find('input' + _inputSelector);
                                 $.each(
                                     mediaFields,
-                                    function(i, el) {
+                                    function (i, el) {
                                         var elName = el.name,
                                             start = elName.indexOf(itemId) + itemId.length + 2,
                                             fieldName = elName.substring(start, el.name.length - 1),
@@ -958,7 +974,8 @@ define(
                                 flagChecked = this.element.find(this._videoDisableinputSelector).attr('checked') ? 1 : 0;
                                 this._gallery.find('input[name*="' + itemId + '][disabled]"]').val(flagChecked);
                                 this._gallery.find(_inputSelector).siblings('.image-fade').css(
-                                    'visibility', flagChecked ? 'visible' : 'hidden'
+                                    'visibility',
+                                    flagChecked ? 'visible' : 'hidden'
                                 );
                                 imageData.disabled = flagChecked;
 
@@ -980,9 +997,10 @@ define(
                                 inputFile.replaceWith(inputFile);
 
                                 callback = $.proxy(
-                                    function() {
+                                    function () {
                                         this.close();
-                                    }, this
+                                    },
+                                    this
                                 );
 
                                 if (fileName) {
@@ -991,7 +1009,8 @@ define(
                                     this._replaceImage(imageData.file, imageData.file, imageData);
                                     callback(0, imageData);
                                 }
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -1001,9 +1020,10 @@ define(
                  *
                  * @param {Object} imageData
                  */
-                _updateVisibility: function(imageData) {
+                _updateVisibility: function (imageData) {
                     this._gallery.trigger(
-                        'updateVisibility', {
+                        'updateVisibility',
+                        {
                             disabled: imageData.disabled,
                             imageData: imageData
                         }
@@ -1015,9 +1035,10 @@ define(
                  *
                  * @param {Object} imageData
                  */
-                _updateImageTitle: function(imageData) {
+                _updateImageTitle: function (imageData) {
                     this._gallery.trigger(
-                        'updateImageTitle', {
+                        'updateImageTitle',
+                        {
                             imageData: imageData
                         }
                     );
@@ -1028,7 +1049,7 @@ define(
                  *
                  * @private
                  */
-                _onCancel: function() {
+                _onCancel: function () {
                     this.close();
                 },
 
@@ -1037,7 +1058,7 @@ define(
                  *
                  * @private
                  */
-                _onDelete: function() {
+                _onDelete: function () {
                     var filename = this.element.find(this._videoImageFilenameselector).val();
 
                     this._removeImage(filename);
@@ -1049,7 +1070,7 @@ define(
                  * @param   {Function} callback
                  * @private
                  */
-                _readPreviewLocal: function(file, callback) {
+                _readPreviewLocal: function (file, callback) {
                     var fr = new FileReader;
 
                     if (!window.FileReader) {
@@ -1059,7 +1080,7 @@ define(
                     /**
                      * On load end
                      */
-                    fr.onloadend = function() {
+                    fr.onloadend = function () {
                         callback(fr.result);
                     };
                     fr.readAsDataURL(file);
@@ -1070,7 +1091,7 @@ define(
                  *
                  * @private
                  */
-                _onImageInputChange: function() {
+                _onImageInputChange: function () {
                     var jFile = this.element.find(this._videoPreviewInputSelector),
                         file = jFile[0],
                         val = jFile.val(),
@@ -1104,7 +1125,7 @@ define(
                  * @param   {Boolean} local
                  * @private
                  */
-                _onPreview: function(error, src, local) {
+                _onPreview: function (error, src, local) {
                     var img, renderImage;
 
                     img = this._getPreviewImage();
@@ -1114,7 +1135,7 @@ define(
                      *
                      * @param {String} source
                      */
-                    renderImage = function(source) {
+                    renderImage = function (source) {
                         img.attr({
                             'src': source
                         }).show();
@@ -1137,7 +1158,7 @@ define(
                  * @returns {null}
                  * @private
                  */
-                _getPreviewImage: function() {
+                _getPreviewImage: function () {
 
                     if (!this._previewImage) {
                         this._previewImage = $(document.createElement('img')).css({
@@ -1155,7 +1176,7 @@ define(
                 /**
                  * Close slideout dialog
                  */
-                close: function() {
+                close: function () {
                     this.element.modal('closeModal');
                 },
 
@@ -1164,7 +1185,7 @@ define(
                  *
                  * @private
                  */
-                _onClose: function() {
+                _onClose: function () {
                     var newVideoForm;
 
                     this._isEditPage = true;
@@ -1188,7 +1209,6 @@ define(
                     try {
                         newVideoForm.validation('clearError');
                     } catch (e) {
-
                     }
                     newVideoForm.trigger('reset');
                 },
@@ -1198,7 +1218,7 @@ define(
                  *
                  * @param {String} file
                  */
-                findElementId: function(file) {
+                findElementId: function (file) {
                     var elem = this._gallery.find('.image.item').find('input[value="' + file + '"]');
 
                     if (!elem.length) {
@@ -1213,7 +1233,7 @@ define(
                  *
                  * @param {Object} imageData
                  */
-                saveImageRoles: function(imageData) {
+                saveImageRoles: function (imageData) {
                     var data = imageData.file,
                         self = this,
                         containers;
@@ -1222,7 +1242,7 @@ define(
                         containers = this._gallery.find('.image-placeholder').siblings('input');
                         $.each(
                             containers,
-                            function(i, el) {
+                            function (i, el) {
                                 var start = el.name.indexOf('[') + 1,
                                     end = el.name.indexOf(']'),
                                     imageType = el.name.substring(start, end),
@@ -1244,7 +1264,7 @@ define(
                  * @param   {Object} imageData - image data object
                  * @private
                  */
-                _changeRole: function(imageType, isEnabled, imageData) {
+                _changeRole: function (imageType, isEnabled, imageData) {
                     var needCheked = true;
 
                     if (!isEnabled) {
@@ -1256,7 +1276,8 @@ define(
                     }
 
                     this._gallery.trigger(
-                        'setImageType', {
+                        'setImageType',
+                        {
                             type: imageType,
                             imageData: isEnabled ? imageData : null
                         }
@@ -1270,7 +1291,7 @@ define(
                  * @param   {Object} imageData
                  * @private
                  */
-                _onOpenDialog: function(e, imageData) {
+                _onOpenDialog: function (e, imageData) {
                     var formFields, flagChecked, file,
                         modal = this.element.closest('.mage-new-video-dialog');
 
@@ -1287,7 +1308,7 @@ define(
 
                         $.each(
                             formFields,
-                            function(i, field) {
+                            function (i, field) {
                                 $(field).val(imageData[field.name]);
                             }
                         );
@@ -1299,14 +1320,14 @@ define(
 
                         $.each(
                             modal.find('.video_image_role'),
-                            function() {
+                            function () {
                                 $(this).prop('checked', false).prop('disabled', false);
                             }
                         );
 
                         $.each(
                             this._gallery.find('.image-placeholder').siblings('input:hidden'),
-                            function() {
+                            function () {
                                 var start, end, imageRole;
 
                                 if ($(this).val() === file.val()) {
@@ -1324,12 +1345,12 @@ define(
                 /**
                  * Toggle buttons
                  */
-                toggleButtons: function() {
+                toggleButtons: function () {
                     var self = this,
                         modal = this.element.closest('.mage-new-video-dialog');
 
                     modal.find('.video-placeholder, .add-video-button-container > button').click(
-                        function() {
+                        function () {
                             modal.find('.video-create-button').show();
                             modal.find('.video-delete-button').hide();
                             modal.find('.video-edit').hide();
@@ -1341,8 +1362,9 @@ define(
                         }
                     );
                     this._gallery.on(
-                        'click', '.item.video-item',
-                        function() {
+                        'click',
+                        '.item.video-item',
+                        function () {
                             modal.find('.video-create-button').hide();
                             modal.find('.video-delete-button').show();
                             modal.find('.video-edit').show();
@@ -1352,8 +1374,9 @@ define(
                         }
                     );
                     this._gallery.on(
-                        'click', '.item.video-item:not(.removed)',
-                        function() {
+                        'click',
+                        '.item.video-item:not(.removed)',
+                        function () {
                             var flagChecked,
                                 file,
                                 formFields = modal.find('.edited-data'),
@@ -1361,7 +1384,7 @@ define(
 
                             $.each(
                                 formFields,
-                                function(i, field) {
+                                function (i, field) {
                                     $(field).val(container.find('input[name*="' + field.name + '"]').val());
                                 }
                             );
@@ -1373,14 +1396,14 @@ define(
 
                             $.each(
                                 self._gallery.find('.video_image_role'),
-                                function() {
+                                function () {
                                     $(this).prop('checked', false).prop('disabled', false);
                                 }
                             );
 
                             $.each(
                                 self._gallery.find('.image-placeholder').siblings('input:hidden'),
-                                function() {
+                                function () {
                                     var start, end, imageRole;
 
                                     if ($(this).val() !== file.val()) {

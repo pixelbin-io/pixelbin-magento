@@ -11,9 +11,9 @@ $filedSyncCollectionCount = $block->getFiledSyncCollection()->getSize();
 ?>
 <div class="pp-buttons-container">
     <button
-        id="<?= /** @escapeNotVerified */ $block->getId() ?>"
+        id="<?= $escaper->escapeHtmlAttr($block->getId()) ?>"
         type="button"
-        onclick="window.location='<?= /** @escapeNotVerified */ $block->getAjaxCheckUrl() ?>'"
+        onclick="window.location='<?= $escaper->escapeUrl($block->getAjaxCheckUrl()) ?>'"
         class="action-default scalable primary ui-button ui-corner-all ui-widget"
         <?php if ($pendingSyncCollectionCount>0): ?>
         disabled="disabled"
@@ -21,7 +21,7 @@ $filedSyncCollectionCount = $block->getFiledSyncCollection()->getSize();
     >
         <span>
             <span>
-                <span><?= /** @escapeNotVerified */ $escaper->escapeHtml($block->getButtonLabel()); ?></span>
+                <span><?= $escaper->escapeHtml($block->getButtonLabel()) ?></span>
             </span>
         </span>
     </button>
@@ -32,17 +32,13 @@ if ($successSyncCollectionCount > 0 && $pendingSyncCollectionCount == 0) {
 }
 ?>
 <?php if ($totalSyncCollectionCount > 0): ?>
-    <p><?= /** @escapeNotVerified */
-        __("Total Media file %1", $totalSyncCollectionCount) ?></p>
-    <p><?= /** @escapeNotVerified */
-        __("Total Media file synced %1", $successSyncCollectionCount) ?></p>
-    <p><?= /** @escapeNotVerified */
-        __("Total Media file pending to sync %1", $pendingSyncCollectionCount) ?></p>
-    <p><?= /** @escapeNotVerified */
-        __("Total Media file failed %1", $filedSyncCollectionCount) ?></p>
+    <p><?= $escaper->escapeHtml(__("Total Media file %1", $totalSyncCollectionCount)) ?></p>
+    <p><?= $escaper->escapeHtml(__("Total Media file synced %1", $successSyncCollectionCount)) ?></p>
+    <p><?= $escaper->escapeHtml(__("Total Media file pending to sync %1", $pendingSyncCollectionCount)) ?></p>
+    <p><?= $escaper->escapeHtml(__("Total Media file failed %1", $filedSyncCollectionCount)) ?></p>
 <?php endif; ?>
 <script>
-    const btnId = "<?= /** @escapeNotVerified */ $block->getId() ?>";
+    const btnId = "<?= $escaper->escapeJs($block->getId()) ?>";
     document.getElementById(btnId).addEventListener("click", function() {
         this.disabled = true;
     });

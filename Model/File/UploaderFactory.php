@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Model\File;
 
 class UploaderFactory extends \Magento\Framework\File\UploaderFactory
@@ -9,7 +16,7 @@ class UploaderFactory extends \Magento\Framework\File\UploaderFactory
      *
      * @var \Magento\Framework\ObjectManagerInterface
      */
-    private $_objectManager;
+    private $objectManager;
 
     /**
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
@@ -18,7 +25,7 @@ class UploaderFactory extends \Magento\Framework\File\UploaderFactory
     {
         parent::__construct($objectManager);
 
-        $this->_objectManager = $objectManager;
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -29,6 +36,6 @@ class UploaderFactory extends \Magento\Framework\File\UploaderFactory
      */
     public function create(array $data = [])
     {
-        return $this->_objectManager->create(Uploader::class, $data);
+        return $this->objectManager->create(Uploader::class, $data);
     }
 }

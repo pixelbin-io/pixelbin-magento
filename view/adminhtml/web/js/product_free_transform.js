@@ -6,7 +6,7 @@ define(
         'uiRegistry',
         'jquery'
     ],
-    function(_, Element, Collection, registry, $) {
+    function (_, Element, Collection, registry, $) {
         'use strict';
 
         var FreeTransformRow = Element.extend({
@@ -25,7 +25,7 @@ define(
                 template: 'Pixelbinio_Pixelbin/product/free_transform_row'
             },
 
-            initObservable: function() {
+            initObservable: function () {
                 var self = this;
 
                 this._super();
@@ -34,7 +34,7 @@ define(
 
                 this.on(
                     'freeTransformation',
-                    function() {
+                    function () {
                         self.hasChanges(true);
                         self.hasChangesToSave(true);
                     }
@@ -43,7 +43,7 @@ define(
                 return this;
             },
 
-            configure: function(params) {
+            configure: function (params) {
                 this.id = params.id || 0;
                 this.label = params.label || "";
                 this.file = params.file || "";
@@ -56,19 +56,19 @@ define(
                 return this;
             },
 
-            inputName: function() {
+            inputName: function () {
                 return 'product[pixelbin_free_transform][' + this.id + ']';
             },
 
-            changesName: function() {
+            changesName: function () {
                 return 'product[pixelbin_free_transform_changes][' + this.id + ']';
             },
 
-            imageSrcForTransform: function(transform) {
+            imageSrcForTransform: function (transform) {
                 return 'http://res.pixelbin.com/m2501/image/upload/' + transform + '/sample.jpg';
             },
 
-            refreshImage: function() {
+            refreshImage: function () {
                 var self = this;
 
                 self.hasChanges(false);
@@ -91,12 +91,12 @@ define(
                     dataType: 'json',
                     showLoader: true
                 }).done(
-                    function(response) {
+                    function (response) {
                         self.src(response.url);
                         self.hasError(false);
                     }
                 ).fail(
-                    function(result) {
+                    function (result) {
                         self.hasError(true);
                         self.error(result.responseJSON.error);
                     }
@@ -117,26 +117,26 @@ define(
              * @param {Object} elem - Instance of an element that was added.
              * @returns {Collection} Chainable.
              */
-            initElement: function(elem) {
+            initElement: function (elem) {
                 elem.initContainer(this);
                 this.ajaxUrl = this.ajaxUrl || this.getAjaxUrl();
                 return this;
             },
 
 
-            getTransforms: function() {
+            getTransforms: function () {
                 return registry.get('product_form.product_form_data_source').data.product.pixelbin_transforms;
             },
 
-            getAjaxUrl: function() {
+            getAjaxUrl: function () {
                 return registry.get('product_form.product_form_data_source').data.product.pixelbin_ajax_url;
             },
 
-            createRow: function(params) {
+            createRow: function (params) {
                 return FreeTransformRow().configure(params);
             },
 
-            insertChildRow: function(params) {
+            insertChildRow: function (params) {
                 if (!this.tableRows()[params.id]) {
                     params.ajaxUrl = this.ajaxUrl;
                     var elm = this.createRow(params);
@@ -148,7 +148,7 @@ define(
                 }
             },
 
-            initObservable: function() {
+            initObservable: function () {
                 var self = this;
 
                 self._super()
@@ -157,12 +157,12 @@ define(
                     ]);
 
                 if (this.getTransforms()) {
-                    $.each(this.getTransforms(), function(i, transform) {
+                    $.each(this.getTransforms(), function (i, transform) {
                         self.insertChildRow(transform);
                     });
                 }
 
-                $(document).on('addItem', '#media_gallery_content', function(event, file) {
+                $(document).on('addItem', '#media_gallery_content', function (event, file) {
                     if (file && (file.media_type === 'image') && file.file && (file.image_url || file.url)) {
                         file.image_url = file.image_url || file.url;
                         file.id = file.id || file.file_id || file.value_id || file.fileId;
@@ -181,10 +181,10 @@ define(
                     }
                 });
 
-                $(document).on('removeItem', '#media_gallery_content', function(event, file) {
+                $(document).on('removeItem', '#media_gallery_content', function (event, file) {
                     if (file && (file.id || file.file_id || file.value_id || file.fileId)) {
                         file.id = file.id || file.file_id || file.value_id || file.fileId;
-                        self.elems.each(function(elem) {
+                        self.elems.each(function (elem) {
                             if (elem.id == file.id) {
                                 self.removeChild(elem);
                             }
@@ -195,10 +195,10 @@ define(
                 return this;
             },
 
-            afterRender: function() {
+            afterRender: function () {
                 var self = this;
 
-                this.elems.each(function(elem) {
+                this.elems.each(function (elem) {
                     elem.ajaxUrl = self.ajaxUrl;
                 });
             }

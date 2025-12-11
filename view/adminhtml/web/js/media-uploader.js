@@ -67,7 +67,7 @@ define([
                     showProgressDetails: false,
                     showSelectedFiles: false,
                     hideProgressAfterFinish: true
-                };
+            };
 
             $(document).on('click', uploaderElement ,function () {
                 $(uploaderElement).closest('.fileinput-button.form-buttons')
@@ -86,11 +86,13 @@ define([
                         byteConvert(currentFile.size);
 
                     // check if file is allowed to upload and resize
-                    allowedResize = $.inArray(currentFile.extension?.toLowerCase(), allowedExt) !== -1;
+                    allowedResize = $.inArray(currentFile.extension ? .toLowerCase(), allowedExt) !== -1;
 
-                    if (!allowedResize)  {
-                        fileUploader.aggregateError(currentFile.name,
-                            $.mage.__('Disallowed file type.'));
+                    if (!allowedResize) {
+                        fileUploader.aggregateError(
+                            currentFile.name,
+                            $.mage.__('Disallowed file type.')
+                        );
                         fileUploader.onLoadingStop();
                         return false;
                     }

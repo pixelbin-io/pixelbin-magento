@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Block\Adminhtml\Product\Edit;
 
 use Magento\Backend\Block\Template\Context;
@@ -38,14 +45,14 @@ class NewVideo extends \Magento\ProductVideo\Block\Adminhtml\Product\Edit\NewVid
      * @param array $data
      */
     public function __construct(
-        Context               $context,
-        Registry              $registry,
-        FormFactory           $formFactory,
-        Media                 $mediaHelper,
-        EncoderInterface      $jsonEncoder,
-        HelperData            $helperData,
+        Context $context,
+        Registry $registry,
+        FormFactory $formFactory,
+        Media $mediaHelper,
+        EncoderInterface $jsonEncoder,
+        HelperData $helperData,
         StoreManagerInterface $storeManager,
-        array                 $data = []
+        array $data = []
     ) {
         parent::__construct(
             $context,

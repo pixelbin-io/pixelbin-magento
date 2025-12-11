@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Widget\Model\Template;
 
 use Magento\Framework\App\Request\Http;
@@ -112,16 +119,16 @@ class Filter
         $action     = $this->request->getActionName();
         $route      = $this->request->getRouteName();
 
-        $path = $moduleName.'_'.$controller.'_'.$action;
+        $path = $moduleName . '_' . $controller . '_' . $action;
 
-        $generated = $this->helperData->getAppZone().$image;
-        $generatedTf = $this->helperData->getAppZone().$image;
+        $generated = $this->helperData->getAppZone() . $image;
+        $generatedTf = $this->helperData->getAppZone() . $image;
 
         $storeId = $this->helperData->getStoreId();
         if ($this->helperData->isImageTransformationEnabled($storeId) && in_array($extension, $allowed_formats)) {
             $globalTransformation = $this->helperData->getGlobalCustomTransformation($storeId);
             if ($globalTransformation) {
-                $transformation = '/'.$globalTransformation.'/';
+                $transformation = '/' . $globalTransformation . '/';
                 if ($path == 'catalog_product_view') {
                     $transformation = str_replace('(', '%28', $transformation);
                     $transformation = str_replace(')', '%29', $transformation);
@@ -139,6 +146,6 @@ class Filter
             return $generated;
         }
 
-        return $this->helperData->getMediaUrl().$image;
+        return $this->helperData->getMediaUrl() . $image;
     }
 }

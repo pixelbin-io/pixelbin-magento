@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Api\Data;
 
 interface PixelbinImageSyncLogsInterface
@@ -20,6 +27,7 @@ interface PixelbinImageSyncLogsInterface
      * Get Entity Id
      *
      * @return int
+     * @api
      */
     public function getEntityId();
 
@@ -28,51 +36,58 @@ interface PixelbinImageSyncLogsInterface
      *
      * @param int $entityId
      * @return $this
+     * @api
      */
     public function setEntityId($entityId);
 
     /**
-     * Set Request
+     * Get Request
      *
      * @return string
+     * @api
      */
     public function getRequest();
 
     /**
-     * Get Request
+     * Set Request
      *
      * @param string $request
      * @return $this
+     * @api
      */
     public function setRequest($request);
 
     /**
-     * Set Response
+     * Get Response
      *
      * @return string
+     * @api
      */
     public function getResponse();
 
     /**
-     * Get Response
+     * Set Response
      *
      * @param string $response
      * @return $this
+     * @api
      */
     public function setResponse($response);
 
     /**
-     * Set Sync Type
+     * Get Sync Type
      *
      * @return string
+     * @api
      */
     public function getSyncType();
 
     /**
-     * Get Sync Type
+     * Set Sync Type
      *
      * @param string $syncType
      * @return $this
+     * @api
      */
     public function setSyncType($syncType);
 
@@ -80,6 +95,7 @@ interface PixelbinImageSyncLogsInterface
      * Get Created At
      *
      * @return string
+     * @api
      */
     public function getCreatedAt();
 
@@ -88,6 +104,7 @@ interface PixelbinImageSyncLogsInterface
      *
      * @param string $createdAt
      * @return $this
+     * @api
      */
     public function setCreatedAt($createdAt);
 
@@ -95,6 +112,7 @@ interface PixelbinImageSyncLogsInterface
      * Get Updated At
      *
      * @return string
+     * @api
      */
     public function getUpdatedAt();
 
@@ -103,6 +121,7 @@ interface PixelbinImageSyncLogsInterface
      *
      * @param string $updateAt
      * @return $this
+     * @api
      */
     public function setUpdatedAt($updateAt);
 }

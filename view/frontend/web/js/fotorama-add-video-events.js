@@ -134,7 +134,8 @@ define(
 
         //create AddFotoramaVideoEvents widget
         $.widget(
-            'mage.AddFotoramaVideoEvents', {
+            'mage.AddFotoramaVideoEvents',
+            {
                 options: {
                     videoData: '',
                     videoSettings: '',
@@ -180,10 +181,12 @@ define(
                  */
                 _create: function () {
                     $(this.element).on(
-                        'gallery:loaded', $.proxy(
+                        'gallery:loaded',
+                        $.proxy(
                             function () {
                                 this._initialize();
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -283,19 +286,23 @@ define(
                  */
                 _listenForFullscreen: function () {
                     this.fotoramaItem.on(
-                        'fotorama:fullscreenenter.' + this.PV, $.proxy(
+                        'fotorama:fullscreenenter.' + this.PV,
+                        $.proxy(
                             function () {
                                 this.isFullscreen = true;
-                            }, this
+                            },
+                            this
                         )
                     );
 
                     this.fotoramaItem.on(
-                        'fotorama:fullscreenexit.' + this.PV, $.proxy(
+                        'fotorama:fullscreenexit.' + this.PV,
+                        $.proxy(
                             function () {
                                 this.isFullscreen = false;
                                 this._hideVideoArrows();
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -401,11 +408,13 @@ define(
                  */
                 _closeVideoSetEvents: function ($closeVideo, fotorama) {
                     $closeVideo.on(
-                        'click', $.proxy(
+                        'click',
+                        $.proxy(
                             function () {
                                 this._unloadVideoPlayer(fotorama.activeFrame.$stageFrame.parent(), fotorama, true);
                                 this._hideCloseVideo();
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -531,10 +540,12 @@ define(
 
                     if (!fotorama.activeFrame.$navThumbFrame) {
                         this.fotoramaItem.on(
-                            'fotorama:showend.' + this.PV, $.proxy(
+                            'fotorama:showend.' + this.PV,
+                            $.proxy(
                                 function (evt, fotoramaData) {
                                     $(fotoramaData.activeFrame.$stageFrame).removeAttr('href');
-                                }, this
+                                },
+                                this
                             )
                         );
 
@@ -553,10 +564,12 @@ define(
                     }
 
                     this.fotoramaItem.on(
-                        'fotorama:showend.' + this.PV, $.proxy(
+                        'fotorama:showend.' + this.PV,
+                        $.proxy(
                             function (evt, fotoramaData) {
                                 $(fotoramaData.activeFrame.$stageFrame).removeAttr('href');
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -600,27 +613,33 @@ define(
                  */
                 _attachFotoramaEvents: function () {
                     this.fotoramaItem.on(
-                        'fotorama:showend.' + this.PV, $.proxy(
+                        'fotorama:showend.' + this.PV,
+                        $.proxy(
                             function (e, fotorama) {
                                 this._startPrepareForPlayer(e, fotorama);
-                            }, this
+                            },
+                            this
                         )
                     );
 
                     this.fotoramaItem.on(
-                        'fotorama:show.' + this.PV, $.proxy(
+                        'fotorama:show.' + this.PV,
+                        $.proxy(
                             function (e, fotorama) {
                                 this._unloadVideoPlayer(fotorama.activeFrame.$stageFrame.parent(), fotorama, true);
-                            }, this
+                            },
+                            this
                         )
                     );
 
                     this.fotoramaItem.on(
-                        'fotorama:fullscreenexit.' + this.PV, $.proxy(
+                        'fotorama:fullscreenexit.' + this.PV,
+                        $.proxy(
                             function (e, fotorama) {
                                 fotorama.activeFrame.$stageFrame.find('.' + this.PV).remove();
                                 this._startPrepareForPlayer(e, fotorama);
-                            }, this
+                            },
+                            this
                         )
                     );
                 },
@@ -825,8 +844,10 @@ define(
                                             this.fotoramaItem.data('fotorama').activeFrame.$stageFrame[0].click();
                                             this.Base = false;
                                         }
-                                    }, this
-                                ), 50
+                                    },
+                                    this
+                                ),
+                                50
                             );
                         } else { //if not a vimeo - play it immediately with a little lag in case for fotorama fullscreen
                             setTimeout(
@@ -835,8 +856,10 @@ define(
                                         fotorama.requestFullScreen();
                                         this.fotoramaItem.data('fotorama').activeFrame.$stageFrame[0].click();
                                         this.Base = false;
-                                    }, this
-                                ), 50
+                                    },
+                                    this
+                                ),
+                                50
                             );
                         }
                     }
