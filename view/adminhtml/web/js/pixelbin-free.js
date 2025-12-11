@@ -2,29 +2,30 @@ define(
     [
         'jquery'
     ],
-    function($) {
+    function ($) {
         'use strict';
 
         $.widget(
-            'pixelbin.pixelbinFreeTransform', {
+            'pixelbin.pixelbinFreeTransform',
+            {
 
                 currentTransform: '',
                 currentTransformProducts: '',
                 currentTransformBehavior: '',
 
-                getTransformText: function() {
+                getTransformText: function () {
                     return $(this.options.transformInputFieldId).val() || '';
                 },
 
-                getTransformProductsText: function() {
+                getTransformProductsText: function () {
                     return $(this.options.transformInputProductsFieldId).val() || '';
                 },
 
-                getTransformBehavior: function() {
+                getTransformBehavior: function () {
                     return $(this.options.transformInputProductsBehaviorFieldId).val();
                 },
 
-                getImageHtml: function(src, header) {
+                getImageHtml: function (src, header) {
                     if (!src) {
                         return '';
                     }
@@ -35,18 +36,18 @@ define(
                     return header + '<img class="' + cls + '" src="' + src + '" style="' + style + '" />' + footer;
                 },
 
-                getErrorHtml: function(message) {
+                getErrorHtml: function (message) {
                     return '<ul><li class="admin__field-error">' + message + '</li></ul>';
                 },
 
-                updatePreviewImage: function(url, url2) {
+                updatePreviewImage: function (url, url2) {
                     $('#pixelbin_custom_transform_preview').html(
                         this.getImageHtml(url, '<hr><p><b>Global Custom Transformation Preview</b></p>') +
                         this.getImageHtml(url2, '<hr><p><b>Products Custom Transformation Preview</b></p>')
                     );
                 },
 
-                updatePreview: function() {
+                updatePreview: function () {
                     var self = this,
                         transformations_string = "";
 
@@ -69,7 +70,7 @@ define(
                         dataType: 'json',
                         showLoader: true
                     }).done(
-                        function(response) {
+                        function (response) {
                             if ((transformations_string = self.currentTransformProducts)) {
                                 if (self.currentTransformBehavior === 'add') {
                                     transformations_string = self.currentTransform + ',' + transformations_string;
@@ -85,11 +86,11 @@ define(
                                     dataType: 'json',
                                     showLoader: true
                                 }).done(
-                                    function(response) {
+                                    function (response) {
                                         self.updatePreviewImage(globalResURL, response.url);
                                     }
                                 ).fail(
-                                    function(result) {
+                                    function (result) {
                                         $('#pixelbin_custom_transform_preview').html(self.getErrorHtml(result.responseJSON.error));
                                     }
                                 );
@@ -99,13 +100,13 @@ define(
                             }
                         }
                     ).fail(
-                        function(result) {
+                        function (result) {
                             $('#pixelbin_custom_transform_preview').html(self.getErrorHtml(result.responseJSON.error));
                         }
                     );
                 },
 
-                setPreviewActiveState: function(state) {
+                setPreviewActiveState: function (state) {
                     if (
                         state &&
                         (
@@ -120,34 +121,34 @@ define(
                     }
                 },
 
-                isPreviewActive: function() {
+                isPreviewActive: function () {
                     return !$(this.options.previewButtonId).hasClass('disabled');
                 },
 
-                _create: function() {
+                _create: function () {
                     var self = this;
 
                     $(this.options.previewButtonId).on(
                         'click',
-                        function() {
+                        function () {
                             self.updatePreview();
                         }
                     );
                     $(this.options.transformInputFieldId).on(
                         'change keydown paste input',
-                        function() {
+                        function () {
                             self.setPreviewActiveState(true);
                         }
                     );
                     $(this.options.transformInputProductsFieldId).on(
                         'change keydown paste input',
-                        function() {
+                        function () {
                             self.setPreviewActiveState(true);
                         }
                     );
                     $(this.options.transformInputProductsBehaviorFieldId).on(
                         'change',
-                        function() {
+                        function () {
                             self.setPreviewActiveState(true);
                         }
                     );

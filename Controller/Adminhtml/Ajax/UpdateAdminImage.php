@@ -1,7 +1,17 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Ajax;
 
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Raw;
@@ -17,9 +27,8 @@ use Magento\Catalog\Helper\Image as CatalogImageHelper;
 use Pixelbinio\Pixelbin\Core\Image\Transformation;
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
 
-class UpdateAdminImage extends Action
+class UpdateAdminImage extends Action implements CsrfAwareActionInterface
 {
-
     /**
      * @var StoreManagerInterface
      */
@@ -43,7 +52,7 @@ class UpdateAdminImage extends Action
     /**
      * @var string
      */
-    private $_authorised;
+    private $authorised;
 
     /**
      * @var Transformation
@@ -80,6 +89,28 @@ class UpdateAdminImage extends Action
         $this->filesystem = $filesystem;
         $this->transformation = $transformation;
         $this->helperData = $helperData;
+    }
+
+    /**
+     * Create CSRF validation exception
+     *
+     * @param RequestInterface $request
+     * @return InvalidRequestException|null
+     */
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    /**
+     * Validate for CSRF
+     *
+     * @param RequestInterface $request
+     * @return bool|null
+     */
+    public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
     }
 
     /**

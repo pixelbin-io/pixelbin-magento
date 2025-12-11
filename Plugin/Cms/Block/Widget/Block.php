@@ -1,22 +1,21 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Plugin\Cms\Block\Widget;
 
-use Pixelbinio\Pixelbin\Plugin\CmsBlockLazyloadAbstract;
+use Pixelbinio\Pixelbin\Plugin\Cms\CmsBlockLazyloadAbstract;
 use Magento\Cms\Block\Widget\Block as CmsBlockWidget;
 
+/**
+ * Plugin for CMS Widget Block lazy loading
+ */
 class Block extends CmsBlockLazyloadAbstract
 {
-
-    /**
-     * After to html
-     *
-     * @param CmsBlockWidget $subject
-     * @param string $html
-     * @return string
-     */
-    public function afterToHtml(CmsBlockWidget $subject, $html)
-    {
-        return $this->process($subject, $html);
-    }
+    // Intentionally empty – logic inherited
 }

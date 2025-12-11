@@ -9,7 +9,7 @@ define(
         'jquery/ui',
         'mage/translate'
     ],
-    function($, alert) {
+    function ($, alert) {
         'use strict';
 
         var videoRegister = {
@@ -21,7 +21,7 @@ define(
              * @param   {String} api
              * @returns {bool}
              */
-            isRegistered: function(api) {
+            isRegistered: function (api) {
                 return this._register[api] !== undefined;
             },
 
@@ -31,7 +31,7 @@ define(
              * @param   {String} api
              * @returns {bool}
              */
-            isLoaded: function(api) {
+            isLoaded: function (api) {
                 return this._register[api] !== undefined && this._register[api] === true;
             },
 
@@ -41,19 +41,20 @@ define(
              * @param {String} api
              * @param {bool} loaded
              */
-            register: function(api, loaded) {
+            register: function (api, loaded) {
                 loaded = loaded || false;
                 this._register[api] = loaded;
             }
         };
 
         $.widget(
-            'mage.productVideoLoader', {
+            'mage.productVideoLoader',
+            {
 
                 /**
                  * @private
                  */
-                _create: function() {
+                _create: function () {
                     switch (this.element.data('type')) {
                         case 'youtube':
                             this.element.videoYoutube();
@@ -76,10 +77,10 @@ define(
                                 /**
                                  * Return string
                                  */
-                                toString: function() {
+                                toString: function () {
                                     return this.name + ': ' + this.message;
                                 }
-                            };
+                        };
                     }
                 },
 
@@ -88,7 +89,7 @@ define(
                  *
                  * @private
                  */
-                _initialize: function() {
+                _initialize: function () {
                     this._params = this.element.data('params') || {};
                     this._code = this.element.data('code');
                     this._width = this.element.data('width');
@@ -158,14 +159,16 @@ define(
         );
 
         $.widget(
-            'mage.videoYoutube', $.mage.productVideoLoader, {
+            'mage.videoYoutube',
+            $.mage.productVideoLoader,
+            {
 
                 /**
                  * Initialization of the Youtube widget
                  *
                  * @private
                  */
-                _create: function() {
+                _create: function () {
                     var self = this;
 
                     this._initialize();
@@ -173,14 +176,15 @@ define(
                     this.element.append('<div></div>');
 
                     this._on(
-                        window, {
+                        window,
+                        {
 
                             /**
                              * Youtube state check
                              *
                              * @private
                              */
-                            'youtubeapiready': function() {
+                            'youtubeapiready': function () {
                                 var host = 'https://www.youtube.com';
 
                                 if (self.useYoutubeNocookie) {
@@ -197,7 +201,8 @@ define(
                                 self._params.rel = 0;
 
                                 self._player = new window.YT.Player(
-                                    self.element.children(':first')[0], {
+                                    self.element.children(':first')[0],
+                                    {
                                         height: self._height,
                                         width: self._width,
                                         videoId: self._code,
@@ -208,14 +213,15 @@ define(
                                             /**
                                              * @private
                                              */
-                                            'onReady': function onPlayerReady() {
+                                            'onReady': function onPlayerReady()
+                                            {
                                                 self._player.getDuration();
                                             },
 
                                             /**
                                              * State change flag init
                                              */
-                                            onStateChange: function(data) {
+                                            onStateChange: function (data) {
                                                 switch (window.parseInt(data.data, 10)) {
                                                     case 1:
                                                         self._playing = true;
@@ -243,7 +249,7 @@ define(
                  *
                  * @private
                  */
-                _loadApi: function() {
+                _loadApi: function () {
                     var element,
                         scriptTag;
 
@@ -266,7 +272,7 @@ define(
                     /**
                      * Trigger youtube api ready event
                      */
-                    window.onYouTubeIframeAPIReady = function() {
+                    window.onYouTubeIframeAPIReady = function () {
                         $(window).trigger('youtubeapiready');
                         videoRegister.register('youtube', true);
                     };
@@ -275,7 +281,7 @@ define(
                 /**
                  * Play command for Youtube
                  */
-                play: function() {
+                play: function () {
                     this._player.playVideo();
                     this._playing = true;
                 },
@@ -283,7 +289,7 @@ define(
                 /**
                  * Pause command for Youtube
                  */
-                pause: function() {
+                pause: function () {
                     this._player.pauseVideo();
                     this._playing = false;
                 },
@@ -291,7 +297,7 @@ define(
                 /**
                  * Stop command for Youtube
                  */
-                stop: function() {
+                stop: function () {
                     this._player.stopVideo();
                     this._playing = false;
                 },
@@ -299,7 +305,7 @@ define(
                 /**
                  * Playing command for Youtube
                  */
-                playing: function() {
+                playing: function () {
                     return this._playing;
                 },
 
@@ -308,7 +314,7 @@ define(
                  *
                  * @private
                  */
-                destroy: function() {
+                destroy: function () {
                     this.stop();
                     this._player.destroy();
                 }
@@ -351,14 +357,16 @@ define(
         });
 
         $.widget(
-            'mage.videopixelbin', $.mage.productVideoLoader, {
+            'mage.videopixelbin',
+            $.mage.productVideoLoader,
+            {
 
                 /**
                  * Initialize the pixelbin widget
                  *
                  * @private
                  */
-                _create: function() {
+                _create: function () {
                     this._initialize();
 
                     this.element.append(
@@ -371,13 +379,13 @@ define(
                             .attr('src', this._videoSrc.replace(/(^\w+:|^)/, ''))
                             .on(
                                 "loadstart",
-                                function() {
+                                function () {
                                     $('body').loader('show');
                                 }
                             )
                             .on(
                                 "load",
-                                function() {
+                                function () {
                                     $('body').loader('hide');
                                 }
                             )
@@ -387,7 +395,8 @@ define(
         );
 
         $.widget(
-            'mage.videoData', {
+            'mage.videoData',
+            {
                 options: {
                     youtubeKey: '',
                     pixelbinPlaceholder: '',
@@ -413,14 +422,16 @@ define(
                 /**
                  * @private
                  */
-                _init: function() {
+                _init: function () {
                     this.element.on(this._START_UPDATE_INFORMATION_TRIGGER, $.proxy(this._onRequestHandler, this));
                     this.element.on(this._ERROR_UPDATE_INFORMATION_TRIGGER, $.proxy(this._onVideoInvalid, this));
                     this.element.on(
-                        this._FINISH_UPDATE_INFORMATION_TRIGGER, $.proxy(
-                            function() {
+                        this._FINISH_UPDATE_INFORMATION_TRIGGER,
+                        $.proxy(
+                            function () {
                                 this._currentVideoUrl = null;
-                            }, this
+                            },
+                            this
                         )
                     );
                     this.element.on(this._VIDEO_URL_VALIDATE_TRIGGER, $.proxy(this._onUrlValidateHandler, this));
@@ -429,7 +440,7 @@ define(
                 /**
                  * @private
                  */
-                _onUrlValidateHandler: function(event, callback, forceVideo) {
+                _onUrlValidateHandler: function (event, callback, forceVideo) {
                     var url = this.element.val(),
                         videoInfo;
 
@@ -445,7 +456,7 @@ define(
                 /**
                  * @private
                  */
-                _onRequestHandler: function() {
+                _onRequestHandler: function () {
                     var url = this.element.val(),
                         self = this,
                         videoInfo,
@@ -460,7 +471,8 @@ define(
                     this._currentVideoUrl = url;
 
                     this.element.trigger(
-                        this._REQUEST_VIDEO_INFORMATION_TRIGGER, {
+                        this._REQUEST_VIDEO_INFORMATION_TRIGGER,
+                        {
                             url: url
                         }
                     );
@@ -482,7 +494,8 @@ define(
                      * @param {Object} data
                      * @private
                      */
-                    function _onYouTubeLoaded(data) {
+                    function _onYouTubeLoaded(data)
+                    {
                         var tmp,
                             uploadedFormatted,
                             respData,
@@ -553,7 +566,8 @@ define(
                     /**
                      * @private
                      */
-                    function _onVimeoLoaded(data) {
+                    function _onVimeoLoaded(data)
+                    {
                         var tmp,
                             respData;
 
@@ -582,7 +596,8 @@ define(
                     /**
                      * @private
                      */
-                    function _onpixelbinLoaded(data) {
+                    function _onpixelbinLoaded(data)
+                    {
                         var tmp,
                             respData,
                             context,
@@ -613,7 +628,7 @@ define(
 
                         tmp.derived = tmp.derived || [];
                         thumbnail = videoInfo.videoSrc
-                            .replace(/\.[^/.]+$/, "")
+                            .replace(/\.[^/.] + $ / , "")
                             .replace(new RegExp('\/v[0-9]{1,10}\/'), '/')
                             .replace(new RegExp('\/(' + this._escapeRegex(encodeURI(decodeURI(tmp.public_id))) + ')$'), '/so_auto/$1.jpg');
 
@@ -622,7 +637,7 @@ define(
                             type: "GET",
                             url: thumbnail,
                             async: false,
-                            error: function(request, status, error) {
+                            error: function (request, status, error) {
                                 thumbnail = self.options.pixelbinPlaceholder;
                                 /*alert({
                                     content: "Couldn't automatically generate pixelbin video thumbnail, using fallback placeholder instead. You can always replace that manually later"
@@ -655,7 +670,8 @@ define(
                             id +
                             '&part=snippet,contentDetails&key=' +
                             this.options.youtubeKey + '&alt=json&callback=?';
-                        $.getJSON(googleapisUrl,
+                        $.getJSON(
+                            googleapisUrl,
                             {
                                 format: 'json'
                             },
@@ -697,7 +713,7 @@ define(
                             /**
                              * @private
                              */
-                            error: function() {
+                            error: function () {
                                 self._onRequestError($.mage.__('Video not found'));
                             }
                         });
@@ -707,7 +723,7 @@ define(
                 /**
                  * @private
                  */
-                _onVideoInvalid: function(event, data) {
+                _onVideoInvalid: function (event, data) {
                     this._videoInformation = null;
                     this.element.val('');
                     alert({
@@ -718,7 +734,7 @@ define(
                 /**
                  * @private
                  */
-                _onRequestError: function(error) {
+                _onRequestError: function (error) {
                     this.element.trigger(this._ERROR_UPDATE_INFORMATION_TRIGGER, error);
                     this.element.trigger(this._FINISH_UPDATE_INFORMATION_TRIGGER, false);
                     this._currentVideoUrl = null;
@@ -727,7 +743,7 @@ define(
                 /**
                  * @private
                  */
-                _formatYoutubeDuration: function(duration) {
+                _formatYoutubeDuration: function (duration) {
                     var match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/),
                         hours = parseInt(match[1], 10) || 0,
                         minutes = parseInt(match[2], 10) || 0,
@@ -739,14 +755,14 @@ define(
                 /**
                  * @private
                  */
-                _formatVimeoDuration: function(seconds) {
+                _formatVimeoDuration: function (seconds) {
                     return (new Date(seconds * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
                 },
 
                 /**
                  * @private
                  */
-                _parseHref: function(href) {
+                _parseHref: function (href) {
                     var a = document.createElement('a');
 
                     a.href = href;
@@ -757,7 +773,7 @@ define(
                 /**
                  * @private
                  */
-                _baseName: function(str) {
+                _baseName: function (str) {
                     var base = new String(str).substring(str.lastIndexOf('/') + 1);
                     if (base.lastIndexOf(".") != -1) {
                         base = base.substring(0, base.lastIndexOf("."));
@@ -768,7 +784,7 @@ define(
                 /**
                  * @private
                  */
-                _fileExtension: function(str) {
+                _fileExtension: function (str) {
                     var re = /(?:\.([^.]+))?$/;
                     return re.exec(str)[1];
                 },
@@ -776,14 +792,14 @@ define(
                 /**
                  * @private
                  */
-                _escapeRegex: function(string) {
+                _escapeRegex: function (string) {
                     return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
                 },
 
                 /**
                  * @private
                  */
-                _validateURL: function(href, forceVideo) {
+                _validateURL: function (href, forceVideo) {
                     var id,
                         type,
                         ampersandPosition,
@@ -799,7 +815,6 @@ define(
                     href = this._parseHref(href);
 
                     if (href.host.match(/youtube\.com/) && href.search) {
-
                         id = href.search.split('v=')[1];
 
                         if (id) {
@@ -810,7 +825,6 @@ define(
                         if (id && ampersandPosition !== -1) {
                             id = id.substring(0, ampersandPosition);
                         }
-
                     } else if (href.host.match(/youtube\.com|youtu\.be|youtube-nocookie.com/)) {
                         id = href.pathname.replace(/^\/(embed\/|v\/)?/, '').replace(/\/.*/, '');
                         type = 'youtube';

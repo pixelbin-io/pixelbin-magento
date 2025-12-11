@@ -1,8 +1,16 @@
 <?php
 
+/**
+ * Copyright © 2023 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
 namespace Pixelbinio\Pixelbin\Controller\Adminhtml\Cms\Wysiwyg\Images;
 
 use Pixelbinio\Pixelbin\Helper\Data as HelperData;
+use Pixelbinio\Pixelbin\Helper\PixelbinHelperData as PixelbinHelperData;
 use Pixelbinio\Pixelbin\Helper\UploadFileToPixelbin;
 use Pixelbinio\Pixelbin\Model\Framework\File\Uploader;
 use Magento\Backend\App\Action\Context;
@@ -24,7 +32,7 @@ use Magento\MediaGalleryApi\Api\SaveAssetsInterface;
 use Pixelbinio\Pixelbin\Logger\Logger;
 
 /**
- * Upload image.
+ * Wysiwyg image upload controller
  */
 class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
 {
@@ -96,6 +104,11 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
     private $helperData;
 
     /**
+     * @var PixelbinHelperData
+     */
+    private $pixelbinHelperData;
+
+    /**
      * @var MediaGalleryUploader
      */
     private $mediaGalleryUploader;
@@ -134,6 +147,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
      * @param AllowedProtocols $protocolValidator
      * @param NotProtectedExtension $extensionValidator
      * @param HelperData $helperData
+     * @param PixelbinHelperData $pixelbinHelperData
      * @param MediaGalleryUploader $mediaGalleryUploader
      * @param AssetInterfaceFactory $mediaAsset
      * @param SaveAssetsInterface $mediaAssetSave
@@ -154,6 +168,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         AllowedProtocols $protocolValidator,
         NotProtectedExtension $extensionValidator,
         HelperData $helperData,
+        PixelbinHelperData $pixelbinHelperData,
         MediaGalleryUploader $mediaGalleryUploader,
         AssetInterfaceFactory $mediaAsset,
         SaveAssetsInterface $mediaAssetSave,
@@ -171,6 +186,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
         $this->extensionValidator = $extensionValidator;
         $this->protocolValidator = $protocolValidator;
         $this->helperData = $helperData;
+        $this->pixelbinHelperData = $pixelbinHelperData;
         $this->mediaGalleryUploader = $mediaGalleryUploader;
         $this->mediaAsset = $mediaAsset;
         $this->mediaAssetSave = $mediaAssetSave;
@@ -191,7 +207,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             $path = ($this->getStorage()->getSession()->getCurrentPath()) ?? null;
 
             if (!$path) {
-                $path = $this->directoryList->getRoot() .'/pub/'. DirectoryList::MEDIA .'/';
+                $path = $this->directoryList->getRoot() . '/pub/' . DirectoryList::MEDIA . '/';
             }
 
             if (!$this->validatePath($path, DirectoryList::MEDIA)) {
@@ -201,12 +217,12 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
             }
             $allData = $this->getRequest()->getParams();
             if (!empty($allData["target_path"])) {
-                $path = $path . $allData["target_path"]."/";
+                $path = $path . $allData["target_path"] . "/";
             }
             $localFileName = $this->remoteFileUrl = $allData["asset"]["url"];
             $imagePathArray = explode($this->helperData->getAppZone(), $localFileName);
             $this->validateRemoteFile($this->remoteFileUrl);
-            $this->parsedRemoteFileUrl = $this->helperData->parsePixelbinUrl($this->remoteFileUrl);
+            $this->parsedRemoteFileUrl = $this->pixelbinHelperData->parsePixelbinUrl($this->remoteFileUrl);
 
             $this->parsedRemoteFileUrl["transformations_string"] = $allData['asset']["free_transformation"];
 
@@ -231,7 +247,7 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                 [
                     'path' => $newPath,
                     'description' => $localFileName,
-                    'contentType' => $asset['assetType'].'/'.$asset['format'],
+                    'contentType' => $asset['assetType'] . '/' . $asset['format'],
                     'title' => $localFileName,
                     'source' => 'Pixelbin',
                     'width' => $asset['width'],
@@ -240,9 +256,11 @@ class Upload extends \Magento\Cms\Controller\Adminhtml\Wysiwyg\Images\Upload
                 ]
             );
             $this->mediaAssetSave->execute([$ma]);
-
         } catch (\Exception $e) {
-            $result = ['error' => $e->getMessage(), 'errorcode' => $e->getCode(), "trace" => $e->getTraceAsString()];
+            $result = [
+                'error' => $e->getMessage(),
+                'errorcode' => $e->getCode()
+            ];
         }
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
